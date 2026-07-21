@@ -1,0 +1,216 @@
+@import 'tailwindcss';
+
+@import '@fontsource-variable/inter';
+@import '@fontsource-variable/source-serif-4';
+@import '@fontsource-variable/jetbrains-mono';
+
+/* ── Design tokens ─────────────────────────────────────────────────────────
+   Monochrome ink on warm paper, one high-signal accent.
+   Serif for prose (this person writes), sans for UI, mono for numbers.
+   ------------------------------------------------------------------------ */
+@theme {
+  --font-sans: 'Inter Variable', ui-sans-serif, system-ui, sans-serif;
+  --font-serif: 'Source Serif 4 Variable', ui-serif, Georgia, serif;
+  --font-mono: 'JetBrains Mono Variable', ui-monospace, monospace;
+
+  --color-paper: #fbfaf8;
+  --color-paper-2: #f4f2ee;
+  --color-ink: #16161a;
+  --color-ink-2: #3d3d46;
+  --color-ink-3: #6b6b78;
+  --color-rule: #e2ded6;
+  --color-accent: #0e7c66;
+  --color-accent-soft: #e6f2ee;
+}
+
+:root {
+  --paper: #fbfaf8;
+  --paper-2: #f4f2ee;
+  --paper-3: #ffffff;
+  --ink: #16161a;
+  --ink-2: #3d3d46;
+  --ink-3: #6b6b78;
+  --rule: #e4e0d8;
+  --accent: #0b6b58;
+  --accent-ink: #0b6b58;
+  --accent-soft: #e7f2ef;
+  --shadow: 0 1px 2px rgb(20 20 26 / 0.04), 0 8px 24px -12px rgb(20 20 26 / 0.12);
+}
+
+:root[data-theme='dark'],
+html.dark {
+  --paper: #0d0e11;
+  --paper-2: #14161a;
+  --paper-3: #191c21;
+  --ink: #f2f1ee;
+  --ink-2: #b9b8b3;
+  --ink-3: #86858020;
+  --ink-3: #8a8a93;
+  --rule: #262a31;
+  --accent: #3ddbb0;
+  --accent-ink: #3ddbb0;
+  --accent-soft: #10231f;
+  --shadow: 0 1px 2px rgb(0 0 0 / 0.4), 0 8px 24px -12px rgb(0 0 0 / 0.6);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    --paper: #0d0e11;
+    --paper-2: #14161a;
+    --paper-3: #191c21;
+    --ink: #f2f1ee;
+    --ink-2: #b9b8b3;
+    --ink-3: #8a8a93;
+    --rule: #262a31;
+    --accent: #3ddbb0;
+    --accent-ink: #3ddbb0;
+    --accent-soft: #10231f;
+    --shadow: 0 1px 2px rgb(0 0 0 / 0.4), 0 8px 24px -12px rgb(0 0 0 / 0.6);
+  }
+}
+
+html {
+  background: var(--paper);
+  color: var(--ink);
+  -webkit-font-smoothing: antialiased;
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-sans);
+  font-synthesis-weight: none;
+}
+
+::selection {
+  background: var(--accent);
+  color: var(--paper);
+}
+
+/* ── Reusable primitives ─────────────────────────────────────────────────── */
+.wrap {
+  width: 100%;
+  max-width: 68rem;
+  margin-inline: auto;
+  padding-inline: 1.5rem;
+}
+@media (min-width: 768px) {
+  .wrap { padding-inline: 2.5rem; }
+}
+
+.eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  font-weight: 500;
+}
+
+.rule { border-color: var(--rule); }
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.02em;
+  padding: 0.2rem 0.5rem;
+  border: 1px solid var(--rule);
+  border-radius: 999px;
+  color: var(--ink-2);
+  white-space: nowrap;
+}
+
+.link-underline {
+  background-image: linear-gradient(var(--accent), var(--accent));
+  background-size: 100% 1px;
+  background-repeat: no-repeat;
+  background-position: 0 100%;
+  transition: background-size 0.25s ease;
+}
+.link-underline:hover { background-size: 0% 1px; }
+
+/* Long-form case-study prose */
+.prose-case {
+  font-family: var(--font-serif);
+  font-size: 1.0625rem;
+  line-height: 1.75;
+  color: var(--ink-2);
+}
+.prose-case > * + * { margin-top: 1.15em; }
+.prose-case h2 {
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink);
+  margin-top: 3rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--rule);
+}
+.prose-case h3 {
+  font-family: var(--font-sans);
+  font-size: 1.0625rem;
+  font-weight: 600;
+  color: var(--ink);
+  margin-top: 2rem;
+}
+.prose-case strong { color: var(--ink); font-weight: 600; }
+.prose-case a { color: var(--accent-ink); text-decoration: underline; text-underline-offset: 3px; }
+.prose-case ul, .prose-case ol { padding-left: 1.25rem; }
+.prose-case li { margin-top: 0.4em; }
+.prose-case ul > li { list-style: none; position: relative; }
+.prose-case ul > li::before {
+  content: '';
+  position: absolute;
+  left: -1rem;
+  top: 0.75em;
+  width: 5px;
+  height: 5px;
+  border-radius: 999px;
+  background: var(--accent);
+}
+.prose-case ol > li { list-style: decimal; }
+.prose-case code {
+  font-family: var(--font-mono);
+  font-size: 0.85em;
+  background: var(--paper-2);
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  padding: 0.1em 0.35em;
+}
+.prose-case blockquote {
+  border-left: 2px solid var(--accent);
+  padding-left: 1.25rem;
+  font-style: italic;
+  color: var(--ink);
+}
+.prose-case table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--font-sans);
+  font-size: 0.875rem;
+}
+.prose-case th, .prose-case td {
+  text-align: left;
+  padding: 0.6rem 0.75rem;
+  border-bottom: 1px solid var(--rule);
+}
+.prose-case th {
+  font-weight: 600;
+  color: var(--ink);
+  font-size: 0.6875rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.prose-case .table-scroll { overflow-x: auto; }
+
+/* Entrance */
+@media (prefers-reduced-motion: no-preference) {
+  .rise { animation: rise 0.7s cubic-bezier(0.2, 0.7, 0.3, 1) both; }
+  @keyframes rise {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: none; }
+  }
+}

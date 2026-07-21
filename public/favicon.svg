@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <rect width="32" height="32" rx="7" fill="#0b6b58"/>
+  <!-- axes + a path climbing to an optimum at the vertex -->
+  <path d="M6 26V6" stroke="#fbfaf8" stroke-width="2" stroke-linecap="round" opacity=".4"/>
+  <path d="M6 26h20" stroke="#fbfaf8" stroke-width="2" stroke-linecap="round" opacity=".4"/>
+  <path d="M9 22.5 14.5 14.5 19.5 17.5 25 9" stroke="#fbfaf8" stroke-width="2.4"
+        stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+  <circle cx="25" cy="9" r="3" fill="#fbfaf8"/>
+</svg>

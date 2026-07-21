@@ -1,0 +1,164 @@
+---
+import Base from '../layouts/Base.astro';
+import { site, education, experience, toolkit } from '../data/site';
+---
+
+<Base
+  title={`About — ${site.name}`}
+  description="Analytics professional with a Master of Management Analytics from Queen’s University, working where optimization, machine learning and automation meet a real P&L."
+>
+  <section class="wrap pt-16 pb-12 md:pt-24">
+    <p class="eyebrow">About</p>
+    <h1
+      class="mt-4 max-w-3xl text-[2.25rem] leading-[1.1] tracking-[-0.02em] md:text-5xl"
+      style="font-family: var(--font-serif); color: var(--ink); font-weight: 400;"
+    >
+      I got into analytics because I kept watching good data go unused.
+    </h1>
+  </section>
+
+  <div class="wrap grid gap-16 md:grid-cols-[minmax(0,42rem)_1fr] md:gap-20">
+    {/* ── Narrative ─────────────────────────────────────────────────── */}
+    <div class="prose-case">
+      <p>
+        My first three years of work were in support and billing operations — 200+ retail accounts
+        at a POS company, then billing and compliance at a Y Combinator–backed studio. Unglamorous
+        work, and the best analytics education I could have had, because it put me next to the data
+        while it was still messy and still mattered.
+      </p>
+      <p>
+        The pattern I kept hitting was always the same. The numbers existed. Somebody had even built
+        a report. But nothing in the system ever <em>acted</em> on them — the reconciliation was still
+        manual, the billing still depended on someone remembering, the insight died in a meeting.
+        The gap was never analysis. It was the distance between an insight and a working process.
+      </p>
+      <p>
+        So I started closing that distance myself. A fractional billing system that put six figures
+        a month on rails. An HR agent that generated its own documents and fed worklogs straight into
+        billing. Slack integrations that handled compliance chasing. None of it was in my job
+        description, which is rather the point.
+      </p>
+
+      <h2>Getting the formal half</h2>
+      <p>
+        What I didn't have was rigour. I could build the system; I couldn't always prove the answer
+        was right. That's why I'm at <strong>Smith School of Business at Queen's University</strong> doing a
+        Master of Management Analytics with a Data Science major — optimization, statistical
+        inference, machine learning, simulation. The half that lets you defend a recommendation
+        rather than just ship it.
+      </p>
+      <p>
+        The coursework has been the most enjoyable part of it: a mixed-integer program that prices
+        what menu variety costs a hospital, a market-value model across 4,056 footballer-seasons, a
+        top-20% Kaggle finish. Not because they're clever, but because each one ends in a decision
+        somebody could actually take.
+      </p>
+
+      <h2>Running something of my own</h2>
+      <p>
+        In the middle of all this I started <strong>Hopefield</strong>, a home-textiles brand selling on
+        Amazon FBA and Shopify. Partly because I wanted the challenge, and partly for a reason that
+        turned out to matter more than I expected: I wanted a business where I owned every number and
+        couldn't hide behind anybody else's dashboard.
+      </p>
+      <p>
+        It has been the sharpest teacher of the three. When you write a linear program to decide how
+        to kit your own inventory, and the leftover stock is your own money sitting in a warehouse,
+        you stop treating model assumptions as an academic formality.
+      </p>
+
+      <h2>How I work</h2>
+      <ul>
+        <li>
+          <strong>Start from the decision, not the dataset.</strong> If I can't say what someone will do
+          differently because of the analysis, I haven't found the problem yet.
+        </li>
+        <li>
+          <strong>State the limitations out loud.</strong> A model with known, published limits is worth
+          more than one presented as truth.
+        </li>
+        <li>
+          <strong>An absurd result is a gift.</strong> The dangerous bug is the one that produces a
+          plausible number. I check outputs against the real world, not just against a validation score.
+        </li>
+        <li>
+          <strong>Automate where two teams maintain the same fact.</strong> That seam is almost always
+          where the highest-value automation is hiding.
+        </li>
+      </ul>
+
+      <h2>Outside the work</h2>
+      <p>
+        I grow food hydroponically in two tower gardens and log it obsessively, which is either a
+        hobby or a longitudinal experiment depending on who's asking. I'm based in
+        Kitchener–Waterloo and I'm open to analytics roles across the GTA and Southwestern Ontario.
+      </p>
+    </div>
+
+    {/* ── Sidebar ───────────────────────────────────────────────────── */}
+    <aside class="space-y-12">
+      <div>
+        <p class="eyebrow border-b pb-3" style="border-color: var(--rule);">Education</p>
+        <ul class="mt-5 space-y-6">
+          {
+            education.map((e) => (
+              <li>
+                <p class="text-[0.9375rem] font-semibold leading-snug" style="color: var(--ink);">
+                  {e.credential}
+                </p>
+                <p class="mt-1 text-sm leading-snug" style="color: var(--ink-2);">
+                  {e.school}
+                </p>
+                <p class="eyebrow mt-2">
+                  {e.detail} · {e.period}
+                </p>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+
+      <div>
+        <p class="eyebrow border-b pb-3" style="border-color: var(--rule);">Experience</p>
+        <ul class="mt-5 space-y-6">
+          {
+            experience.map((x) => (
+              <li>
+                <p class="text-[0.9375rem] font-semibold leading-snug" style="color: var(--ink);">
+                  {x.title}
+                </p>
+                <p class="mt-1 text-sm" style="color: var(--accent-ink);">
+                  {x.company}
+                </p>
+                <p class="eyebrow mt-1.5">{x.period}</p>
+                <p class="mt-2.5 text-[0.8125rem] leading-relaxed" style="color: var(--ink-2);">
+                  {x.detail}
+                </p>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+
+      <div>
+        <p class="eyebrow border-b pb-3" style="border-color: var(--rule);">Toolkit</p>
+        <div class="mt-5 space-y-5">
+          {
+            toolkit.map((t) => (
+              <div>
+                <p class="text-[0.8125rem] font-semibold" style="color: var(--ink);">
+                  {t.group}
+                </p>
+                <ul class="mt-2 flex flex-wrap gap-1.5">
+                  {t.items.map((i) => (
+                    <li class="chip">{i}</li>
+                  ))}
+                </ul>
+              </div>
+            ))
+          }
+        </div>
+      </div>
+    </aside>
+  </div>
+</Base>

@@ -1,0 +1,71 @@
+---
+import { site } from '../data/site';
+
+const year = new Date().getFullYear();
+---
+
+<footer class="mt-32 border-t" style="border-color: var(--rule); background: var(--paper-2);">
+  <div class="wrap py-16 md:py-20">
+    <div class="grid gap-12 md:grid-cols-[1.4fr_1fr]">
+      <div>
+        <p class="eyebrow">Get in touch</p>
+        <h2
+          class="mt-4 max-w-lg text-3xl leading-[1.15] tracking-tight md:text-4xl"
+          style="font-family: var(--font-serif); color: var(--ink);"
+        >
+          Looking for someone who can model it <em>and</em> ship it?
+        </h2>
+        <p class="mt-4 max-w-md text-[0.9375rem] leading-relaxed" style="color: var(--ink-2);">
+          I’m {site.status.toLowerCase()}. The fastest way to reach me is email — I reply the same day.
+        </p>
+        <div class="mt-7 flex flex-wrap gap-3">
+          <a
+            href={`mailto:${site.email}`}
+            class="rounded-full px-5 py-2.5 text-sm font-medium transition-opacity hover:opacity-85"
+            style="background: var(--accent); color: var(--paper);">Email me</a
+          >
+          <a
+            href={site.resume}
+            class="rounded-full border px-5 py-2.5 text-sm font-medium transition-colors"
+            style="border-color: var(--rule); color: var(--ink);"
+            data-ghost>Download résumé</a
+          >
+        </div>
+      </div>
+
+      <div class="grid grid-cols-2 gap-8 md:justify-items-end">
+        <div>
+          <p class="eyebrow">Elsewhere</p>
+          <ul class="mt-4 space-y-2.5 text-sm">
+            <li><a href={site.linkedin} class="link-underline" style="color: var(--ink-2);">LinkedIn</a></li>
+            <li><a href={site.github} class="link-underline" style="color: var(--ink-2);">GitHub</a></li>
+            <li><a href={`mailto:${site.email}`} class="link-underline" style="color: var(--ink-2);">Email</a></li>
+          </ul>
+        </div>
+        <div>
+          <p class="eyebrow">Site</p>
+          <ul class="mt-4 space-y-2.5 text-sm">
+            <li><a href="/projects" class="link-underline" style="color: var(--ink-2);">Work</a></li>
+            <li><a href="/about" class="link-underline" style="color: var(--ink-2);">About</a></li>
+            <li><a href={site.resume} class="link-underline" style="color: var(--ink-2);">Résumé</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div
+      class="mt-14 flex flex-col gap-2 border-t pt-6 text-xs sm:flex-row sm:items-center sm:justify-between"
+      style="border-color: var(--rule); color: var(--ink-3);"
+    >
+      <p>© {year} {site.name}</p>
+      <p style="font-family: var(--font-mono);">{site.location}</p>
+    </div>
+  </div>
+</footer>
+
+<style>
+  [data-ghost]:hover {
+    background: var(--paper-3);
+    border-color: var(--ink-3);
+  }
+</style>

@@ -1,0 +1,199 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import SectionHead from '../components/SectionHead.astro';
+import ProjectCard from '../components/ProjectCard.astro';
+import { site, proof, toolkit } from '../data/site';
+
+const all = (await getCollection('projects', ({ data }) => !data.draft)).sort(
+  (a, b) => a.data.order - b.data.order
+);
+const featured = all.filter((p) => p.data.featured).slice(0, 4);
+const rest = all.filter((p) => !p.data.featured);
+const headlineLines = site.headline.split('\n');
+---
+
+<Base>
+  {/* ── Hero ─────────────────────────────────────────────────────────── */}
+  <section class="wrap pt-20 pb-16 md:pt-32 md:pb-24">
+    <div class="rise max-w-4xl">
+      <div class="flex items-center gap-2.5">
+        <span class="relative flex h-2 w-2">
+          <span
+            class="absolute inline-flex h-full w-full animate-ping rounded-full opacity-60"
+            style="background: var(--accent);"></span>
+          <span class="relative inline-flex h-2 w-2 rounded-full" style="background: var(--accent);"></span>
+        </span>
+        <p class="eyebrow">{site.status}</p>
+      </div>
+
+      <h1
+        class="mt-7 text-[2.5rem] leading-[1.08] tracking-[-0.02em] sm:text-6xl md:text-[4.25rem]"
+        style="font-family: var(--font-serif); color: var(--ink); font-weight: 400;"
+      >
+        {
+          headlineLines.map((line, i) => (
+            <span class="block">
+              {i === headlineLines.length - 1 ? (
+                <em style="font-style: italic; color: var(--accent-ink);">{line}</em>
+              ) : (
+                line
+              )}
+            </span>
+          ))
+        }
+      </h1>
+
+      <p class="mt-8 max-w-2xl text-lg leading-relaxed" style="color: var(--ink-2);">
+        {site.subhead}
+      </p>
+
+      <div class="mt-10 flex flex-wrap items-center gap-3">
+        <a
+          href="#work"
+          class="rounded-full px-6 py-3 text-sm font-medium transition-opacity hover:opacity-85"
+          style="background: var(--accent); color: var(--paper);">See the work</a
+        >
+        <a
+          href={site.resume}
+          class="rounded-full border px-6 py-3 text-sm font-medium transition-colors"
+          style="border-color: var(--rule); color: var(--ink);"
+          data-ghost>Download résumé</a
+        >
+        <a
+          href={`mailto:${site.email}`}
+          class="link-underline px-2 py-3 text-sm font-medium"
+          style="color: var(--ink-2);">{site.email}</a
+        >
+      </div>
+    </div>
+  </section>
+
+  {/* ── Proof strip ──────────────────────────────────────────────────── */}
+  <section class="wrap">
+    <dl
+      class="grid grid-cols-2 gap-px overflow-hidden rounded-xl border lg:grid-cols-4"
+      style="border-color: var(--rule); background: var(--rule);"
+    >
+      {
+        proof.map((p) => (
+          <div class="p-6" style="background: var(--paper-3);">
+            <dd
+              class="text-[1.75rem] leading-none tracking-tight"
+              style="font-family: var(--font-mono); font-weight: 600; color: var(--ink);"
+            >
+              {p.value}
+            </dd>
+            <dt class="mt-3 text-[0.8125rem] leading-snug" style="color: var(--ink-2);">
+              {p.label}
+            </dt>
+            <p class="eyebrow mt-2">{p.note}</p>
+          </div>
+        ))
+      }
+    </dl>
+  </section>
+
+  {/* ── Featured work ────────────────────────────────────────────────── */}
+  <section id="work" class="wrap mt-28 scroll-mt-20 md:mt-36">
+    <SectionHead
+      eyebrow="Selected work"
+      title="Four projects that show the whole arc — question, model, decision, result."
+      lede="Each one started with a business problem someone actually had. Two of them are running in production right now."
+      href="/projects"
+      hrefLabel="All work"
+    />
+
+    <div class="mt-10 grid gap-5 md:grid-cols-2">
+      {featured.map((p) => <ProjectCard project={p} />)}
+    </div>
+  </section>
+
+  {/* ── Secondary work ───────────────────────────────────────────────── */}
+  {
+    rest.length > 0 && (
+      <section class="wrap mt-28 md:mt-36">
+        <SectionHead
+          eyebrow="Also in the portfolio"
+          title="Coursework, competitions and tools I’ve built."
+          lede="Shorter write-ups — same structure, less depth."
+        />
+        <div class="mt-4">
+          {rest.map((p) => (
+            <ProjectCard project={p} variant="compact" />
+          ))}
+        </div>
+      </section>
+    )
+  }
+
+  {/* ── Toolkit ──────────────────────────────────────────────────────── */}
+  <section class="wrap mt-28 md:mt-36">
+    <SectionHead
+      eyebrow="Toolkit"
+      title="What I reach for."
+      lede="Grouped by what it’s for, not by how long the list is."
+    />
+    <div
+      class="mt-10 grid gap-px overflow-hidden rounded-xl border sm:grid-cols-2"
+      style="border-color: var(--rule); background: var(--rule);"
+    >
+      {
+        toolkit.map((t) => (
+          <div class="p-7" style="background: var(--paper-3);">
+            <h3 class="text-[0.9375rem] font-semibold tracking-tight" style="color: var(--ink);">
+              {t.group}
+            </h3>
+            <ul class="mt-4 flex flex-wrap gap-1.5">
+              {t.items.map((i) => (
+                <li class="chip">{i}</li>
+              ))}
+            </ul>
+          </div>
+        ))
+      }
+    </div>
+  </section>
+
+  {/* ── Bio ──────────────────────────────────────────────────────────── */}
+  <section class="wrap mt-28 md:mt-36">
+    <div
+      class="grid gap-10 border-t pt-6 md:grid-cols-[auto_1fr] md:gap-16"
+      style="border-color: var(--rule);"
+    >
+      <p class="eyebrow md:pt-1">The short version</p>
+      <div class="max-w-2xl">
+        <div class="prose-case" style="font-size: 1.125rem;">
+          <p>
+            I came into analytics through operations — three years of support and billing work where I
+            kept hitting the same wall: the data existed, but nobody had built anything that would
+            <em>act</em> on it. So I started building. A fractional-billing system that now runs real money.
+            An HR agent that writes its own documents. A browser agent that fills in forms by itself.
+          </p>
+          <p>
+            Now I’m finishing a Master of Management Analytics at Queen’s, which gave me the formal half —
+            optimization, inference, machine learning — to go with the engineering half. In between I
+            started <strong>Hopefield</strong>, a home-textiles brand, mostly because I wanted a business where
+            I owned every number and couldn’t hide behind someone else’s dashboard.
+          </p>
+          <p>
+            That’s the thread: I like problems where the answer has to survive contact with a real
+            constraint — a budget, a warehouse, a solver, a customer.
+          </p>
+        </div>
+        <a
+          href="/about"
+          class="link-underline mt-6 inline-block text-sm font-medium"
+          style="color: var(--accent-ink);">More about me &rarr;</a
+        >
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  [data-ghost]:hover {
+    background: var(--paper-2);
+    border-color: var(--ink-3);
+  }
+</style>
