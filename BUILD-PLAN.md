@@ -90,7 +90,9 @@ automation they engineered themselves. Lead with that combination.
 - [ ] Charts / visuals for each case study (built from the real data, not stock)
 
 ### Phase 7 — GitHub backing
-- [ ] **Fix the soccer notebook's log back-transform bug** (currently predicts €1.55e29)
+- [x] **Fix the soccer notebook's log back-transform bug** (confirmed fixed in the final
+      notebook — `np.exp()` applied to both sides before ranking; case study keeps the bug
+      story as a deliberate lesson, output now sane: top gap is Lejeune €3M → €127M)
 - [ ] Clean public repo per featured project with a real README
 - [ ] Link each case study to its repo
 

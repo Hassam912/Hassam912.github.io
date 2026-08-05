@@ -206,6 +206,30 @@ body {
 }
 .prose-case .table-scroll { overflow-x: auto; }
 
+.prose-case figure.chart-figure {
+  margin: 2rem 0;
+  padding: 1.5rem 1.5rem 1.25rem;
+  border: 1px solid var(--rule);
+  border-radius: 0.75rem;
+  background: var(--paper-3);
+}
+.prose-case figure.chart-figure figcaption.chart-title {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  font-weight: 500;
+  margin-bottom: 1rem;
+}
+.prose-case figure.chart-figure figcaption.chart-caption {
+  margin-top: 1rem;
+  font-family: var(--font-sans);
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  color: var(--ink-3);
+}
+
 /* Entrance */
 @media (prefers-reduced-motion: no-preference) {
   .rise { animation: rise 0.7s cubic-bezier(0.2, 0.7, 0.3, 1) both; }
