@@ -4,6 +4,7 @@ import Base from '../layouts/Base.astro';
 import SectionHead from '../components/SectionHead.astro';
 import ProjectCard from '../components/ProjectCard.astro';
 import SkillCloud from '../components/SkillCloud.astro';
+import ToolTiles from '../components/ToolTiles.astro';
 import { site, toolkit } from '../data/site';
 
 const all = (await getCollection('projects', ({ data }) => !data.draft)).sort(
@@ -105,25 +106,37 @@ const headlineLines = site.headline.split('\n');
     </div>
   </section>
 
-  {/* ── Credentials ──────────────────────────────────────────────────── */}
-  <section class="wrap pb-14">
-    <div class="border-t pt-6" style="border-color: var(--rule);">
-      <p class="eyebrow">Where the work comes from</p>
-      <div class="mt-4 grid gap-x-10 gap-y-4 sm:grid-cols-3">
-        {
-          [
-            ['Smith School of Business', 'Queen’s University · MMA'],
-            ['Cowlar Design Studio', 'Y Combinator–backed'],
-            ['Hopefield', 'my own brand'],
-          ].map(([name, sub]) => (
-            <div>
-              <p class="text-[0.9375rem] font-semibold leading-snug tracking-tight" style="color: var(--ink);">
-                {name}
-              </p>
-              <p class="eyebrow mt-1.5">{sub}</p>
-            </div>
-          ))
-        }
+  {/* ── Credentials + toolkit ────────────────────────────────────────── */}
+  <section class="wrap pb-16">
+    <div class="grid gap-12 border-t pt-8 lg:grid-cols-[0.85fr_1.15fr] lg:gap-16" style="border-color: var(--rule);">
+      {/* Where the work comes from — stacked, so the tiles get the other half */}
+      <div>
+        <p class="eyebrow">Where the work comes from</p>
+        <ul class="mt-6 flex flex-col gap-5">
+          {
+            [
+              ['Smith School of Business', 'Queen’s University · MMA'],
+              ['Cowlar Design Studio', 'Y Combinator–backed'],
+              ['Modisoft Inc.', '200+ retail accounts · POS data QA'],
+              ['Hopefield', 'my own brand'],
+            ].map(([name, sub]) => (
+              <li class="border-l-2 pl-4" style="border-color: var(--accent-border);">
+                <p class="text-[1rem] font-semibold leading-snug tracking-tight" style="color: var(--ink);">
+                  {name}
+                </p>
+                <p class="eyebrow mt-1.5">{sub}</p>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+
+      {/* The toolkit, as cycling square tiles */}
+      <div>
+        <p class="eyebrow">What I build it with</p>
+        <div class="mt-6">
+          <ToolTiles />
+        </div>
       </div>
     </div>
   </section>

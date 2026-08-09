@@ -1,0 +1,184 @@
+---
+/**
+ * Square tile grid of the tools I work in.
+ *
+ * Brand marks come from simple-icons and are inlined at build time, so there
+ * are no external requests. Several vendors (Microsoft, Salesforce/Tableau,
+ * OpenAI) aren't in that set — they've asked to be excluded — so those tools
+ * render as text tiles instead, which is also the fallback for anything that
+ * is a method rather than a product.
+ *
+ * There is never room for the whole toolkit, so tiles cycle: a few fade out
+ * and others swoop in, same idea as the hero word cloud.
+ */
+import * as si from 'simple-icons';
+
+type Tool = { label: string; slug?: string };
+
+/* Ordered roughly by how much of my day each one accounts for. */
+const TOOLS: Tool[] = [
+  { label: 'Python', slug: 'siPython' },
+  { label: 'pandas', slug: 'siPandas' },
+  { label: 'scikit-learn', slug: 'siScikitlearn' },
+  { label: 'NumPy', slug: 'siNumpy' },
+  { label: 'SciPy', slug: 'siScipy' },
+  { label: 'Plotly', slug: 'siPlotly' },
+  { label: 'Jupyter', slug: 'siJupyter' },
+  { label: 'R', slug: 'siR' },
+  { label: 'Node.js', slug: 'siNodedotjs' },
+  { label: 'Git', slug: 'siGit' },
+  { label: 'GitHub', slug: 'siGithub' },
+  { label: 'Claude API', slug: 'siAnthropic' },
+  { label: 'Apps Script', slug: 'siGoogleappsscript' },
+  { label: 'n8n', slug: 'siN8n' },
+  { label: 'Looker', slug: 'siLooker' },
+  { label: 'GraphQL', slug: 'siGraphql' },
+  // No mark available, or a method rather than a product — text tile.
+  { label: 'Power BI' },
+  { label: 'Tableau' },
+  { label: 'Advanced Excel' },
+  { label: 'SQL' },
+  { label: 'XGBoost' },
+  { label: 'statsmodels' },
+  { label: 'Linear & MIP' },
+  { label: 'PuLP / Solver' },
+  { label: 'A/B testing' },
+  { label: 'Forecasting' },
+  { label: 'Simulation' },
+  { label: 'ANOVA' },
+  { label: 'Agentic workflows' },
+  { label: 'Data storytelling' },
+];
+
+const icons = TOOLS.map((t) => {
+  const icon = t.slug ? (si as Record<string, any>)[t.slug] : null;
+  return { label: t.label, path: icon?.path ?? null };
+});
+
+const VISIBLE = 12;
+const shown = icons.slice(0, VISIBLE);
+const bench = icons.slice(VISIBLE);
+---
+
+<div class="tiles" data-tiles>
+  {
+    shown.map((t) => (
+      <div class="tile" data-tile title={t.label}>
+        {t.path ? (
+          <svg viewBox="0 0 24 24" aria-hidden="true" class="tile-ico">
+            <path d={t.path} />
+          </svg>
+        ) : (
+          <span class="tile-txt">{t.label}</span>
+        )}
+        <span class="sr-only">{t.label}</span>
+      </div>
+    ))
+  }
+</div>
+<script type="application/json" data-tiles-pool set:html={JSON.stringify(bench)} />
+
+<script>
+  type T = { label: string; path: string | null };
+
+  const grid = document.querySelector<HTMLElement>('[data-tiles]');
+  const poolEl = document.querySelector('[data-tiles-pool]');
+
+  if (grid && poolEl && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    const bench: T[] = JSON.parse(poolEl.textContent || '[]');
+
+    const render = (tile: HTMLElement, t: T) => {
+      tile.title = t.label;
+      tile.innerHTML = t.path
+        ? `<svg viewBox="0 0 24 24" aria-hidden="true" class="tile-ico"><path d="${t.path}"></path></svg>
+           <span class="sr-only">${t.label}</span>`
+        : `<span class="tile-txt">${t.label}</span><span class="sr-only">${t.label}</span>`;
+    };
+
+    setInterval(() => {
+      if (!bench.length) return;
+      const tiles = [...grid.querySelectorAll<HTMLElement>('[data-tile]')];
+      const tile = tiles[Math.floor(Math.random() * tiles.length)];
+      const outgoing: T = {
+        label: tile.title,
+        path: tile.querySelector('path')?.getAttribute('d') ?? null,
+      };
+      const incoming = bench.splice(Math.floor(Math.random() * bench.length), 1)[0];
+
+      tile.classList.add('is-out');
+      setTimeout(() => {
+        render(tile, incoming);
+        requestAnimationFrame(() => tile.classList.remove('is-out'));
+        bench.push(outgoing);
+      }, 320);
+    }, 2400);
+  }
+</script>
+
+<style>
+  .tiles {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0.6rem;
+  }
+  .tile {
+    aspect-ratio: 1 / 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.6rem;
+    border: 1px solid var(--rule);
+    border-radius: var(--radius);
+    background: var(--paper-3);
+    text-align: center;
+    overflow: hidden;
+    transition:
+      opacity 0.32s ease,
+      transform 0.32s ease,
+      border-color 0.2s ease;
+  }
+  .tile:hover {
+    border-color: var(--accent-border);
+  }
+  .tile.is-out {
+    opacity: 0;
+    transform: translateY(8px) scale(0.9);
+  }
+  /* :global — tiles swapped in by the script are built with innerHTML and so
+     never receive Astro's scoping attribute. Scoping stays on .tile, which is
+     server-rendered. */
+  .tile :global(.tile-ico) {
+    width: 40%;
+    height: auto;
+    fill: var(--ink-2);
+    transition: fill 0.2s ease;
+  }
+  .tile:hover :global(.tile-ico) {
+    fill: var(--accent);
+  }
+  .tile :global(.tile-txt) {
+    font-size: 0.75rem;
+    font-weight: 600;
+    line-height: 1.25;
+    color: var(--ink-2);
+    overflow-wrap: anywhere;
+  }
+  .tile:hover :global(.tile-txt) {
+    color: var(--accent-ink);
+  }
+
+  @media (max-width: 1023px) {
+    .tiles {
+      grid-template-columns: repeat(6, 1fr);
+    }
+  }
+  @media (max-width: 640px) {
+    .tiles {
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0.45rem;
+    }
+    .tile-txt {
+      font-size: 0.6875rem;
+    }
+  }
+</style>
