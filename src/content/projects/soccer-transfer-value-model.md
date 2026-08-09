@@ -4,7 +4,7 @@ tagline: 'A market-value model over 4,056 player-seasons that separates what a p
 short: 'Finding footballers the market underprices'
 navLabel: 'Transfer values'
 summary: 'Transfer fees are set by narrative as much as by performance. We merged three sources into one 203-feature dataset, tested four hypotheses about how the market actually prices players, then modelled valuation to surface the gap between output and price.'
-category: 'Machine Learning'
+category: 'Predictive Modelling'
 context: 'MMA 860 — Queen’s University'
 role: 'Team lead on data assembly, hypothesis design and modelling'
 timeline: '2026'
@@ -24,7 +24,7 @@ links:
   - label: 'Notebook & model results on GitHub'
     href: 'https://github.com/Hassam912/soccer-transfer-value-model'
 featured: true
-order: 2
+order: 3
 ---
 
 ## The question

@@ -4,7 +4,7 @@ tagline: 'A disciplined preprocessing strategy beat hyperparameter chasing on 79
 short: 'Top 20% on Kaggle by fixing the encoding'
 navLabel: 'House prices'
 summary: 'The Ames housing dataset is 79 features of numeric, ordinal and nominal data with missingness that means three different things. Most of the leaderboard gap comes from treating those distinctions correctly — not from a fancier estimator.'
-category: 'Machine Learning'
+category: 'Predictive Modelling'
 context: 'Kaggle competition — team entry'
 role: 'Preprocessing design, model selection and tuning'
 timeline: '2026'

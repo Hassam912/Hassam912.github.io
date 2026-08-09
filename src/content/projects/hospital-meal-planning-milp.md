@@ -24,7 +24,7 @@ links:
   - label: 'Notebook & data on GitHub'
     href: 'https://github.com/Hassam912/hospital-meal-planning-milp'
 featured: true
-order: 3
+order: 2
 ---
 
 ## The trilemma

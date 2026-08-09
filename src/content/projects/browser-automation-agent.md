@@ -2,7 +2,7 @@
 title: 'A browser agent that learns each site it visits'
 tagline: 'Zero-dependency automation that fills any web form — and gets cheaper to run every time it sees a site again.'
 summary: 'A universal form-filling agent built on the Chrome DevTools Protocol. A deterministic matcher handles what it can, the language model resolves only what it can’t, and a learning loop turns each run into cached knowledge so repeat visits cost almost nothing.'
-category: 'AI & Automation'
+category: 'Agentic AI'
 context: 'Personal engineering project'
 role: 'Sole designer and engineer'
 timeline: '2026'
@@ -16,8 +16,8 @@ glance:
   problem: 'LLM browser agents are slow and expensive because they re-read the entire page — usually as screenshots — on every single step.'
   approach: 'Push the deterministic work into code: a matcher resolves fields against a profile, and only genuinely ambiguous fields reach the model. Every resolution is logged and promoted into reusable knowledge.'
   result: 'A repeatedly-visited site approaches zero model tokens — it replays a compiled sequence of steps instead of reasoning from scratch.'
-featured: false
-order: 10
+featured: true
+order: 7
 ---
 
 ## The economics problem

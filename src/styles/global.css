@@ -244,7 +244,8 @@ body {
 }
 
 /* Anchor targets clear the sticky header and the jump-nav above them. */
-.snap-card {
+.snap-card,
+.group-block {
   scroll-margin-top: 7.5rem;
 }
 
@@ -286,6 +287,20 @@ body {
   border-color: var(--accent-border);
   background: var(--accent-soft);
   color: var(--accent-ink);
+}
+.project-nav-count {
+  display: inline-block;
+  margin-left: 0.45rem;
+  padding: 0 0.4rem;
+  border-radius: 999px;
+  background: var(--accent-soft);
+  color: var(--accent-ink);
+  font-size: 0.6875rem;
+  font-weight: 700;
+}
+.project-nav-link.is-active .project-nav-count {
+  background: rgb(255 255 255 / 0.22);
+  color: #fff;
 }
 .project-nav-link.is-active {
   border-color: transparent;

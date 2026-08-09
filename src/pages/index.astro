@@ -9,8 +9,24 @@ import { site, toolkit } from '../data/site';
 const all = (await getCollection('projects', ({ data }) => !data.draft)).sort(
   (a, b) => a.data.order - b.data.order
 );
-const featured = all.filter((p) => p.data.featured).slice(0, 4);
+const featured = all.filter((p) => p.data.featured);
 const rest = all.filter((p) => !p.data.featured);
+
+/* Group the featured work by category. Order is fixed here rather than taken
+   from the data so the agentic-AI tools always land last. */
+const GROUP_ORDER = ['Optimization', 'Predictive Modelling', 'Analytics & BI', 'Agentic AI'] as const;
+const GROUP_BLURB: Record<string, string> = {
+  Optimization: 'Linear and mixed-integer programs — where the answer has to survive a real constraint.',
+  'Predictive Modelling': 'Models framed around the decision they enable, not the leaderboard.',
+  'Analytics & BI': 'Datasets and reporting that other people make decisions on.',
+  'Agentic AI': 'Tools I built so the analysis actually acts on itself.',
+};
+const groups = GROUP_ORDER.map((name) => ({
+  name,
+  slug: name.toLowerCase().replace(/[^a-z]+/g, '-').replace(/^-|-$/g, ''),
+  blurb: GROUP_BLURB[name],
+  items: featured.filter((p) => p.data.category === name),
+})).filter((g) => g.items.length > 0);
 const headlineLines = site.headline.split('\n');
 ---
 
@@ -116,22 +132,23 @@ const headlineLines = site.headline.split('\n');
   <section id="work" class="wrap mt-28 scroll-mt-20 md:mt-36">
     <SectionHead
       eyebrow="Selected work"
-      title="Four projects that show the whole arc — question, model, decision, result."
-      lede="Each one started with a business problem someone actually had. Two of them are running in production right now."
+      title="The work, grouped by the kind of problem it solves."
+      lede="Every one started with a problem someone actually had — question, model, decision, result. Jump to whichever kind you care about."
       href="/projects"
       hrefLabel="All work"
     />
 
-    {/* Jump-nav: names first, then click straight to the card. Sticks below
-        the site header so it stays reachable through the full-height cards. */}
-    <nav class="project-nav" aria-label="Jump to a project">
+    {/* Jump-nav by category. Sticks below the site header so it stays
+        reachable through the full-height cards. */}
+    <nav class="project-nav" aria-label="Jump to a category of work">
       <span class="eyebrow shrink-0">Jump to</span>
       <ul class="project-nav-list">
         {
-          featured.map((p) => (
+          groups.map((g) => (
             <li>
-              <a href={`#project-${p.id}`} class="project-nav-link" data-jump={`project-${p.id}`}>
-                {p.data.navLabel ?? p.data.category}
+              <a href={`#group-${g.slug}`} class="project-nav-link" data-jump={`group-${g.slug}`}>
+                {g.name}
+                <span class="project-nav-count">{g.items.length}</span>
               </a>
             </li>
           ))
@@ -139,8 +156,27 @@ const headlineLines = site.headline.split('\n');
       </ul>
     </nav>
 
-    <div class="mt-8 flex flex-col gap-6">
-      {featured.map((p, i) => <ProjectCard project={p} index={i} />)}
+    <div class="mt-8 flex flex-col gap-16">
+      {
+        groups.map((g) => (
+          <section id={`group-${g.slug}`} class="group-block flex flex-col gap-6">
+            <div class="flex flex-wrap items-baseline gap-x-4 gap-y-1">
+              <h3
+                class="text-[1.25rem] tracking-tight md:text-[1.375rem]"
+                style="font-family: var(--font-display); color: var(--ink); font-weight: 700;"
+              >
+                {g.name}
+              </h3>
+              <p class="text-[0.875rem]" style="color: var(--ink-3);">
+                {g.blurb}
+              </p>
+            </div>
+            {g.items.map((p, i) => (
+              <ProjectCard project={p} index={i} />
+            ))}
+          </section>
+        ))
+      }
     </div>
 
     <script>
@@ -150,6 +186,8 @@ const headlineLines = site.headline.split('\n');
       const cards = links
         .map((l) => document.getElementById(l.dataset.jump!))
         .filter((el): el is HTMLElement => !!el);
+      /* Groups are tall, so track the one whose top is nearest the header
+         rather than whose centre is nearest the viewport centre. */
 
       /* Drive the jump ourselves. A plain hash jump obeys scroll-margin-top
          while scroll-snap wants the card centred, and the two disagree — which
@@ -159,7 +197,7 @@ const headlineLines = site.headline.split('\n');
           const target = document.getElementById(l.dataset.jump!);
           if (!target) return;
           e.preventDefault();
-          target.scrollIntoView({ block: 'center', behavior: 'smooth' });
+          target.scrollIntoView({ block: 'start', behavior: 'smooth' });
           history.replaceState(null, '', `#${l.dataset.jump}`);
         })
       );
@@ -170,12 +208,11 @@ const headlineLines = site.headline.split('\n');
 
         const io = new IntersectionObserver(
           (entries) => {
-            const mid = innerHeight / 2;
             let best: { id: string; d: number } | null = null;
             for (const c of cards) {
               const r = c.getBoundingClientRect();
-              if (r.bottom < 0 || r.top > innerHeight) continue;
-              const d = Math.abs(r.top + r.height / 2 - mid);
+              if (r.bottom < 120 || r.top > innerHeight) continue;
+              const d = Math.abs(r.top - 140);
               if (!best || d < best.d) best = { id: c.id, d };
             }
             if (best) setActive(best.id);

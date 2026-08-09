@@ -14,11 +14,13 @@ const projects = defineCollection({
     navLabel: z.string().optional(),
     /** Card blurb on the index pages. */
     summary: z.string(),
+    /** Doubles as the grouping for the featured-work jump-nav. Order here is
+        the order the groups appear on the homepage. */
     category: z.enum([
       'Optimization',
-      'Machine Learning',
-      'Business Intelligence',
-      'AI & Automation',
+      'Predictive Modelling',
+      'Analytics & BI',
+      'Agentic AI',
     ]),
     /** Where the work happened — my business, a course, an employer. */
     context: z.string(),

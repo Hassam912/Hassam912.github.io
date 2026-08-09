@@ -2,7 +2,7 @@
 title: 'An HR agent that writes its own paperwork'
 tagline: 'Text-prompt automation for letters, onboarding checklists and worklogs — built on Sheets, Apps Script and an LLM.'
 summary: 'Before “AI agent” was a product category, I built one for HR operations: generate employment and experience letters, produce onboarding checklists, maintain worklogs that feed billing, and read and write the company database — all from plain-language prompts.'
-category: 'AI & Automation'
+category: 'Agentic AI'
 context: 'Cowlar Design Studio'
 role: 'Designer and builder'
 timeline: '2024 – 2025'
@@ -12,8 +12,8 @@ glance:
   problem: 'HR document work is high-volume, highly templated and low-judgement — exactly the shape of task that consumes disproportionate human time.'
   approach: 'A prompt-driven agent over Sheets-as-database with Apps Script for document generation, storage and retrieval, plus Slack integrations for compliance workflows.'
   result: 'Letters, checklists and worklogs generated on request; worklog output fed directly into the billing pipeline.'
-featured: false
-order: 12
+featured: true
+order: 8
 ---
 
 ## Why Sheets instead of a CRM

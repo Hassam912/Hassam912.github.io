@@ -40,6 +40,16 @@ const kits = [
 
 /* ── Kaggle: leaderboard finish ────────────────────────────────────────────── */
 const finishPct = 20;
+
+/* ── RiskIQ: ROC-AUC across the four benchmarked models ────────────────────── */
+const models = [
+  { n: 'Logistic Regression', v: 0.8865, win: true },
+  { n: 'Gradient Boosting', v: 0.8814, win: false },
+  { n: 'Random Forest', v: 0.8762, win: false },
+  { n: 'Decision Tree', v: 0.8729, win: false },
+];
+const aMin = 0.85;
+const aMax = 0.895;
 ---
 
 {
@@ -153,6 +163,45 @@ const finishPct = 20;
   )
 }
 
+{
+  id === 'car-insurance-claim-predictor' && (
+    <svg viewBox={`0 0 ${W} ${H}`} class="thumb" role="img" aria-label="ROC-AUC for four benchmarked models; logistic regression scores highest">
+      {models.map((m, i) => {
+        const rh = (H - 6) / models.length;
+        const cy = 3 + i * rh + rh / 2;
+        const x0 = 150;
+        const bw = (v: number) => ((v - aMin) / (aMax - aMin)) * (W - x0 - 58);
+        return (
+          <>
+            <text x={x0 - 10} y={cy + 3.5} text-anchor="end" font-size="9.5" fill="var(--ink-3)" style="font-family: var(--font-mono);">
+              {m.n}
+            </text>
+            <rect
+              x={x0}
+              y={cy - 7}
+              width={bw(m.v)}
+              height="14"
+              rx="3"
+              fill={m.win ? 'var(--accent)' : 'color-mix(in oklab, var(--ink-3) 42%, var(--paper-2))'}
+            >
+              <title>{`${m.n}: ${m.v} ROC-AUC`}</title>
+            </rect>
+            <text
+              x={x0 + bw(m.v) + 7}
+              y={cy + 3.5}
+              font-size="9.5"
+              fill={m.win ? 'var(--accent-ink)' : 'var(--ink-3)'}
+              style={`font-family: var(--font-mono); font-weight: ${m.win ? 600 : 400};`}
+            >
+              {m.v.toFixed(4)}
+            </text>
+          </>
+        );
+      })}
+    </svg>
+  )
+}
+
 {/* One line so the chart informs rather than decorates. */}
 <p class="thumb-cap">
   {id === 'hospital-meal-planning-milp' && (
@@ -173,6 +222,12 @@ const finishPct = 20;
     </>
   )}
   {id === 'kaggle-house-prices' && <>Final leaderboard position out of all entries</>}
+  {id === 'car-insurance-claim-predictor' && (
+    <>
+      ROC-AUC on the held-out test set — <span class="sw sw-3" /> logistic regression beat every
+      tree ensemble
+    </>
+  )}
 </p>
 
 <style>

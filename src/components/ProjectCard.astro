@@ -20,6 +20,7 @@ const withThumb = new Set([
   'soccer-transfer-value-model',
   'hopefield-inventory-optimization',
   'kaggle-house-prices',
+  'car-insurance-claim-predictor',
 ]);
 const hasThumb = withThumb.has(project.id);
 ---
@@ -28,7 +29,7 @@ const hasThumb = withThumb.has(project.id);
   variant === 'feature' ? (
     <a
       href={href}
-      class="snap-card group relative grid items-stretch gap-8 overflow-hidden border p-7 transition-all md:p-11 lg:grid-cols-[1.05fr_0.95fr] lg:gap-14"
+      class:list={["snap-card group relative grid items-stretch gap-8 overflow-hidden border p-7 transition-all md:p-11 lg:gap-14", hasThumb ? "lg:grid-cols-[1.05fr_0.95fr]" : "lg:grid-cols-1"]}
       style="border-color: var(--rule); background: var(--paper-3); box-shadow: var(--shadow); border-radius: var(--radius-lg);"
       id={`project-${project.id}`}
       data-card
