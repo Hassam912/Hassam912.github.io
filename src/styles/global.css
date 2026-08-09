@@ -243,6 +243,24 @@ body {
   color: var(--ink-3);
 }
 
+/* ── Featured-project scroll snapping ─────────────────────────────────────
+   One card fills the viewport at a time and scrolling settles on the next.
+   `proximity` rather than `mandatory`: mandatory on the document traps the
+   scroll between the hero and the first card, and makes it hard to stop
+   anywhere in between. Only .snap-card carries a snap point, so nothing
+   else on the page is affected.
+   ------------------------------------------------------------------------ */
+@media (min-width: 1024px) and (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-snap-type: y proximity;
+  }
+  .snap-card {
+    scroll-snap-align: center;
+    scroll-snap-stop: always;
+    min-height: 84vh;
+  }
+}
+
 /* Entrance */
 @media (prefers-reduced-motion: no-preference) {
   .rise { animation: rise 0.7s cubic-bezier(0.2, 0.7, 0.3, 1) both; }
