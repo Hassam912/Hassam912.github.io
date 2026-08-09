@@ -1,71 +1,83 @@
 @import 'tailwindcss';
 
-@import '@fontsource-variable/inter';
-@import '@fontsource-variable/source-serif-4';
+@import '@fontsource-variable/figtree';
+@import '@fontsource-variable/lexend';
 @import '@fontsource-variable/jetbrains-mono';
 
 /* ── Design tokens ─────────────────────────────────────────────────────────
-   Monochrome ink on warm paper, one high-signal accent.
-   Serif for prose (this person writes), sans for UI, mono for numbers.
+   Warm, rounded, product-led: cool off-white page, white cards, orange accent.
+   Lexend for display, Figtree for text/UI, mono kept for figures.
    ------------------------------------------------------------------------ */
 @theme {
-  --font-sans: 'Inter Variable', ui-sans-serif, system-ui, sans-serif;
-  --font-serif: 'Source Serif 4 Variable', ui-serif, Georgia, serif;
+  --font-sans: 'Figtree Variable', ui-sans-serif, system-ui, sans-serif;
+  --font-display: 'Lexend Variable', 'Figtree Variable', ui-sans-serif, sans-serif;
+  --font-serif: 'Lexend Variable', 'Figtree Variable', ui-sans-serif, sans-serif;
   --font-mono: 'JetBrains Mono Variable', ui-monospace, monospace;
 
-  --color-paper: #fbfaf8;
-  --color-paper-2: #f4f2ee;
-  --color-ink: #16161a;
-  --color-ink-2: #3d3d46;
-  --color-ink-3: #6b6b78;
-  --color-rule: #e2ded6;
-  --color-accent: #0e7c66;
-  --color-accent-soft: #e6f2ee;
+  --color-paper: #f6f9fd;
+  --color-paper-2: #eef3fa;
+  --color-ink: #0f172a;
+  --color-ink-2: #4b5563;
+  --color-ink-3: #6b7280;
+  --color-rule: #e5e7eb;
+  --color-accent: #f97316;
+  --color-accent-soft: #fff7ed;
 }
 
 :root {
-  --paper: #fbfaf8;
-  --paper-2: #f4f2ee;
+  --paper: #f6f9fd;
+  --paper-2: #eef3fa;
   --paper-3: #ffffff;
-  --ink: #16161a;
-  --ink-2: #3d3d46;
-  --ink-3: #6b6b78;
-  --rule: #e4e0d8;
-  --accent: #0b6b58;
-  --accent-ink: #0b6b58;
-  --accent-soft: #e7f2ef;
-  --shadow: 0 1px 2px rgb(20 20 26 / 0.04), 0 8px 24px -12px rgb(20 20 26 / 0.12);
+  --ink: #0f172a;
+  --ink-2: #4b5563;
+  --ink-3: #6b7280;
+  --rule: #e5e7eb;
+  --accent: #f97316;
+  --accent-ink: #c2410c;
+  --accent-soft: #fff7ed;
+  --accent-border: #fed7aa;
+  --radius: 1rem;
+  --radius-lg: 1.5rem;
+  --shadow: 0 1px 2px rgb(15 23 42 / 0.04), 0 12px 28px -14px rgb(15 23 42 / 0.14);
+  --shadow-lift: 0 2px 4px rgb(15 23 42 / 0.05), 0 20px 40px -18px rgb(249 115 22 / 0.28);
 }
 
 :root[data-theme='dark'],
 html.dark {
-  --paper: #0d0e11;
-  --paper-2: #14161a;
-  --paper-3: #191c21;
-  --ink: #f2f1ee;
-  --ink-2: #b9b8b3;
-  --ink-3: #86858020;
-  --ink-3: #8a8a93;
-  --rule: #262a31;
-  --accent: #3ddbb0;
-  --accent-ink: #3ddbb0;
-  --accent-soft: #10231f;
-  --shadow: 0 1px 2px rgb(0 0 0 / 0.4), 0 8px 24px -12px rgb(0 0 0 / 0.6);
+  --paper: #0b1120;
+  --paper-2: #111a2e;
+  --paper-3: #16203a;
+  --ink: #f1f5f9;
+  --ink-2: #cbd5e1;
+  --ink-3: #94a3b8;
+  --rule: #24314d;
+  --accent: #fb923c;
+  --accent-ink: #fdba74;
+  --accent-soft: #2a1a10;
+  --accent-border: #7c2d12;
+  --radius: 1rem;
+  --radius-lg: 1.5rem;
+  --shadow: 0 1px 2px rgb(0 0 0 / 0.5), 0 14px 32px -16px rgb(0 0 0 / 0.75);
+  --shadow-lift: 0 2px 4px rgb(0 0 0 / 0.5), 0 22px 44px -20px rgb(251 146 60 / 0.35);
 }
 
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme='light']) {
-    --paper: #0d0e11;
-    --paper-2: #14161a;
-    --paper-3: #191c21;
-    --ink: #f2f1ee;
-    --ink-2: #b9b8b3;
-    --ink-3: #8a8a93;
-    --rule: #262a31;
-    --accent: #3ddbb0;
-    --accent-ink: #3ddbb0;
-    --accent-soft: #10231f;
-    --shadow: 0 1px 2px rgb(0 0 0 / 0.4), 0 8px 24px -12px rgb(0 0 0 / 0.6);
+  --paper: #0b1120;
+  --paper-2: #111a2e;
+  --paper-3: #16203a;
+  --ink: #f1f5f9;
+  --ink-2: #cbd5e1;
+  --ink-3: #94a3b8;
+  --rule: #24314d;
+  --accent: #fb923c;
+  --accent-ink: #fdba74;
+  --accent-soft: #2a1a10;
+  --accent-border: #7c2d12;
+  --radius: 1rem;
+  --radius-lg: 1.5rem;
+  --shadow: 0 1px 2px rgb(0 0 0 / 0.5), 0 14px 32px -16px rgb(0 0 0 / 0.75);
+  --shadow-lift: 0 2px 4px rgb(0 0 0 / 0.5), 0 22px 44px -20px rgb(251 146 60 / 0.35);
   }
 }
 
@@ -98,12 +110,12 @@ body {
 }
 
 .eyebrow {
-  font-family: var(--font-mono);
-  font-size: 0.6875rem;
-  letter-spacing: 0.14em;
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
   color: var(--ink-3);
-  font-weight: 500;
+  font-weight: 600;
 }
 
 .rule { border-color: var(--rule); }
@@ -111,13 +123,15 @@ body {
 .chip {
   display: inline-flex;
   align-items: center;
-  font-family: var(--font-mono);
-  font-size: 0.6875rem;
-  letter-spacing: 0.02em;
-  padding: 0.2rem 0.5rem;
-  border: 1px solid var(--rule);
+  font-family: var(--font-sans);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  letter-spacing: 0;
+  padding: 0.3rem 0.75rem;
+  border: 1px solid var(--accent-border);
   border-radius: 999px;
-  color: var(--ink-2);
+  background: var(--accent-soft);
+  color: var(--accent-ink);
   white-space: nowrap;
 }
 
@@ -132,27 +146,26 @@ body {
 
 /* Long-form case-study prose */
 .prose-case {
-  font-family: var(--font-serif);
+  font-family: var(--font-sans);
   font-size: 1.0625rem;
-  line-height: 1.75;
+  line-height: 1.8;
   color: var(--ink-2);
 }
 .prose-case > * + * { margin-top: 1.15em; }
 .prose-case h2 {
-  font-family: var(--font-sans);
-  font-size: 0.75rem;
-  font-weight: 600;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--ink);
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: 700;
+  letter-spacing: -0.015em;
+  color: var(--accent-ink);
   margin-top: 3rem;
-  padding-top: 1.25rem;
+  padding-top: 1.75rem;
   border-top: 1px solid var(--rule);
 }
 .prose-case h3 {
-  font-family: var(--font-sans);
-  font-size: 1.0625rem;
-  font-weight: 600;
+  font-family: var(--font-display);
+  font-size: 1.125rem;
+  font-weight: 700;
   color: var(--ink);
   margin-top: 2rem;
 }
@@ -210,7 +223,7 @@ body {
   margin: 2rem 0;
   padding: 1.5rem 1.5rem 1.25rem;
   border: 1px solid var(--rule);
-  border-radius: 0.75rem;
+  border-radius: var(--radius);
   background: var(--paper-3);
 }
 .prose-case figure.chart-figure figcaption.chart-title {

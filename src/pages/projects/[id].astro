@@ -43,7 +43,7 @@ const facts = [
       <p class="eyebrow mt-8" style="color: var(--accent-ink);">{d.category}</p>
       <h1
         class="mt-4 max-w-3xl text-[2.125rem] leading-[1.12] tracking-[-0.02em] md:text-5xl"
-        style="font-family: var(--font-serif); color: var(--ink); font-weight: 400;"
+        style="font-family: var(--font-display); color: var(--ink); font-weight: 400;"
       >
         {d.title}
       </h1>
@@ -74,7 +74,7 @@ const facts = [
       d.metrics.length > 0 && (
         <section class="wrap">
           <dl
-            class="grid gap-px overflow-hidden rounded-xl border sm:grid-cols-3"
+            class="grid gap-px overflow-hidden rounded-2xl border sm:grid-cols-3"
             style="border-color: var(--rule); background: var(--rule);"
           >
             {d.metrics.map((m) => (
@@ -97,7 +97,7 @@ const facts = [
 
     {/* ── At a glance ──────────────────────────────────────────────── */}
     <section class="wrap mt-14">
-      <div class="grid gap-8 rounded-xl border p-7 md:grid-cols-3 md:p-9" style="border-color: var(--rule); background: var(--paper-2);">
+      <div class="grid gap-8 rounded-2xl border p-7 md:grid-cols-3 md:p-9" style="border-color: var(--rule); background: var(--paper-2);">
         {
           (
             [
@@ -147,7 +147,7 @@ const facts = [
 
     {/* ── Prev / next ──────────────────────────────────────────────── */}
     <nav class="wrap mt-24">
-      <div class="grid gap-px overflow-hidden rounded-xl border sm:grid-cols-2" style="border-color: var(--rule); background: var(--rule);">
+      <div class="grid gap-px overflow-hidden rounded-2xl border sm:grid-cols-2" style="border-color: var(--rule); background: var(--rule);">
         {
           [
             { entry: prev, dir: 'Previous' },
@@ -161,7 +161,7 @@ const facts = [
                 data-pn
               >
                 <p class="eyebrow">{dir}</p>
-                <p class="mt-2.5 text-lg leading-snug tracking-tight" style="font-family: var(--font-serif); color: var(--ink);">
+                <p class="mt-2.5 text-lg leading-snug tracking-tight" style="font-family: var(--font-display); color: var(--ink);">
                   {entry.data.title}
                 </p>
               </a>

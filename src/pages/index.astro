@@ -28,14 +28,14 @@ const headlineLines = site.headline.split('\n');
       </div>
 
       <h1
-        class="mt-7 text-[2.5rem] leading-[1.08] tracking-[-0.02em] sm:text-6xl md:text-[4.25rem]"
-        style="font-family: var(--font-serif); color: var(--ink); font-weight: 400;"
+        class="mt-7 text-[2.5rem] leading-[1.05] tracking-[-0.03em] sm:text-6xl md:text-[4.25rem]"
+        style="font-family: var(--font-display); color: var(--ink); font-weight: 800;"
       >
         {
           headlineLines.map((line, i) => (
             <span class="block">
               {i === headlineLines.length - 1 ? (
-                <em style="font-style: italic; color: var(--accent-ink);">{line}</em>
+                <span style="color: var(--accent);">{line}</span>
               ) : (
                 line
               )}
@@ -51,13 +51,14 @@ const headlineLines = site.headline.split('\n');
       <div class="mt-10 flex flex-wrap items-center gap-3">
         <a
           href="#work"
-          class="rounded-full px-6 py-3 text-sm font-medium transition-opacity hover:opacity-85"
-          style="background: var(--accent); color: var(--paper);">See the work</a
+          class="rounded-full px-7 py-3.5 text-[0.9375rem] font-semibold text-white transition-all"
+          style="background: linear-gradient(135deg, #fb923c, #ea580c); box-shadow: var(--shadow-lift);"
+          data-cta>See the work</a
         >
         <a
           href={site.resume}
-          class="rounded-full border px-6 py-3 text-sm font-medium transition-colors"
-          style="border-color: var(--rule); color: var(--ink);"
+          class="rounded-full border px-7 py-3.5 text-[0.9375rem] font-semibold transition-colors"
+          style="border-color: var(--accent-border); background: var(--paper-3); color: var(--accent-ink);"
           data-ghost>Download résumé</a
         >
         <a
@@ -95,7 +96,7 @@ const headlineLines = site.headline.split('\n');
   {/* ── Proof strip ──────────────────────────────────────────────────── */}
   <section class="wrap">
     <dl
-      class="grid grid-cols-2 gap-px overflow-hidden rounded-xl border lg:grid-cols-4"
+      class="grid grid-cols-2 gap-px overflow-hidden rounded-2xl border lg:grid-cols-4"
       style="border-color: var(--rule); background: var(--rule);"
     >
       {
@@ -158,7 +159,7 @@ const headlineLines = site.headline.split('\n');
       lede="Grouped by what it’s for, not by how long the list is."
     />
     <div
-      class="mt-10 grid gap-px overflow-hidden rounded-xl border sm:grid-cols-2"
+      class="mt-10 grid gap-px overflow-hidden rounded-2xl border sm:grid-cols-2"
       style="border-color: var(--rule); background: var(--rule);"
     >
       {
@@ -216,7 +217,11 @@ const headlineLines = site.headline.split('\n');
 
 <style>
   [data-ghost]:hover {
-    background: var(--paper-2);
-    border-color: var(--ink-3);
+    background: var(--accent-soft);
+    border-color: var(--accent);
+  }
+  [data-cta]:hover {
+    transform: translateY(-2px);
+    filter: saturate(1.08);
   }
 </style>
