@@ -1,6 +1,7 @@
 ---
 title: 'Finding undervalued footballers in Europe’s Big Five'
 tagline: 'A market-value model over 4,056 player-seasons that separates what a player does from what the market pays for it.'
+short: 'Finding footballers the market underprices'
 summary: 'Transfer fees are set by narrative as much as by performance. We merged three sources into one 203-feature dataset, tested four hypotheses about how the market actually prices players, then modelled valuation to surface the gap between output and price.'
 category: 'Machine Learning'
 context: 'MMA 860 — Queen’s University'

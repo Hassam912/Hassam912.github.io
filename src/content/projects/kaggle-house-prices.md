@@ -1,6 +1,7 @@
 ---
 title: 'Top 20% on Kaggle’s House Prices — by fixing the encoding, not the model'
 tagline: 'A disciplined preprocessing strategy beat hyperparameter chasing on 79 mixed-type features.'
+short: 'Top 20% on Kaggle by fixing the encoding'
 summary: 'The Ames housing dataset is 79 features of numeric, ordinal and nominal data with missingness that means three different things. Most of the leaderboard gap comes from treating those distinctions correctly — not from a fancier estimator.'
 category: 'Machine Learning'
 context: 'Kaggle competition — team entry'

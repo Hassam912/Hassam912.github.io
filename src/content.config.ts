@@ -8,6 +8,8 @@ const projects = defineCollection({
     title: z.string(),
     /** One line a recruiter can read in three seconds. Lead with the outcome. */
     tagline: z.string(),
+    /** Short label for the hero pill — a few words, no punctuation. */
+    short: z.string().optional(),
     /** Card blurb on the index pages. */
     summary: z.string(),
     category: z.enum([

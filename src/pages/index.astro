@@ -15,60 +15,126 @@ const headlineLines = site.headline.split('\n');
 
 <Base>
   {/* ── Hero ─────────────────────────────────────────────────────────── */}
-  <section class="wrap pt-20 pb-16 md:pt-32 md:pb-24">
-    <div class="rise max-w-4xl">
-      <div class="flex items-center gap-2.5">
-        <span class="relative flex h-2 w-2">
-          <span
-            class="absolute inline-flex h-full w-full animate-ping rounded-full opacity-60"
-            style="background: var(--accent);"></span>
-          <span class="relative inline-flex h-2 w-2 rounded-full" style="background: var(--accent);"></span>
-        </span>
-        <p class="eyebrow">{site.status}</p>
-      </div>
+  <section class="wrap pt-14 pb-12 md:pt-20 md:pb-16">
+    <div class="rise grid items-center gap-14 lg:grid-cols-[1.05fr_0.95fr] lg:gap-16">
+      {/* Left — the pitch */}
+      <div>
+        <div class="flex items-center gap-2.5">
+          <span class="relative flex h-2 w-2">
+            <span
+              class="absolute inline-flex h-full w-full animate-ping rounded-full opacity-60"
+              style="background: var(--accent);"></span>
+            <span class="relative inline-flex h-2 w-2 rounded-full" style="background: var(--accent);"
+            ></span>
+          </span>
+          <p class="eyebrow">{site.status}</p>
+        </div>
 
-      <h1
-        class="mt-7 text-[2.5rem] leading-[1.05] tracking-[-0.03em] sm:text-6xl md:text-[4.25rem]"
-        style="font-family: var(--font-display); color: var(--ink); font-weight: 800;"
-      >
-        {
-          headlineLines.map((line, i) => (
-            <span class="block">
-              {i === headlineLines.length - 1 ? (
-                <span style="color: var(--accent);">{line}</span>
-              ) : (
-                line
-              )}
-            </span>
-          ))
-        }
-      </h1>
-
-      <p class="mt-8 max-w-2xl text-lg leading-relaxed" style="color: var(--ink-2);">
-        {site.subhead}
-      </p>
-
-      <div class="mt-10 flex flex-wrap items-center gap-3">
-        <a
-          href="#work"
-          class="rounded-full px-7 py-3.5 text-[0.9375rem] font-semibold text-white transition-all"
-          style="background: linear-gradient(135deg, #fb923c, #ea580c); box-shadow: var(--shadow-lift);"
-          data-cta>See the work</a
+        <h1
+          class="mt-6 text-[2.25rem] leading-[1.06] tracking-[-0.03em] sm:text-5xl md:text-[3.25rem]"
+          style="font-family: var(--font-display); color: var(--ink); font-weight: 800;"
         >
-        <a
-          href={site.resume}
-          class="rounded-full border px-7 py-3.5 text-[0.9375rem] font-semibold transition-colors"
-          style="border-color: var(--accent-border); background: var(--paper-3); color: var(--accent-ink);"
-          data-ghost>Download résumé</a
-        >
+          {
+            headlineLines.map((line, i) => (
+              <span class="block">
+                {i === headlineLines.length - 1 ? (
+                  <span style="color: var(--accent);">{line}</span>
+                ) : (
+                  line
+                )}
+              </span>
+            ))
+          }
+        </h1>
+
+        <p class="mt-6 max-w-xl text-[1.0625rem] leading-relaxed" style="color: var(--ink-2);">
+          {site.subhead}
+        </p>
+
+        <div class="mt-8 flex flex-wrap items-center gap-3">
+          <a
+            href="#work"
+            class="rounded-full px-7 py-3.5 text-[0.9375rem] font-semibold text-white transition-all"
+            style="background: linear-gradient(135deg, #fb923c, #ea580c); box-shadow: var(--shadow-lift);"
+            data-cta>See the work</a
+          >
+          <a
+            href={site.resume}
+            class="rounded-full border px-7 py-3.5 text-[0.9375rem] font-semibold transition-colors"
+            style="border-color: var(--accent-border); background: var(--paper-3); color: var(--accent-ink);"
+            data-ghost>Download résumé</a
+          >
+        </div>
         <a
           href={`mailto:${site.email}`}
-          class="link-underline px-2 py-3 text-sm font-medium"
+          class="link-underline mt-5 inline-block text-sm font-medium"
           style="color: var(--ink-2);">{site.email}</a
         >
       </div>
+
+      {/* Right — the work itself, in place of a decorative visual */}
+      <div>
+        <h2
+          class="text-center text-[1.75rem] leading-tight tracking-tight md:text-[2rem]"
+          style="font-family: var(--font-display); color: var(--ink); font-weight: 700;"
+        >
+          Want to see what I've built?
+        </h2>
+
+        <ul class="mt-7 flex flex-col gap-3.5">
+          {
+            featured.map((p, i) => (
+              <li class={['mr-auto w-full', 'ml-auto w-[94%]', 'mr-auto w-[97%]', 'ml-auto w-[92%]'][i % 4]}>
+                <a
+                  href={`/projects/${p.id}`}
+                  class="group flex items-center gap-3 rounded-2xl px-5 py-4 text-[0.9375rem] font-semibold text-white transition-all"
+                  style={`background: linear-gradient(135deg, ${['#fb923c,#f97316', '#f97316,#ea580c', '#fb923c,#ea580c', '#f59e0b,#f97316'][i % 4]}); box-shadow: var(--shadow);`}
+                  data-pill
+                >
+                  <span class="flex-1 leading-snug">{p.data.short ?? p.data.title}</span>
+                  <svg
+                    class="shrink-0 transition-transform group-hover:translate-x-1"
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2.4"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    aria-hidden="true"
+                  >
+                    <path d="M5 12h13M13 6l6 6-6 6" />
+                  </svg>
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+
+        <p class="mt-5 text-center text-[0.8125rem]" style="color: var(--ink-3);">
+          Four case studies — question, model, decision, result.
+        </p>
+      </div>
     </div>
   </section>
+
+  {/* ── Skills marquee ───────────────────────────────────────────────── */}
+  <div class="marquee border-y py-4" style="border-color: var(--rule); background: var(--paper-3);">
+    <ul class="marquee-track" aria-label="Tools and methods I work with">
+      {
+        [0, 1].map((pass) =>
+          toolkit
+            .flatMap((g) => g.items)
+            .map((item) => (
+              <li class="chip shrink-0" aria-hidden={pass === 1 ? 'true' : undefined}>
+                {item}
+              </li>
+            ))
+        )
+      }
+    </ul>
+  </div>
 
   {/* ── Credentials ──────────────────────────────────────────────────── */}
   <section class="wrap pb-14">
@@ -223,5 +289,32 @@ const headlineLines = site.headline.split('\n');
   [data-cta]:hover {
     transform: translateY(-2px);
     filter: saturate(1.08);
+  }
+  [data-pill]:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lift) !important;
+  }
+
+  /* Scrolling toolkit strip. Pauses on hover; static if reduced motion. */
+  .marquee {
+    overflow: hidden;
+    -webkit-mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
+    mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
+  }
+  .marquee-track {
+    display: flex;
+    gap: 0.6rem;
+    width: max-content;
+    animation: marquee 46s linear infinite;
+  }
+  .marquee:hover .marquee-track {
+    animation-play-state: paused;
+  }
+  @keyframes marquee {
+    from { transform: translateX(0); }
+    to   { transform: translateX(-50%); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .marquee-track { animation: none; flex-wrap: wrap; width: 100%; justify-content: center; }
   }
 </style>
