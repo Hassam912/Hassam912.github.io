@@ -13,11 +13,11 @@
  */
 import * as si from 'simple-icons';
 
-type Tool = { label: string; slug?: string };
+type Tool = { label: string; slug?: string; pinned?: boolean };
 
 /* Ordered roughly by how much of my day each one accounts for. */
 const TOOLS: Tool[] = [
-  { label: 'Python', slug: 'siPython' },
+  { label: 'Python', slug: 'siPython', pinned: true },
   { label: 'pandas', slug: 'siPandas' },
   { label: 'scikit-learn', slug: 'siScikitlearn' },
   { label: 'NumPy', slug: 'siNumpy' },
@@ -34,9 +34,9 @@ const TOOLS: Tool[] = [
   { label: 'Looker', slug: 'siLooker' },
   { label: 'GraphQL', slug: 'siGraphql' },
   // No mark available, or a method rather than a product — text tile.
-  { label: 'Power BI' },
+  { label: 'Power BI', pinned: true },
   { label: 'Tableau' },
-  { label: 'Advanced Excel' },
+  { label: 'Advanced Excel', pinned: true },
   { label: 'SQL' },
   { label: 'XGBoost' },
   { label: 'statsmodels' },
@@ -50,26 +50,89 @@ const TOOLS: Tool[] = [
   { label: 'Data storytelling' },
 ];
 
+
+/* Original glyphs, drawn here in the site's own style, for tools with no
+   licensable mark and for the methods that aren't products at all.
+   Deliberately not imitations of any vendor's logo — Microsoft and Salesforce
+   asked simple-icons to drop their brands, so Excel/Power BI/Tableau get a
+   generic representation of what the tool does instead. */
+const GLYPHS: Record<string, string> = {
+  // spreadsheet grid
+  'Advanced Excel':
+    '<rect x="2" y="4" width="20" height="16" rx="2.5" opacity=".18"/><rect x="2" y="4" width="20" height="4" rx="2"/><rect x="9" y="10" width="1.6" height="9"/><rect x="15" y="10" width="1.6" height="9"/><rect x="3.5" y="12.4" width="17" height="1.5"/><rect x="3.5" y="16.2" width="17" height="1.5"/>',
+  // dashboard bars
+  'Power BI':
+    '<rect x="3" y="13" width="4.4" height="8" rx="1.4"/><rect x="9.8" y="8" width="4.4" height="13" rx="1.4"/><rect x="16.6" y="3" width="4.4" height="18" rx="1.4"/>',
+  // crossed measures
+  Tableau:
+    '<rect x="11" y="2" width="2" height="20" rx="1"/><rect x="2" y="11" width="20" height="2" rx="1"/><rect x="6.2" y="6" width="1.6" height="12" rx=".8" opacity=".45"/><rect x="16.2" y="6" width="1.6" height="12" rx=".8" opacity=".45"/>',
+  // database
+  SQL:
+    '<ellipse cx="12" cy="5.5" rx="8" ry="3.2"/><path d="M4 9.5c0 1.8 3.6 3.2 8 3.2s8-1.4 8-3.2v4c0 1.8-3.6 3.2-8 3.2s-8-1.4-8-3.2z" opacity=".55"/><path d="M4 15.5c0 1.8 3.6 3.2 8 3.2s8-1.4 8-3.2v3c0 1.8-3.6 3.2-8 3.2s-8-1.4-8-3.2z" opacity=".3"/>',
+  // scattered draws
+  Simulation:
+    '<circle cx="6" cy="7" r="1.9"/><circle cx="12.5" cy="4.6" r="1.5" opacity=".6"/><circle cx="18" cy="8" r="1.9" opacity=".8"/><circle cx="8.5" cy="13" r="1.5" opacity=".6"/><circle cx="15" cy="14.5" r="1.9"/><circle cx="5.5" cy="18.5" r="1.5" opacity=".45"/><circle cx="19" cy="18" r="1.5" opacity=".45"/>',
+  // trend with projection
+  Forecasting:
+    '<path d="M2.6 16.4l4.6-4.6 3.4 3.4 5-5 1.7 1.7-6.7 6.7-3.4-3.4-3.2 3.2z"/><path d="M17 6h5v5l-1.8-1.8-3.1 3.1-1.7-1.7 3.1-3.1z" opacity=".55"/>',
+  // split test
+  'A/B testing':
+    '<rect x="2.5" y="4" width="8.5" height="16" rx="2.2"/><rect x="13" y="4" width="8.5" height="16" rx="2.2" opacity=".3"/><rect x="13" y="4" width="8.5" height="16" rx="2.2" fill="none" stroke="currentColor" stroke-width="1.6"/>',
+  // feasible region + optimum
+  'Linear & MIP':
+    '<path d="M3 20V7l7-4 9 6v11z" opacity=".22"/><path d="M3 20V7l7-4 9 6v11" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><circle cx="19" cy="9" r="2.6"/>',
+  'PuLP / Solver':
+    '<path d="M3 20V7l7-4 9 6v11z" opacity=".22"/><path d="M3 20V7l7-4 9 6v11" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><circle cx="19" cy="9" r="2.6"/>',
+  // boosted trees
+  XGBoost:
+    '<circle cx="12" cy="4" r="2.4"/><circle cx="6" cy="13" r="2.4" opacity=".7"/><circle cx="18" cy="13" r="2.4" opacity=".7"/><circle cx="6" cy="20.5" r="2" opacity=".45"/><circle cx="18" cy="20.5" r="2" opacity=".45"/><path d="M11 6.2L7 10.8M13 6.2l4 4.6M6 15.4v3M18 15.4v3" stroke="currentColor" stroke-width="1.5" fill="none"/>',
+  // distribution
+  statsmodels:
+    '<path d="M2 19c4 0 4.5-13 10-13s6 13 10 13z" opacity=".25"/><path d="M2 19c4 0 4.5-13 10-13s6 13 10 13" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><rect x="11.1" y="7" width="1.8" height="12" rx=".9"/>',
+  // box plot
+  ANOVA:
+    '<rect x="6" y="7" width="12" height="10" rx="2" opacity=".25"/><rect x="6" y="7" width="12" height="10" rx="2" fill="none" stroke="currentColor" stroke-width="1.7"/><rect x="5" y="11.2" width="14" height="1.6" rx=".8"/><rect x="11.2" y="2.5" width="1.6" height="4.5" rx=".8"/><rect x="11.2" y="17" width="1.6" height="4.5" rx=".8"/>',
+  // chart plus narrative
+  'Data storytelling':
+    '<rect x="2.5" y="12" width="4" height="9" rx="1.4"/><rect x="8.6" y="8" width="4" height="13" rx="1.4" opacity=".6"/><rect x="14.7" y="4" width="4" height="17" rx="1.4" opacity=".35"/><rect x="2.5" y="2.5" width="12" height="1.8" rx=".9"/><rect x="2.5" y="6" width="8" height="1.8" rx=".9" opacity=".6"/>',
+  // connected agents
+  'Agentic workflows':
+    '<circle cx="5" cy="6" r="2.6"/><circle cx="19" cy="6" r="2.6" opacity=".6"/><circle cx="12" cy="18.5" r="2.6"/><path d="M7.4 7.2l3.4 9M16.6 7.2l-3.4 9M7.2 6h9.6" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round"/>',
+  // regression fit
+  'Regression & regularization':
+    '<circle cx="5" cy="17" r="1.7" opacity=".6"/><circle cx="9.5" cy="13.5" r="1.7" opacity=".6"/><circle cx="14" cy="11" r="1.7" opacity=".6"/><circle cx="18.5" cy="6.5" r="1.7" opacity=".6"/><path d="M3 20L21 4" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" fill="none"/>',
+};
+
 const icons = TOOLS.map((t) => {
   const icon = t.slug ? (si as Record<string, any>)[t.slug] : null;
-  return { label: t.label, path: icon?.path ?? null };
+  return {
+    label: t.label,
+    path: icon?.path ?? null,
+    glyph: GLYPHS[t.label] ?? null,
+    pinned: !!t.pinned,
+  };
 });
 
+/* Pinned tools hold their tile and never cycle out. */
+const pinned = icons.filter((i) => i.pinned);
+const rotating = icons.filter((i) => !i.pinned);
 const VISIBLE = 12;
-const shown = icons.slice(0, VISIBLE);
-const bench = icons.slice(VISIBLE);
+const shown = [...pinned, ...rotating.slice(0, VISIBLE - pinned.length)];
+const bench = rotating.slice(VISIBLE - pinned.length);
 ---
 
 <div class="tiles" data-tiles>
   {
     shown.map((t) => (
-      <div class="tile" data-tile title={t.label}>
-        {t.path && (
+      <div class="tile" data-tile data-pinned={t.pinned ? '' : undefined} title={t.label}>
+        {t.path ? (
           <svg viewBox="0 0 24 24" aria-hidden="true" class="tile-ico">
             <path d={t.path} />
           </svg>
-        )}
-        <span class={t.path ? 'tile-name' : 'tile-txt'}>{t.label}</span>
+        ) : t.glyph ? (
+          <svg viewBox="0 0 24 24" aria-hidden="true" class="tile-ico" set:html={t.glyph} />
+        ) : null}
+        <span class={t.path || t.glyph ? 'tile-name' : 'tile-txt'}>{t.label}</span>
       </div>
     ))
   }
@@ -77,7 +140,7 @@ const bench = icons.slice(VISIBLE);
 <script type="application/json" data-tiles-pool set:html={JSON.stringify(bench)} />
 
 <script>
-  type T = { label: string; path: string | null };
+  type T = { label: string; path: string | null; glyph: string | null };
 
   const grid = document.querySelector<HTMLElement>('[data-tiles]');
   const poolEl = document.querySelector('[data-tiles-pool]');
@@ -87,19 +150,28 @@ const bench = icons.slice(VISIBLE);
 
     const render = (tile: HTMLElement, t: T) => {
       tile.title = t.label;
-      tile.innerHTML = t.path
-        ? `<svg viewBox="0 0 24 24" aria-hidden="true" class="tile-ico"><path d="${t.path}"></path></svg>
-           <span class="tile-name">${t.label}</span>`
+      const art = t.path
+        ? `<svg viewBox="0 0 24 24" aria-hidden="true" class="tile-ico"><path d="${t.path}"></path></svg>`
+        : t.glyph
+          ? `<svg viewBox="0 0 24 24" aria-hidden="true" class="tile-ico">${t.glyph}</svg>`
+          : '';
+      tile.innerHTML = art
+        ? `${art}<span class="tile-name">${t.label}</span>`
         : `<span class="tile-txt">${t.label}</span>`;
     };
 
     setInterval(() => {
       if (!bench.length) return;
-      const tiles = [...grid.querySelectorAll<HTMLElement>('[data-tile]')];
+      const tiles = [...grid.querySelectorAll<HTMLElement>('[data-tile]:not([data-pinned])')];
+      if (!tiles.length) return;
       const tile = tiles[Math.floor(Math.random() * tiles.length)];
+      const svg = tile.querySelector('svg');
+      const single = svg?.querySelector('path');
       const outgoing: T = {
         label: tile.title,
-        path: tile.querySelector('path')?.getAttribute('d') ?? null,
+        // a lone <path d> is a simple-icons mark; anything richer is one of ours
+        path: svg && single && svg.children.length === 1 ? single.getAttribute('d') : null,
+        glyph: svg && !(single && svg.children.length === 1) ? svg.innerHTML : null,
       };
       const incoming = bench.splice(Math.floor(Math.random() * bench.length), 1)[0];
 
@@ -159,12 +231,14 @@ const bench = icons.slice(VISIBLE);
   }
   .tile :global(.tile-ico) {
     width: 34%;
+    color: var(--ink-2);
     height: auto;
     fill: var(--ink-2);
     transition: fill 0.2s ease;
   }
   .tile:hover :global(.tile-ico) {
     fill: var(--accent);
+    color: var(--accent);
   }
   .tile :global(.tile-txt) {
     font-size: 0.75rem;
