@@ -1,15 +1,21 @@
 ---
 /**
- * Word cloud of the toolkit: mixed sizes, and skills cycle in and out because
- * there is never enough room for all of them at once.
- * Server-rendered so it reads fine with JS off; the swapping is progressive.
+ * Circular word cloud of the toolkit.
+ *
+ * Words are packed along an Archimedean spiral with real measured widths, so
+ * the mass lands in a disc rather than a ragged block. Placement runs on the
+ * client because it needs true text metrics; the server renders a plain
+ * centred wrap first, which is what you get with JS off or reduced motion.
+ *
+ * Palette stays deliberately narrow — orange for the few big words, slate for
+ * the rest — so it reads as one system rather than confetti.
  */
 import { toolkit } from '../data/site';
 
 const all = [...new Set(toolkit.flatMap((g) => g.items))];
 
-/* Size tier is capped by label length — long phrases can never go huge, which
-   is what keeps this reading as a cloud instead of a stacked list. */
+/* Size tier is capped by label length: long phrases can never take a big tier,
+   which is what stops one string from dominating the disc. */
 function tiersFor(label: string) {
   const n = label.length;
   if (n > 22) return ['w-xs', 'w-sm'];
@@ -19,9 +25,8 @@ function tiersFor(label: string) {
 }
 const pick = <T,>(a: T[]): T => a[Math.floor(Math.random() * a.length)];
 
-/* Shuffle at build time, then show as many as comfortably fit. */
 const shuffled = [...all].sort(() => Math.random() - 0.5);
-const VISIBLE = 15;
+const VISIBLE = 18;
 const shown = shuffled.slice(0, VISIBLE).map((label) => ({ label, cls: pick(tiersFor(label)) }));
 const pool = shuffled.slice(VISIBLE);
 ---
@@ -40,12 +45,15 @@ const pool = shuffled.slice(VISIBLE);
 </div>
 
 <script>
-  const wrap = document.querySelector('[data-cloud]');
+  type Box = { x: number; y: number; w: number; h: number };
+
+  const wrap = document.querySelector<HTMLElement>('[data-cloud]');
   const poolEl = document.querySelector('[data-cloud-pool]');
-  if (wrap && poolEl && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  if (wrap && poolEl) {
     const bench: string[] = JSON.parse(poolEl.textContent || '[]');
     const rand = <T,>(a: T[]): T => a[Math.floor(Math.random() * a.length)];
-    /* Mirror the server's length cap so swapped-in words stay proportionate. */
     const tiersFor = (label: string) => {
       const n = label.length;
       if (n > 22) return ['w-xs', 'w-sm'];
@@ -54,70 +62,212 @@ const pool = shuffled.slice(VISIBLE);
       return ['w-sm', 'w-md', 'w-lg', 'w-lg', 'w-xl'];
     };
 
-    setInterval(() => {
-      if (!bench.length) return;
-      const words = [...wrap.querySelectorAll<HTMLElement>('[data-word]')];
+    /* Generous reserve: a swapped-in word is never exactly as wide as the one
+       it replaces, and nothing re-packs between ticks. Padding the collision
+       box absorbs that drift so words can't grow into each other. */
+    const PAD = 11;
+
+    /** Pack words into a disc along a spiral, largest first. */
+    function layout() {
+      const words = [...wrap!.querySelectorAll<HTMLElement>('[data-word]')];
       if (!words.length) return;
 
-      const el = rand(words);
-      const outgoing = el.textContent?.trim() ?? '';
-      const incoming = bench.splice(Math.floor(Math.random() * bench.length), 1)[0];
+      const W = wrap!.clientWidth;
+      const H = wrap!.clientHeight;
+      if (!W || !H) return;
 
-      el.classList.add('is-out');
-      setTimeout(() => {
-        el.textContent = incoming;
-        el.className = `cloud-word ${rand(tiersFor(incoming))} is-out`;
-        el.setAttribute('data-word', '');
-        // next frame so the transition actually runs
-        requestAnimationFrame(() => el.classList.remove('is-out'));
-        if (outgoing) bench.push(outgoing);
-      }, 420);
-    }, 1900);
+      const cx = W / 2;
+      const cy = H / 2;
+      const R = Math.min(W, H) / 2 - 2;
+
+      // Measure while static, then position absolutely.
+      wrap!.classList.remove('is-placed');
+      // offsetWidth/Height, not getBoundingClientRect: a word mid-fade carries
+      // a scale() transform, and measuring that packs it too tightly.
+      const metrics = words.map((el) => ({
+        el,
+        w: el.offsetWidth + PAD * 2,
+        h: el.offsetHeight + PAD * 2,
+      }));
+      metrics.sort((a, b) => b.w * b.h - a.w * a.h); // biggest first
+
+      const placed: Box[] = [];
+      const hits = (b: Box) =>
+        placed.some((p) => b.x < p.x + p.w && b.x + b.w > p.x && b.y < p.y + p.h && b.y + b.h > p.y);
+      const insideDisc = (b: Box) => {
+        // every corner must sit inside the circle
+        const pts = [
+          [b.x, b.y],
+          [b.x + b.w, b.y],
+          [b.x, b.y + b.h],
+          [b.x + b.w, b.y + b.h],
+        ];
+        return pts.every(([px, py]) => {
+          const dx = (px - cx) / R;
+          const dy = (py - cy) / (R * 0.94);
+          return dx * dx + dy * dy <= 1;
+        });
+      };
+
+      for (const m of metrics) {
+        let done = false;
+        const jitter = Math.random() * Math.PI * 2;
+
+        // Search ring by ring, sweeping many angles at each radius before
+        // growing it. A spiral that grows on every step overshoots the disc
+        // long before it has actually tried the space near the centre.
+        for (let radius = 0; radius <= R && !done; radius += 4) {
+          const steps = Math.max(10, Math.round((2 * Math.PI * radius) / 12));
+          for (let i = 0; i < steps; i++) {
+            const angle = jitter + (i * 2 * Math.PI) / steps;
+            // squash vertically — word clouds read better a touch wider than tall
+            const x = cx + radius * Math.cos(angle) - m.w / 2;
+            const y = cy + radius * Math.sin(angle) * 0.78 - m.h / 2;
+            const box: Box = { x, y, w: m.w, h: m.h };
+
+            if (insideDisc(box) && !hits(box)) {
+              placed.push(box);
+              m.el.style.left = `${x + PAD}px`;
+              m.el.style.top = `${y + PAD}px`;
+              m.el.style.visibility = 'visible';
+              done = true;
+              break;
+            }
+          }
+        }
+        // No room left in the disc — hide rather than let it overflow.
+        if (!done) m.el.style.visibility = 'hidden';
+      }
+      wrap!.classList.add('is-placed');
+    }
+
+    // Fonts change metrics, so lay out again once they're ready.
+    layout();
+    if ('fonts' in document) (document as any).fonts.ready.then(layout);
+
+    let t: number | undefined;
+    addEventListener('resize', () => {
+      clearTimeout(t);
+      t = window.setTimeout(layout, 180);
+    });
+
+    /* Cycle words in and out. Swap for a similar-length label so the packing
+       stays stable instead of reshuffling the whole disc on every tick. */
+    if (!reduced) {
+      setInterval(() => {
+        if (!bench.length) return;
+        const words = [...wrap!.querySelectorAll<HTMLElement>('[data-word]')].filter(
+          (e) => e.style.visibility !== 'hidden'
+        );
+        if (!words.length) return;
+
+        const el = rand(words);
+        const outgoing = el.textContent?.trim() ?? '';
+        let best = 0;
+        for (let i = 1; i < bench.length; i++) {
+          if (Math.abs(bench[i].length - outgoing.length) < Math.abs(bench[best].length - outgoing.length))
+            best = i;
+        }
+        const incoming = bench.splice(best, 1)[0];
+
+        // Keep the slot's existing size tier. Re-rolling it changes the word's
+        // width enough to collide with its neighbours, since nothing re-packs
+        // the disc between ticks.
+        const tier = [...el.classList].find((c) => c.startsWith('w-')) ?? 'w-sm';
+        const before = el.offsetWidth;
+
+        el.classList.add('is-out');
+        setTimeout(() => {
+          el.textContent = incoming;
+          el.className = `cloud-word ${tier} is-out`;
+          el.setAttribute('data-word', '');
+          requestAnimationFrame(() => {
+            el.classList.remove('is-out');
+            // grow/shrink about the slot's centre so it stays put
+            const after = el.offsetWidth;
+            el.style.left = `${parseFloat(el.style.left || '0') + (before - after) / 2}px`;
+
+            // Self-heal: a wider word can still clip a neighbour, so if this
+            // one landed on top of anything, re-pack the whole disc.
+            const mx = el.offsetLeft, my = el.offsetTop, mw = el.offsetWidth, mh = el.offsetHeight;
+            const clash = [...wrap!.querySelectorAll<HTMLElement>('[data-word]')].some((o) => {
+              if (o === el || o.style.visibility === 'hidden') return false;
+              return (
+                mx < o.offsetLeft + o.offsetWidth &&
+                mx + mw > o.offsetLeft &&
+                my < o.offsetTop + o.offsetHeight &&
+                my + mh > o.offsetTop
+              );
+            });
+            if (clash) layout();
+          });
+          if (outgoing) bench.push(outgoing);
+        }, 420);
+      }, 2100);
+    }
   }
 </script>
 
 <style>
   .cloud-wrap {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    min-height: 20rem;
-    padding: 1.5rem 0.5rem;
+    position: relative;
+    width: 100%;
+    max-width: 32rem;
+    aspect-ratio: 1.06 / 1;
+    margin-inline: auto;
   }
+
+  /* Fallback layout (no JS / pre-placement): a centred wrap. */
   .cloud {
     display: flex;
     flex-wrap: wrap;
     align-items: baseline;
     justify-content: center;
-    gap: 0.35rem 0.95rem;
-    max-width: 30rem;
+    align-content: center;
+    gap: 0.3rem 0.85rem;
+    height: 100%;
   }
+  .cloud.is-placed {
+    display: block;
+  }
+  .cloud.is-placed .cloud-word {
+    position: absolute;
+    visibility: hidden; /* revealed as each word is placed */
+  }
+
   .cloud-word {
-    font-family: var(--font-display);
+    /* <li> defaults to list-item, which is block-level and fills the
+       container — it must shrink to its own text for packing to work. */
+    display: inline-block;
+    /* Both flex-item and abspos contexts blockify inline-block, which makes
+       the box fill its container. max-content forces shrink-to-fit so the
+       measured width is the actual text width. */
+    width: max-content;
+    list-style: none;
+    font-family: var(--font-sans);
     font-weight: 600;
-    line-height: 1.15;
+    line-height: 1.1;
     color: var(--ink-3);
     white-space: nowrap;
     transition:
       opacity 0.4s ease,
-      transform 0.4s ease,
-      font-size 0.4s ease;
+      transform 0.4s ease;
   }
   .cloud-word.is-out {
     opacity: 0;
-    transform: translateY(6px) scale(0.94);
+    transform: translateY(5px) scale(0.94);
   }
 
-  /* Size tiers — bigger words also read stronger in colour. */
-  .w-xs { font-size: 0.8125rem; font-weight: 500; }
-  .w-sm { font-size: 0.9375rem; color: var(--ink-2); }
-  .w-md { font-size: 1.1875rem; color: var(--ink-2); font-weight: 700; }
-  .w-lg { font-size: 1.5rem; color: var(--accent-ink); font-weight: 700; letter-spacing: -0.02em; }
-  .w-xl { font-size: 2rem; color: var(--accent); font-weight: 800; letter-spacing: -0.03em; }
+  /* Narrow palette: orange carries the big words, slate carries the rest. */
+  .w-xs { font-size: 0.75rem; font-weight: 500; }
+  .w-sm { font-size: 0.875rem; color: var(--ink-2); }
+  .w-md { font-size: 1.0625rem; color: var(--ink-2); font-weight: 700; }
+  .w-lg { font-size: 1.3125rem; color: var(--accent-ink); font-weight: 700; letter-spacing: -0.02em; }
+  .w-xl { font-size: 1.625rem; color: var(--accent); font-weight: 800; letter-spacing: -0.03em; }
 
   @media (max-width: 640px) {
-    .cloud-wrap { min-height: 17rem; }
+    .cloud-wrap { max-width: 22rem; }
     .w-lg { font-size: 1.25rem; }
-    .w-xl { font-size: 1.625rem; }
+    .w-xl { font-size: 1.75rem; }
   }
 </style>
