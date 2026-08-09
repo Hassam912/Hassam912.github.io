@@ -50,6 +50,17 @@ const models = [
 ];
 const aMin = 0.85;
 const aMax = 0.895;
+
+/* ── Cowlar: the billing data pipeline, as a schematic ─────────────────────
+   A diagram of the stages described in the case study — deliberately not a
+   chart, because the underlying billing figures are a former employer's and
+   are not mine to publish. */
+const stages = [
+  { n: 'Project time\n& expense', accent: false },
+  { n: 'SQL datasets', accent: false },
+  { n: 'QA / UAT', accent: true },
+  { n: 'Power BI', accent: false },
+];
 ---
 
 {
@@ -202,6 +213,69 @@ const aMax = 0.895;
   )
 }
 
+{
+  id === 'cowlar-billing-system' && (
+    <svg viewBox={`0 0 ${W} ${H}`} class="thumb" role="img" aria-label="Pipeline diagram: project time and expense data flows into SQL datasets, through a QA and UAT gate, into Power BI reporting, and out to client invoicing">
+      {stages.map((s, i) => {
+        const bw = 116;
+        const gap = (W - bw * stages.length) / (stages.length - 1);
+        const x = i * (bw + gap);
+        const y = 22;
+        const bh = 46;
+        const lines = s.n.split('\n');
+        return (
+          <>
+            <rect
+              x={x}
+              y={y}
+              width={bw}
+              height={bh}
+              rx="9"
+              fill={s.accent ? 'var(--accent-soft)' : 'var(--paper-3)'}
+              stroke={s.accent ? 'var(--accent)' : 'var(--rule)'}
+              stroke-width={s.accent ? 1.6 : 1}
+            />
+            {lines.map((ln, li) => (
+              <text
+                x={x + bw / 2}
+                y={y + bh / 2 + (lines.length === 1 ? 3.5 : li * 12 - 2)}
+                text-anchor="middle"
+                font-size="10"
+                fill={s.accent ? 'var(--accent-ink)' : 'var(--ink-2)'}
+                style={`font-family: var(--font-sans); font-weight: ${s.accent ? 700 : 600};`}
+              >
+                {ln}
+              </text>
+            ))}
+            {i < stages.length - 1 && (
+              <>
+                <line
+                  x1={x + bw + 4}
+                  y1={y + bh / 2}
+                  x2={x + bw + gap - 7}
+                  y2={y + bh / 2}
+                  stroke="var(--rule)"
+                  stroke-width="1.5"
+                />
+                <path
+                  d={`M ${x + bw + gap - 10} ${y + bh / 2 - 3.5} L ${x + bw + gap - 4} ${y + bh / 2} L ${x + bw + gap - 10} ${y + bh / 2 + 3.5} Z`}
+                  fill="var(--ink-3)"
+                />
+              </>
+            )}
+          </>
+        );
+      })}
+      <text x={W / 2} y="12" text-anchor="middle" font-size="9" fill="var(--ink-3)" style="font-family: var(--font-mono); letter-spacing: 0.08em;">
+        THE DATA LAYER I OWNED
+      </text>
+      <text x={W / 2} y={90} text-anchor="middle" font-size="9.5" fill="var(--ink-3)" style="font-family: var(--font-sans);">
+        → client invoicing · leadership reporting
+      </text>
+    </svg>
+  )
+}
+
 {/* One line so the chart informs rather than decorates. */}
 <p class="thumb-cap">
   {id === 'hospital-meal-planning-milp' && (
@@ -222,6 +296,12 @@ const aMax = 0.895;
     </>
   )}
   {id === 'kaggle-house-prices' && <>Final leaderboard position out of all entries</>}
+  {id === 'cowlar-billing-system' && (
+    <>
+      Schematic of the pipeline, not measured data — the billing figures belong to a former
+      employer. <span class="sw sw-3" /> marks the QA gate I built.
+    </>
+  )}
   {id === 'car-insurance-claim-predictor' && (
     <>
       ROC-AUC on the held-out test set — <span class="sw sw-3" /> logistic regression beat every

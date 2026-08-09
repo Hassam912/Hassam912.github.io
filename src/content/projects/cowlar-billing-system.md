@@ -16,9 +16,47 @@ glance:
   result: 'A live production billing system with reporting used for client invoicing and internal decision-making.'
 featured: true
 order: 6
-draft: true
+draft: false
 ---
 
-> **This case study is being written.** The architecture walkthrough, the roadblocks I hit
-> and how the QA process evolved are coming from a longer conversation — I'd rather publish
-> it properly than publish it thin.
+## Why fractional billing is a data problem
+
+A studio billing fractionally across many concurrent projects doesn't have one invoice to
+get right — it has a matrix of them. Hours and expenses land against projects continuously,
+each client's share is a fraction of a shared cost base, and revenue depends entirely on
+whether that underlying data is correct.
+
+That makes it unforgiving in a specific way: the volume is high enough that manual checking
+doesn't scale, and the stakes are high enough that a quiet error becomes a wrong invoice to
+a paying client.
+
+## What I owned
+
+The data layer underneath it — end to end:
+
+- **Analytics-ready SQL datasets.** The modelled tables the billing and reporting ran on.
+- **A QA / UAT process.** The part that made the datasets trustworthy rather than merely
+  present, formalised into workflows and SOPs so it didn't depend on me remembering.
+- **Power BI reporting on top.** Turning project financials into something clients and
+  leadership could actually act on.
+
+Google Apps Script handled the automation around the edges of that pipeline.
+
+## The shape of it
+
+Project time and expense data flowed into the SQL datasets, through the QA/UAT gate, and
+out into Power BI — which fed both client invoicing and internal decision-making. The gate
+in the middle is the piece I'd point at: it's the difference between a pipeline that moves
+data and one whose output you can put in front of a client.
+
+## Scale
+
+**$100K+ billed monthly** ran through the system while I owned it.
+
+---
+
+> **A fuller architecture walkthrough is still to come** — the specific roadblocks, how the
+> QA process evolved, and the design trade-offs I'd argue for differently now. I'd rather
+> add that properly than pad this out. The billing figures themselves belong to a former
+> employer, so the diagram above is a schematic of the pipeline rather than a chart of their
+> numbers.
