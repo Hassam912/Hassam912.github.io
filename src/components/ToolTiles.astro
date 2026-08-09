@@ -64,14 +64,12 @@ const bench = icons.slice(VISIBLE);
   {
     shown.map((t) => (
       <div class="tile" data-tile title={t.label}>
-        {t.path ? (
+        {t.path && (
           <svg viewBox="0 0 24 24" aria-hidden="true" class="tile-ico">
             <path d={t.path} />
           </svg>
-        ) : (
-          <span class="tile-txt">{t.label}</span>
         )}
-        <span class="sr-only">{t.label}</span>
+        <span class={t.path ? 'tile-name' : 'tile-txt'}>{t.label}</span>
       </div>
     ))
   }
@@ -91,8 +89,8 @@ const bench = icons.slice(VISIBLE);
       tile.title = t.label;
       tile.innerHTML = t.path
         ? `<svg viewBox="0 0 24 24" aria-hidden="true" class="tile-ico"><path d="${t.path}"></path></svg>
-           <span class="sr-only">${t.label}</span>`
-        : `<span class="tile-txt">${t.label}</span><span class="sr-only">${t.label}</span>`;
+           <span class="tile-name">${t.label}</span>`
+        : `<span class="tile-txt">${t.label}</span>`;
     };
 
     setInterval(() => {
@@ -124,8 +122,10 @@ const bench = icons.slice(VISIBLE);
   .tile {
     aspect-ratio: 1 / 1;
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
+    gap: 0.45rem;
     padding: 0.6rem;
     border: 1px solid var(--rule);
     border-radius: var(--radius);
@@ -147,8 +147,18 @@ const bench = icons.slice(VISIBLE);
   /* :global — tiles swapped in by the script are built with innerHTML and so
      never receive Astro's scoping attribute. Scoping stays on .tile, which is
      server-rendered. */
+  .tile :global(.tile-name) {
+    font-size: 0.6875rem;
+    font-weight: 600;
+    line-height: 1.15;
+    color: var(--ink-3);
+    overflow-wrap: anywhere;
+  }
+  .tile:hover :global(.tile-name) {
+    color: var(--accent-ink);
+  }
   .tile :global(.tile-ico) {
-    width: 40%;
+    width: 34%;
     height: auto;
     fill: var(--ink-2);
     transition: fill 0.2s ease;
