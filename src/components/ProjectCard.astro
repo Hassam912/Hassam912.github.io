@@ -1,5 +1,6 @@
 ---
 import type { CollectionEntry } from 'astro:content';
+import CardThumb from './CardThumb.astro';
 
 interface Props {
   project: CollectionEntry<'projects'>;
@@ -9,6 +10,15 @@ interface Props {
 const { project, variant = 'feature' } = Astro.props;
 const d = project.data;
 const href = `/projects/${project.id}`;
+
+/** Featured projects that have a real chart to preview. */
+const withThumb = new Set([
+  'hospital-meal-planning-milp',
+  'soccer-transfer-value-model',
+  'hopefield-inventory-optimization',
+  'kaggle-house-prices',
+]);
+const hasThumb = withThumb.has(project.id);
 ---
 
 {
@@ -25,6 +35,15 @@ const href = `/projects/${project.id}`;
         </span>
         <span class="eyebrow truncate text-right">{d.context}</span>
       </div>
+
+      {hasThumb && (
+        <div
+          class="mt-5 rounded-lg border px-4 py-3.5"
+          style="border-color: var(--rule); background: var(--paper-2);"
+        >
+          <CardThumb id={project.id} />
+        </div>
+      )}
 
       <h3
         class="mt-5 text-[1.375rem] leading-snug tracking-tight md:text-2xl"

@@ -69,6 +69,29 @@ const headlineLines = site.headline.split('\n');
     </div>
   </section>
 
+  {/* ── Credentials ──────────────────────────────────────────────────── */}
+  <section class="wrap pb-14">
+    <div class="border-t pt-6" style="border-color: var(--rule);">
+      <p class="eyebrow">Where the work comes from</p>
+      <div class="mt-4 grid gap-x-10 gap-y-4 sm:grid-cols-3">
+        {
+          [
+            ['Smith School of Business', 'Queen’s University · MMA'],
+            ['Cowlar Design Studio', 'Y Combinator–backed'],
+            ['Hopefield', 'my own brand'],
+          ].map(([name, sub]) => (
+            <div>
+              <p class="text-[0.9375rem] font-semibold leading-snug tracking-tight" style="color: var(--ink);">
+                {name}
+              </p>
+              <p class="eyebrow mt-1.5">{sub}</p>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
   {/* ── Proof strip ──────────────────────────────────────────────────── */}
   <section class="wrap">
     <dl

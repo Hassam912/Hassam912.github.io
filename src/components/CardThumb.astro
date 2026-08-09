@@ -1,0 +1,204 @@
+---
+/**
+ * Small chart shown at the top of a featured project card.
+ * Every figure here is the project's real output — see the case study for sources.
+ * Drawn in site tokens so it themes automatically and ships as zero-JS inline SVG.
+ */
+interface Props {
+  id: string;
+}
+const { id } = Astro.props;
+
+const W = 560;
+const H = 116;
+
+/* ── Hospital MILP: 3-day cost per profile, across rotation strictness ─────── */
+const hospital = [
+  { p: 'Normal M', v: [7.05, 9.93, 9.81] },
+  { p: 'Normal F', v: [7.31, 10.67, 10.67] },
+  { p: 'Diabetic', v: [7.88, 9.57, 9.3] },
+  { p: 'High Chol', v: [5.75, 8.28, 8.28] },
+  { p: 'DASH', v: [6.06, 8.63, 8.63] },
+];
+const hMax = 11;
+
+/* ── Soccer: actual vs model-predicted value (€M), top 5 undervalued ───────── */
+const soccer = [
+  { n: 'Kane', a: 100, m: 257 },
+  { n: 'Wirtz', a: 130, m: 263 },
+  { n: 'Lejeune', a: 3, m: 127 },
+  { n: 'Musiala', a: 120, m: 217 },
+  { n: 'Ødegaard', a: 110, m: 205 },
+];
+const sMax = 280;
+
+/* ── Hopefield: fixed set compositions the LP packs to (bath / hand / cloth) ─ */
+const kits = [
+  { n: 'Set of 6 (combo)', parts: [2, 2, 2] },
+  { n: 'Set of 6 hand', parts: [0, 6, 0] },
+];
+
+/* ── Kaggle: leaderboard finish ────────────────────────────────────────────── */
+const finishPct = 20;
+---
+
+{
+  id === 'hospital-meal-planning-milp' && (
+    <svg viewBox={`0 0 ${W} ${H}`} class="thumb" role="img" aria-label="Three-day food cost for five clinical profiles, rising as ingredient-rotation rules tighten">
+      {[0, 1, 2, 3].map((g) => (
+        <line x1="0" y1={H - 14 - (g / 3) * (H - 26)} x2={W} y2={H - 14 - (g / 3) * (H - 26)} stroke="var(--rule)" stroke-width="1" />
+      ))}
+      {hospital.map((row, i) => {
+        const gw = W / hospital.length;
+        const bw = 11;
+        return row.v.map((v, j) => {
+          const bh = (v / hMax) * (H - 26);
+          return (
+            <rect
+              x={i * gw + gw / 2 - (bw * 3 + 6) / 2 + j * (bw + 3)}
+              y={H - 14 - bh}
+              width={bw}
+              height={bh}
+              rx="2.5"
+              fill={j === 2 ? 'var(--accent)' : `color-mix(in oklab, var(--accent) ${j === 0 ? 30 : 60}%, var(--paper-3))`}
+            />
+          );
+        });
+      })}
+      {hospital.map((row, i) => {
+        const gw = W / hospital.length;
+        return (
+          <text x={i * gw + gw / 2} y={H - 3} text-anchor="middle" font-size="8.5" fill="var(--ink-3)" style="font-family: var(--font-mono);">
+            {row.p}
+          </text>
+        );
+      })}
+    </svg>
+  )
+}
+
+{
+  id === 'soccer-transfer-value-model' && (
+    <svg viewBox={`0 0 ${W} ${H}`} class="thumb" role="img" aria-label="Actual versus model-predicted market value for the five most undervalued players">
+      {soccer.map((p, i) => {
+        const rh = (H - 8) / soccer.length;
+        const cy = 6 + i * rh + rh / 2;
+        const x = (v: number) => 62 + (v / sMax) * (W - 78);
+        return (
+          <>
+            <text x="56" y={cy + 3} text-anchor="end" font-size="8.5" fill="var(--ink-3)" style="font-family: var(--font-mono);">
+              {p.n}
+            </text>
+            <line x1={x(p.a)} y1={cy} x2={x(p.m)} y2={cy} stroke="var(--rule)" stroke-width="2" />
+            <circle cx={x(p.a)} cy={cy} r="3.2" fill="var(--paper-3)" stroke="var(--ink-3)" stroke-width="1.6" />
+            <circle cx={x(p.m)} cy={cy} r="3.6" fill="var(--accent)" />
+          </>
+        );
+      })}
+    </svg>
+  )
+}
+
+{
+  id === 'hopefield-inventory-optimization' && (
+    <svg viewBox={`0 0 ${W} ${H}`} class="thumb" role="img" aria-label="Fixed set compositions the linear program packs loose towel stock into">
+      {kits.map((k, i) => {
+        const rh = 34;
+        const y = 16 + i * (rh + 20);
+        let cx = 132;
+        const unit = 46;
+        return (
+          <>
+            <text x="122" y={y + rh / 2 + 3} text-anchor="end" font-size="9" fill="var(--ink-3)" style="font-family: var(--font-mono);">
+              {k.n}
+            </text>
+            {k.parts.map((count, j) => {
+              const w = count * unit;
+              const el = w > 0 && (
+                <rect
+                  x={cx}
+                  y={y}
+                  width={w - 3}
+                  height={rh}
+                  rx="3"
+                  fill={`color-mix(in oklab, var(--accent) ${[30, 62, 100][j]}%, var(--paper-3))`}
+                />
+              );
+              cx += w;
+              return el;
+            })}
+          </>
+        );
+      })}
+    </svg>
+  )
+}
+
+{
+  id === 'kaggle-house-prices' && (
+    <svg viewBox={`0 0 ${W} ${H}`} class="thumb" role="img" aria-label="Top twenty percent leaderboard finish">
+      <rect x="0" y="34" width={W} height="16" rx="8" fill="var(--rule)" />
+      <rect x="0" y="34" width={W * (finishPct / 100)} height="16" rx="8" fill="var(--accent)" />
+      <line x1={W * (finishPct / 100)} y1="26" x2={W * (finishPct / 100)} y2="58" stroke="var(--ink)" stroke-width="1.5" />
+      <text x={W * (finishPct / 100) + 8} y="74" font-size="11" fill="var(--ink)" style="font-family: var(--font-mono); font-weight: 600;">
+        Top 20%
+      </text>
+      <text x="0" y="74" font-size="9" fill="var(--ink-3)" style="font-family: var(--font-mono);">
+        1st
+      </text>
+      <text x={W} y="74" text-anchor="end" font-size="9" fill="var(--ink-3)" style="font-family: var(--font-mono);">
+        last
+      </text>
+    </svg>
+  )
+}
+
+{/* One line so the chart informs rather than decorates. */}
+<p class="thumb-cap">
+  {id === 'hospital-meal-planning-milp' && (
+    <>
+      3-day food cost per profile — <span class="sw sw-1" /> cost-only,
+      <span class="sw sw-2" /> 3-day rotation, <span class="sw sw-3" /> 2-day rotation
+    </>
+  )}
+  {id === 'soccer-transfer-value-model' && (
+    <>
+      <span class="sw sw-o" /> actual vs <span class="sw sw-3" /> model-predicted value (€M), top 5 undervalued
+    </>
+  )}
+  {id === 'hopefield-inventory-optimization' && (
+    <>
+      Set compositions the LP packs to — <span class="sw sw-1" /> bath,
+      <span class="sw sw-2" /> hand, <span class="sw sw-3" /> washcloth
+    </>
+  )}
+  {id === 'kaggle-house-prices' && <>Final leaderboard position out of all entries</>}
+</p>
+
+<style>
+  .thumb {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+  .thumb-cap {
+    margin-top: 0.6rem;
+    font-family: var(--font-sans);
+    font-size: 0.6875rem;
+    line-height: 1.5;
+    color: var(--ink-3);
+  }
+  .sw {
+    display: inline-block;
+    width: 7px;
+    height: 7px;
+    border-radius: 2px;
+    margin-right: 1px;
+    margin-left: 2px;
+    vertical-align: baseline;
+  }
+  .sw-1 { background: color-mix(in oklab, var(--accent) 30%, var(--paper-3)); }
+  .sw-2 { background: color-mix(in oklab, var(--accent) 62%, var(--paper-3)); }
+  .sw-3 { background: var(--accent); }
+  .sw-o { background: var(--paper-3); border: 1.5px solid var(--ink-3); }
+</style>
