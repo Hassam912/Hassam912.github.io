@@ -10,9 +10,9 @@ export const site = {
   resume: '/Hassam-Asghar-Resume.pdf',
 
   /** The positioning line. Everything else on the site supports this claim. */
-  headline: 'I build the model that decides what to do —\nand the system that runs it.',
+  headline: 'Analytics that ends in a decision,\nnot a dashboard.',
   subhead:
-    'Analytics professional with a Master of Management Analytics from Queen’s. I work at the point where optimization, machine learning and automation meet a real P&L — including my own: a home-goods brand whose inventory I plan with a linear program I wrote.',
+    'Master of Management Analytics from Queen’s. I work at the point where optimization, machine learning and automation meet a real P&L — including my own: a home-goods brand whose inventory I plan with a linear program I wrote.',
 
   status: 'Open to analytics roles in the GTA & Southwestern Ontario',
 } as const;

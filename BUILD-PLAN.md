@@ -32,7 +32,7 @@ is intentional and the work is given room to breathe.
 
 ## Positioning
 
-> I build the model that decides what to do — and the system that runs it.
+> Analytics that ends in a decision, not a dashboard.
 
 Three things almost never appear together in a junior analytics candidate:
 graduate-level rigour, a real P&L the candidate personally owns, and production
