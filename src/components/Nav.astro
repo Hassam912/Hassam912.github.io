@@ -3,11 +3,17 @@ import { site } from '../data/site';
 
 const path = Astro.url.pathname;
 const links = [
-  { href: '/projects', label: 'Work' },
+  /* Scrolls to the work section on the homepage; from any other page it goes
+     home first and lands there. `match` drives the active state, since the
+     hash never appears in the pathname. */
+  { href: '/#work', label: 'Work', match: '/projects' },
   { href: '/about', label: 'About' },
   { href: site.resume, label: 'Résumé', external: true },
 ];
-const isActive = (href: string) => path === href || path.startsWith(href + '/');
+const isActive = (l: { href: string; match?: string }) => {
+  const p = l.match ?? l.href;
+  return path === p || path.startsWith(p + '/');
+};
 ---
 
 <header
@@ -28,7 +34,7 @@ const isActive = (href: string) => path === href || path.startsWith(href + '/');
           <a
             href={l.href}
             class="rounded px-2.5 py-1.5 text-[0.8125rem] font-medium transition-colors"
-            style={`color: ${isActive(l.href) && !l.external ? 'var(--accent-ink)' : 'var(--ink-2)'};`}
+            style={`color: ${isActive(l) && !l.external ? 'var(--accent-ink)' : 'var(--ink-2)'};`}
             data-nav
           >
             {l.label}
