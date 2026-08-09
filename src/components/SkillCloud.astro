@@ -26,7 +26,7 @@ function tiersFor(label: string) {
 const pick = <T,>(a: T[]): T => a[Math.floor(Math.random() * a.length)];
 
 const shuffled = [...all].sort(() => Math.random() - 0.5);
-const VISIBLE = 18;
+const VISIBLE = 22;
 const shown = shuffled.slice(0, VISIBLE).map((label) => ({ label, cls: pick(tiersFor(label)) }));
 const pool = shuffled.slice(VISIBLE);
 ---
@@ -212,7 +212,7 @@ const pool = shuffled.slice(VISIBLE);
   .cloud-wrap {
     position: relative;
     width: 100%;
-    max-width: 32rem;
+    max-width: 38rem;
     aspect-ratio: 1.06 / 1;
     margin-inline: auto;
   }
@@ -266,7 +266,7 @@ const pool = shuffled.slice(VISIBLE);
   .w-xl { font-size: 1.625rem; color: var(--accent); font-weight: 800; letter-spacing: -0.03em; }
 
   @media (max-width: 640px) {
-    .cloud-wrap { max-width: 22rem; }
+    .cloud-wrap { max-width: 24rem; }
     .w-lg { font-size: 1.25rem; }
     .w-xl { font-size: 1.75rem; }
   }
