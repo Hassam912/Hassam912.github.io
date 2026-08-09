@@ -1,0 +1,123 @@
+---
+/**
+ * Word cloud of the toolkit: mixed sizes, and skills cycle in and out because
+ * there is never enough room for all of them at once.
+ * Server-rendered so it reads fine with JS off; the swapping is progressive.
+ */
+import { toolkit } from '../data/site';
+
+const all = [...new Set(toolkit.flatMap((g) => g.items))];
+
+/* Size tier is capped by label length — long phrases can never go huge, which
+   is what keeps this reading as a cloud instead of a stacked list. */
+function tiersFor(label: string) {
+  const n = label.length;
+  if (n > 22) return ['w-xs', 'w-sm'];
+  if (n > 14) return ['w-xs', 'w-sm', 'w-sm', 'w-md'];
+  if (n > 9) return ['w-xs', 'w-sm', 'w-md', 'w-md', 'w-lg'];
+  return ['w-sm', 'w-md', 'w-lg', 'w-lg', 'w-xl'];
+}
+const pick = <T,>(a: T[]): T => a[Math.floor(Math.random() * a.length)];
+
+/* Shuffle at build time, then show as many as comfortably fit. */
+const shuffled = [...all].sort(() => Math.random() - 0.5);
+const VISIBLE = 15;
+const shown = shuffled.slice(0, VISIBLE).map((label) => ({ label, cls: pick(tiersFor(label)) }));
+const pool = shuffled.slice(VISIBLE);
+---
+
+<div class="cloud-wrap">
+  <ul class="cloud" data-cloud aria-label="Tools and methods I work with">
+    {
+      shown.map((s) => (
+        <li class={`cloud-word ${s.cls}`} data-word>
+          {s.label}
+        </li>
+      ))
+    }
+  </ul>
+  <script type="application/json" data-cloud-pool set:html={JSON.stringify(pool)} />
+</div>
+
+<script>
+  const wrap = document.querySelector('[data-cloud]');
+  const poolEl = document.querySelector('[data-cloud-pool]');
+  if (wrap && poolEl && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    const bench: string[] = JSON.parse(poolEl.textContent || '[]');
+    const rand = <T,>(a: T[]): T => a[Math.floor(Math.random() * a.length)];
+    /* Mirror the server's length cap so swapped-in words stay proportionate. */
+    const tiersFor = (label: string) => {
+      const n = label.length;
+      if (n > 22) return ['w-xs', 'w-sm'];
+      if (n > 14) return ['w-xs', 'w-sm', 'w-sm', 'w-md'];
+      if (n > 9) return ['w-xs', 'w-sm', 'w-md', 'w-md', 'w-lg'];
+      return ['w-sm', 'w-md', 'w-lg', 'w-lg', 'w-xl'];
+    };
+
+    setInterval(() => {
+      if (!bench.length) return;
+      const words = [...wrap.querySelectorAll<HTMLElement>('[data-word]')];
+      if (!words.length) return;
+
+      const el = rand(words);
+      const outgoing = el.textContent?.trim() ?? '';
+      const incoming = bench.splice(Math.floor(Math.random() * bench.length), 1)[0];
+
+      el.classList.add('is-out');
+      setTimeout(() => {
+        el.textContent = incoming;
+        el.className = `cloud-word ${rand(tiersFor(incoming))} is-out`;
+        el.setAttribute('data-word', '');
+        // next frame so the transition actually runs
+        requestAnimationFrame(() => el.classList.remove('is-out'));
+        if (outgoing) bench.push(outgoing);
+      }, 420);
+    }, 1900);
+  }
+</script>
+
+<style>
+  .cloud-wrap {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 20rem;
+    padding: 1.5rem 0.5rem;
+  }
+  .cloud {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: center;
+    gap: 0.35rem 0.95rem;
+    max-width: 30rem;
+  }
+  .cloud-word {
+    font-family: var(--font-display);
+    font-weight: 600;
+    line-height: 1.15;
+    color: var(--ink-3);
+    white-space: nowrap;
+    transition:
+      opacity 0.4s ease,
+      transform 0.4s ease,
+      font-size 0.4s ease;
+  }
+  .cloud-word.is-out {
+    opacity: 0;
+    transform: translateY(6px) scale(0.94);
+  }
+
+  /* Size tiers — bigger words also read stronger in colour. */
+  .w-xs { font-size: 0.8125rem; font-weight: 500; }
+  .w-sm { font-size: 0.9375rem; color: var(--ink-2); }
+  .w-md { font-size: 1.1875rem; color: var(--ink-2); font-weight: 700; }
+  .w-lg { font-size: 1.5rem; color: var(--accent-ink); font-weight: 700; letter-spacing: -0.02em; }
+  .w-xl { font-size: 2rem; color: var(--accent); font-weight: 800; letter-spacing: -0.03em; }
+
+  @media (max-width: 640px) {
+    .cloud-wrap { min-height: 17rem; }
+    .w-lg { font-size: 1.25rem; }
+    .w-xl { font-size: 1.625rem; }
+  }
+</style>
