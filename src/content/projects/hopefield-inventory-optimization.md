@@ -2,6 +2,7 @@
 title: 'Kitting 7 SKU families without stranding inventory'
 tagline: 'A linear program that turns loose towel stock into sellable retail sets — with almost nothing left over.'
 short: 'An LP that turns loose stock into sellable sets'
+navLabel: 'Inventory kitting'
 summary: 'My home-textiles brand receives towels as loose pieces and sells them as bundled sets. Packing by intuition strands odd inventory that can never be sold. I replaced the guesswork with a linear program that maximises how much stock becomes revenue.'
 category: 'Optimization'
 context: 'Hopefield — my own brand'

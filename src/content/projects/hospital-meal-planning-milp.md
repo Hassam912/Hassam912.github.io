@@ -2,6 +2,7 @@
 title: 'Pricing the cost of variety in hospital meal planning'
 tagline: 'A mixed-integer program that feeds patients within clinical limits, on budget — and tells the manager exactly what menu variety costs.'
 short: 'Pricing what menu variety actually costs'
+navLabel: 'Hospital meals'
 summary: 'Hospital food managers face a trilemma: cut ingredient cost, satisfy strict clinical nutrition bounds, and keep menus varied enough that patients keep eating. I built a MILP that solves all three at once, then used shadow prices to show which clinical rule drives the most cost.'
 category: 'Optimization'
 context: 'MMA 861 — Queen’s University'
