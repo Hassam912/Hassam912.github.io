@@ -3,7 +3,6 @@ import { getCollection } from 'astro:content';
 import Base from '../layouts/Base.astro';
 import SectionHead from '../components/SectionHead.astro';
 import ProjectCard from '../components/ProjectCard.astro';
-import SkillCloud from '../components/SkillCloud.astro';
 import { site, proof, toolkit } from '../data/site';
 
 const all = (await getCollection('projects', ({ data }) => !data.draft)).sort(
@@ -73,21 +72,69 @@ const headlineLines = site.headline.split('\n');
         >
       </div>
 
-      {/* Right — the toolkit as a living word cloud */}
+      {/* Right — the work itself, in place of a decorative visual */}
       <div>
         <h2
           class="text-center text-[1.75rem] leading-tight tracking-tight md:text-[2rem]"
           style="font-family: var(--font-display); color: var(--ink); font-weight: 700;"
         >
-          What I work with
+          Want to see what I've built?
         </h2>
-        <SkillCloud />
-        <p class="text-center text-[0.8125rem]" style="color: var(--ink-3);">
-          Never all of it at once — the list keeps rotating.
+
+        <ul class="mt-7 flex flex-col gap-3.5">
+          {
+            featured.map((p, i) => (
+              <li class={['mr-auto w-full', 'ml-auto w-[94%]', 'mr-auto w-[97%]', 'ml-auto w-[92%]'][i % 4]}>
+                <a
+                  href={`/projects/${p.id}`}
+                  class="group flex items-center gap-3 rounded-2xl px-5 py-4 text-[0.9375rem] font-semibold text-white transition-all"
+                  style={`background: linear-gradient(135deg, ${['#fb923c,#f97316', '#f97316,#ea580c', '#fb923c,#ea580c', '#f59e0b,#f97316'][i % 4]}); box-shadow: var(--shadow);`}
+                  data-pill
+                >
+                  <span class="flex-1 leading-snug">{p.data.short ?? p.data.title}</span>
+                  <svg
+                    class="shrink-0 transition-transform group-hover:translate-x-1"
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2.4"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    aria-hidden="true"
+                  >
+                    <path d="M5 12h13M13 6l6 6-6 6" />
+                  </svg>
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+
+        <p class="mt-5 text-center text-[0.8125rem]" style="color: var(--ink-3);">
+          Four case studies — question, model, decision, result.
         </p>
       </div>
     </div>
   </section>
+
+  {/* ── Skills marquee ───────────────────────────────────────────────── */}
+  <div class="marquee border-y py-4" style="border-color: var(--rule); background: var(--paper-3);">
+    <ul class="marquee-track" aria-label="Tools and methods I work with">
+      {
+        [0, 1].map((pass) =>
+          toolkit
+            .flatMap((g) => g.items)
+            .map((item) => (
+              <li class="chip shrink-0" aria-hidden={pass === 1 ? 'true' : undefined}>
+                {item}
+              </li>
+            ))
+        )
+      }
+    </ul>
+  </div>
 
   {/* ── Credentials ──────────────────────────────────────────────────── */}
   <section class="wrap pb-14">
@@ -248,4 +295,26 @@ const headlineLines = site.headline.split('\n');
     box-shadow: var(--shadow-lift) !important;
   }
 
+  /* Scrolling toolkit strip. Pauses on hover; static if reduced motion. */
+  .marquee {
+    overflow: hidden;
+    -webkit-mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
+    mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
+  }
+  .marquee-track {
+    display: flex;
+    gap: 0.6rem;
+    width: max-content;
+    animation: marquee 46s linear infinite;
+  }
+  .marquee:hover .marquee-track {
+    animation-play-state: paused;
+  }
+  @keyframes marquee {
+    from { transform: translateX(0); }
+    to   { transform: translateX(-50%); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .marquee-track { animation: none; flex-wrap: wrap; width: 100%; justify-content: center; }
+  }
 </style>
