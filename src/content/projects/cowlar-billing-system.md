@@ -1,5 +1,5 @@
 ---
-title: 'A fractional billing system running six figures a month'
+title: 'A fractional billing system processing close to $1M a month'
 tagline: 'Analytics-ready SQL datasets and Power BI reporting behind a live production billing pipeline.'
 summary: 'At a Y Combinator–backed studio I owned the data layer behind fractional billing — the SQL datasets, the QA process that kept them trustworthy, and the Power BI reporting that turned project financials into something clients and leadership could act on.'
 category: 'Analytics & BI'
@@ -8,8 +8,12 @@ role: 'Billing & Compliance Analyst'
 timeline: '2024 – 2025'
 stack: ['SQL', 'Power BI', 'Google Apps Script', 'Data QA / UAT', 'Process design']
 metrics:
-  - value: '$100K+'
-    label: 'billed monthly through the system'
+  - value: '~$1M'
+    label: 'billed a month through the system'
+  - value: '40%'
+    label: 'less time on financial reconciliation'
+  - value: '15+'
+    label: 'SQL datasets as the single source of truth'
 glance:
   problem: 'Fractional billing across many concurrent projects means revenue depends on data that is fiddly, high-volume and unforgiving of error.'
   approach: 'Owned end-to-end delivery of the analytics-ready SQL datasets, established QA/UAT workflows and SOPs, and built Power BI reporting on top.'
@@ -51,12 +55,11 @@ data and one whose output you can put in front of a client.
 
 ## Scale
 
-**$100K+ billed monthly** ran through the system while I owned it.
+Close to **$1M a month** in billing ran through the system while I owned it. The Power BI
+reporting cut financial reconciliation time by **40%**, and the automated collection lifted
+billing accuracy by about **25%**.
 
 ---
 
-> **A fuller architecture walkthrough is still to come** — the specific roadblocks, how the
-> QA process evolved, and the design trade-offs I'd argue for differently now. I'd rather
-> add that properly than pad this out. The billing figures themselves belong to a former
-> employer, so the diagram above is a schematic of the pipeline rather than a chart of their
-> numbers.
+> The billing figures themselves belong to a former employer, so this page describes the
+> pipeline rather than charting their numbers.

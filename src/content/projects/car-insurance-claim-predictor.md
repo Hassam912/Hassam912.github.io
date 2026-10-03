@@ -1,7 +1,7 @@
 ---
 title: 'RiskIQ: pricing auto insurance risk instead of guessing at it'
 tagline: 'A claim-likelihood model and a deployable underwriting function — where the simplest, most interpretable model beat every tree ensemble we tried.'
-summary: 'Built the EDA and the deployable underwriting tool for a four-person team project: a claim-likelihood model on 10,000 policyholder records, framed around the pricing decision it exists to serve rather than around leaderboard accuracy. Logistic regression, the most interpretable model in the comparison, also won on ROC-AUC — which mattered, because insurance pricing is regulated and "the model said so" is not a defensible answer.'
+summary: 'Built the EDA and the deployable underwriting tool for a five-person team project: a claim-likelihood model on 10,000 policyholder records, framed around the pricing decision it exists to serve rather than around leaderboard accuracy. Logistic regression, the most interpretable model in the comparison, also won on ROC-AUC — which mattered, because insurance pricing is regulated and "the model said so" is not a defensible answer.'
 category: 'Predictive Modelling'
 context: 'MMA 867 — Queen’s University'
 role: 'Solution architecture — EDA, model interpretation, deployable underwriting tool'

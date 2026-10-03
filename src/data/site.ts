@@ -3,7 +3,7 @@ export const site = {
   url: 'https://hassamasghar.com',
   role: 'Analytics · Optimization · AI Automation',
   location: 'Kitchener–Waterloo, Ontario',
-  email: 'hassamasghar94@gmail.com',
+  email: 'hassam.asghar.work@gmail.com',
   phone: '(226) 581-9664',
   linkedin: 'https://www.linkedin.com/in/hassam-asghar-69628b219',
   github: 'https://github.com/Hassam912',
@@ -12,14 +12,14 @@ export const site = {
   /** The positioning line. Everything else on the site supports this claim. */
   headline: 'Analytics that ends in a decision,\nnot a dashboard.',
   subhead:
-    'Master of Management Analytics from Queen’s. I work at the point where optimization, machine learning and automation meet a real P&L — including my own: a home-goods brand whose inventory I plan with a linear program I wrote.',
+    'Completing a Master of Management Analytics at Queen’s (Dec 2026). I work at the point where optimization, machine learning and automation meet a real P&L — including my own: a home-goods brand whose inventory I plan with a linear program I wrote.',
 
   status: 'Open to analytics roles in the GTA & Southwestern Ontario',
 } as const;
 
 /** Above-the-fold proof. Every number here traces to a real artifact. */
 export const proof = [
-  { value: '$100K+', label: 'monthly billing run through a system I built', note: 'Cowlar Design Studio' },
+  { value: '~$1M', label: 'a month in billing run through data I owned', note: 'Cowlar Design Studio' },
   { value: 'Top 20%', label: 'Kaggle House Prices leaderboard finish', note: 'team entry' },
   { value: '4,056', label: 'player-seasons modelled across 203 features', note: 'MMA 860 team project' },
   { value: '7 SKUs', label: 'of live inventory kitted by my LP model', note: 'Hopefield' },
@@ -55,37 +55,37 @@ export const education = [
   {
     school: 'Smith School of Business, Queen’s University',
     credential: 'Master of Management Analytics',
-    detail: 'Data Science major',
-    period: '2026',
+    detail: 'In progress',
+    period: 'Jan – Dec 2026',
   },
   {
     school: 'National Defense University',
-    credential: 'BS, Business Management',
+    credential: 'Bachelor of Business Administration (BBA)',
     detail: 'Islamabad, Pakistan',
-    period: '2019 – 2024',
+    period: 'Jan 2019 – Jan 2024',
   },
 ] as const;
 
 export const experience = [
   {
-    company: 'Hopefield',
-    title: 'Founder & Operator',
-    period: '2026 – present',
+    company: 'Hopefield Home',
+    title: 'Co-Founder & Operator',
+    period: 'Nov 2025 – present',
     detail:
       'Home-textiles brand on Amazon FBA and Shopify. I own the demand plan, the inventory optimization, the listing analytics and the automation stack behind it.',
   },
   {
     company: 'Cowlar Design Studio (Y Combinator–backed)',
     title: 'Billing & Compliance Analyst',
-    period: '2024 – 2025',
+    period: 'May 2024 – Jun 2025',
     detail:
-      'Owned the analytics-ready SQL datasets and Power BI reporting behind a live fractional-billing system, and automated the pipelines that fed it.',
+      'Owned the 15+ SQL datasets and Power BI reporting behind a live fractional-billing system processing close to $1M a month. Cut financial reconciliation time 40%.',
   },
   {
     company: 'Modisoft Inc.',
     title: 'Customer Support Lead',
-    period: '2022 – 2024',
+    period: 'Jan 2023 – Apr 2024',
     detail:
-      'Managed 200+ retail accounts, ran QA on POS and financial datasets, and led weekly ERP training for US clients.',
+      'Led a team of 7 across 200+ US retail accounts, ran QA on POS and financial datasets, and traced a recurring scan-data discrepancy to its root cause.',
   },
 ] as const;

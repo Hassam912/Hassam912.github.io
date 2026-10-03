@@ -1,7 +1,7 @@
 ---
 title: 'An HR agent that writes its own paperwork'
 tagline: 'Text-prompt automation for letters, onboarding checklists and worklogs — built on Sheets, Apps Script and an LLM.'
-summary: 'Before “AI agent” was a product category, I built one for HR operations: generate employment and experience letters, produce onboarding checklists, maintain worklogs that feed billing, and read and write the company database — all from plain-language prompts.'
+summary: 'At Cowlar I built an agent for HR operations: generate employment and experience letters, produce onboarding checklists, maintain worklogs that feed billing, and read and write the company database — all from plain-language prompts.'
 category: 'Agentic AI'
 context: 'Cowlar Design Studio'
 role: 'Designer and builder'

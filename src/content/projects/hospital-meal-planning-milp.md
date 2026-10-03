@@ -185,7 +185,7 @@ technically feasible but clinically fragile?
 
 <svg viewBox="0 0 640 334" role="img" aria-labelledby="chart2-title chart2-desc" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;font-family:var(--font-mono, monospace);">
 <title id="chart2-title">Nutrient compliance, Diabetic profile, 2-day rotation solver</title>
-<desc id="chart2-desc">Ten nutrients shown as a bar from the clinical minimum to the actual 3-day average, positioned within the allowed min-max range. Potassium and fibre sit near the top of their range; sodium and protein sit comfortably low.</desc>
+<desc id="chart2-desc">Ten nutrients shown as a bar from the clinical minimum to the actual 3-day average, positioned within the allowed min-max range. Potassium sits at the top of its range, which makes it the binding constraint; fibre, fat and protein sit just above their minimums; sodium sits comfortably low.</desc>
 <rect x="92.0" y="10" width="420.0" height="300" fill="var(--accent-soft)" opacity="0.5" />
 <text x="82" y="28.5" text-anchor="end" font-size="11" fill="var(--ink-2)">Protein</text>
 <line x1="92.0" y1="25.0" x2="512.0" y2="25.0" stroke="var(--rule)" stroke-width="6" stroke-linecap="round" />
