@@ -4,7 +4,7 @@ tagline: 'An LLM agent on Google Sheets and Apps Script that drafts HR paperwork
 tldr: 'At Cowlar I built an LLM agent on Google Sheets and Apps Script that drafts HR letters and onboarding checklists and keeps the worklogs that feed a ~$1M-a-month billing system.'
 summary: 'An LLM HR agent at a ~175-person studio: letters, checklists and worklogs from plain-language prompts, with worklogs feeding a ~$1M/month billing pipeline.'
 category: 'Agentic AI'
-context: 'Cowlar Design Studio (Y Combinator–backed)'
+context: 'Cowlar Design Studio, product studio of YC-backed Cowlar'
 team: 'Solo build, ~175-person studio'
 role: 'Designed and built the agent, the Sheets data model and the Apps Script document flow; connected its worklogs to the billing datasets I owned'
 timeline: 'May 2024 – Jun 2025'

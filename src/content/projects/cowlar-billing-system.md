@@ -1,10 +1,10 @@
 ---
 title: 'Cut billing reconciliation time 40% on a ~$1M/month billing system'
 tagline: 'SQL datasets, a QA/UAT gate and Power BI behind a studio’s live fractional-billing pipeline.'
-tldr: 'At a ~175-person, YC-backed studio I owned the 15+ SQL datasets and QA gate behind close to $1M a month of fractional billing; my Power BI reporting cut reconciliation time 40%.'
-summary: 'Owned the data behind ~$1M/month of fractional billing at a YC-backed studio: SQL datasets, a QA/UAT gate, n8n and Power BI. Reconciliation time fell 40%.'
+tldr: 'At Cowlar Design Studio, a ~175-person product studio, I owned the 15+ SQL datasets and QA gate behind close to $1M a month of fractional billing; my Power BI reporting cut reconciliation time 40%.'
+summary: 'Owned the data behind ~$1M/month of fractional billing at a ~175-person product studio: SQL datasets, a QA/UAT gate, n8n and Power BI. Reconciliation time fell 40%.'
 category: 'Analytics & BI'
-context: 'Cowlar Design Studio (Y Combinator–backed)'
+context: 'Cowlar Design Studio, product studio of YC-backed Cowlar'
 team: 'Data owner · ~175-person studio'
 role: 'Billing & Compliance Analyst: owned the SQL datasets, the QA/UAT process and SOPs, and the Power BI reporting; built the n8n and Apps Script data capture'
 timeline: 'May 2024 – Jun 2025'
@@ -64,8 +64,8 @@ draft: false
 
 ## A ~175-person studio needed invoices it could trust
 
-Cowlar Design Studio is a Y Combinator–backed product-development and consulting studio of about
-175 people, working across IoT, AI/ML, SaaS and AgTech. It bills fractionally: each client pays for
+Cowlar Design Studio is a product-development and consulting studio of about 175 people, the
+services arm of Cowlar (Y Combinator W17), working across IoT, AI/ML, SaaS and AgTech. It bills fractionally: each client pays for
 its share of the engineering time and expenses spent across many projects running at once. Close to
 $1M a month went out through that system.
 

@@ -1,8 +1,8 @@
 ---
-title: 'Ranked #1 of 18,990 predicting which Tanzanian water pumps fail'
+title: 'Ranked #1 on DrivenData predicting which Tanzanian water pumps fail'
 tagline: 'Three-class pump-failure model on 59,400 survey records, built around CatBoost’s native handling of 19,000-value location columns.'
-tldr: 'Tanzania needs to know which of 59,400 water pumps to repair. I built a CatBoost-led blend (0.8235) inside a six-person team whose stacked ensemble hit 0.8308 accuracy, #1 of 18,990 at submission, against a 0.5431 baseline.'
-summary: 'Team Danforth’s DrivenData Pump It Up entry: 0.8308 accuracy, #1 of 18,990 at submission. My CatBoost + LightGBM + Random Forest blend scored 0.8235.'
+tldr: 'Tanzania needs to know which of 59,400 water pumps to repair. I built a CatBoost-led blend (0.8235) inside a six-person team whose stacked ensemble hit 0.8308 accuracy, #1 on the leaderboard at submission, against a 0.5431 baseline.'
+summary: 'Team Danforth’s DrivenData Pump It Up entry: 0.8308 accuracy, #1 at submission and top 3 of 8,657 ranked entries today. My CatBoost, LightGBM and Random Forest blend scored 0.8235.'
 category: 'Predictive Modelling'
 context: 'DrivenData Pump It Up · MMA 869 Machine Learning & AI'
 team: 'Team of 6'
@@ -10,9 +10,9 @@ role: 'Modelling pair: built my own CatBoost blend, ran the model and error anal
 timeline: 'Summer 2026 (submitted Sep 2026)'
 stack: ['CatBoost', 'LightGBM', 'Random Forest', 'Stacking', 'scikit-learn', 'Python']
 headline:
-  value: '#1 of 18,990'
-  label: 'on DrivenData’s public leaderboard at submission (team, 0.8308 accuracy)'
-result: '0.8308 accuracy for the team’s stacked ensemble and 0.8235 for my own blend, against 0.5431 for always guessing the most common class. #1 of 18,990 at submission; top 3 of 20,083 as of Oct 2026.'
+  value: '#1'
+  label: 'on DrivenData’s Pump It Up leaderboard at submission; top 3 of 8,657 ranked entries today (team, 0.8308)'
+result: '0.8308 accuracy for the team’s stacked ensemble and 0.8235 for my own blend, against 0.5431 for always guessing the most common class. #1 on the leaderboard at submission; #3 of 8,657 ranked entries as of 3 Oct 2026.'
 impact: 'Of every 100 broken pumps, my blend correctly sends a repair crew to 77. Trading about 0.5 accuracy points would raise that by roughly 6.'
 metrics:
   - value: '0.8308'
@@ -176,11 +176,12 @@ importance** in the worse model. I deleted all twelve. Cross-validation is good 
 options, but after many rounds of tuning against it, it overstates how well the model will do on new
 data.
 
-## 0.8308, #1 of 18,990 at submission
+## 0.8308, #1 on the leaderboard at submission
 
 - **Team stacked ensemble: 0.8308** on the public leaderboard, cross-validated at 0.8208. It was #1
-  of 18,990 when we submitted in September 2026; newer entries have since posted 0.8325 and a tied
-  0.8308, so it stands #3 of 20,083 as of October 2026.
+  on the leaderboard when we submitted in September 2026; newer entries have since posted 0.8325 and a
+  tied 0.8308, so it stands #3 of 8,657 ranked entries as of 3 October 2026. (About 20,000 people have
+  joined the competition; most never submitted.)
 - **My blend: 0.8235** on the leaderboard and 0.8154 in stratified 5-fold CV (CatBoost 0.50,
   LightGBM 0.25, Random Forest 0.25, weights chosen on out-of-fold predictions only).
 - **Validation spread:** the same CatBoost scored 0.8091 to 0.8207 across folds, a 1.1-point swing
@@ -283,6 +284,9 @@ rotation.
 - **Accuracy is the wrong objective for a real ministry.** A deployment would set the threshold from
   repair and travel costs, not from a leaderboard.
 - **Importance is not causation.** Next step: permutation importance or SHAP on a held-out fold.
+- **The leaderboard is not a fully independent test.** We used leaderboard scores when choosing
+  which blend to submit (the 12-feature decision above), so 0.8308 is somewhat optimistic as an
+  estimate of performance on new data. Cross-validation (0.8208) is the more honest figure.
 - **Every strong model was tree-based.** Our logistic-regression baseline scored about 0.76.
 
 ## Team and credits

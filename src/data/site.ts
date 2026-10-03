@@ -23,13 +23,13 @@ export const proof = [
   { value: '~$1M', label: 'a month in billing through data I owned', href: '/projects/cowlar-billing-system/' },
   { value: '−40%', label: 'financial reconciliation time, with Power BI', href: '/projects/cowlar-billing-system/' },
   { value: '+37%', label: 'what menu variety adds to hospital food cost', href: '/projects/hospital-meal-planning-milp/' },
-  { value: '#1', label: 'of 18,990 on DrivenData’s Pump It Up leaderboard at submission (team)', href: '/projects/pump-it-up-water-pumps/' },
+  { value: '#1', label: 'on DrivenData’s Pump It Up leaderboard at submission (team, 0.8308)', href: '/projects/pump-it-up-water-pumps/' },
 ] as const;
 
 /** Where the work comes from: shown as a single row under the proof strip. */
 export const credentials = [
   { name: 'Smith School of Business', sub: 'Queen’s University · MMA' },
-  { name: 'Cowlar Design Studio', sub: 'Y Combinator–backed' },
+  { name: 'Cowlar Design Studio', sub: 'Studio of YC-backed Cowlar' },
   { name: 'Modisoft Inc.', sub: '200+ US retail accounts' },
   { name: 'Hopefield Home', sub: 'Co-founder' },
 ] as const;
@@ -88,7 +88,7 @@ export const experience = [
       'Home-textiles brand on Amazon FBA and Shopify. I own the demand plan, the inventory optimization, the listing analytics and the automation stack behind it.',
   },
   {
-    company: 'Cowlar Design Studio (Y Combinator–backed)',
+    company: 'Cowlar Design Studio',
     title: 'Billing & Compliance Analyst',
     period: 'May 2024 – Jun 2025',
     detail:
