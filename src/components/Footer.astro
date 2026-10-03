@@ -4,32 +4,24 @@ import { site } from '../data/site';
 const year = new Date().getFullYear();
 ---
 
-<footer class="mt-32 border-t" style="border-color: var(--rule); background: var(--paper-2);">
-  <div class="wrap py-16 md:py-20">
-    <div class="grid gap-12 md:grid-cols-[1.4fr_1fr]">
+<footer id="contact" class="mt-24 border-t md:mt-32" style="border-color: var(--rule); background: var(--paper-2);">
+  <div class="wrap py-14 md:py-20">
+    <div class="grid gap-12 md:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)]">
       <div>
-        <p class="eyebrow">Get in touch</p>
+        <p class="eyebrow flex items-center gap-2.5"><span class="signal-dot" aria-hidden="true"></span>Contact</p>
         <h2
-          class="mt-4 max-w-lg text-3xl leading-[1.15] tracking-tight md:text-4xl"
-          style="font-family: var(--font-display); color: var(--ink);"
+          class="mt-4 max-w-lg text-[1.9rem] leading-[1.15] tracking-[-0.015em] md:text-[2.25rem]"
+          style="font-family: var(--font-display); color: var(--ink); font-weight: 650;"
         >
-          Looking for someone who can model it <em>and</em> ship it?
+          Looking for someone who can model it and ship it?
         </h2>
-        <p class="mt-4 max-w-md text-[0.9375rem] leading-relaxed" style="color: var(--ink-2);">
-          I’m {site.status.toLowerCase()}. The fastest way to reach me is email — I reply the same day.
+        <p class="mt-4 max-w-md text-[0.98rem] leading-relaxed" style="color: var(--ink-2);">
+          I’m {site.status.charAt(0).toLowerCase() + site.status.slice(1)}. Email is the fastest way to reach me.
         </p>
-        <div class="mt-7 flex flex-wrap gap-3">
-          <a
-            href={`mailto:${site.email}`}
-            class="rounded-full px-5 py-2.5 text-sm font-medium transition-opacity hover:opacity-85"
-            style="background: var(--accent); color: var(--paper);">Email me</a
-          >
-          <a
-            href={site.resume}
-            class="rounded-full border px-5 py-2.5 text-sm font-medium transition-colors"
-            style="border-color: var(--rule); color: var(--ink);"
-            data-ghost>Download résumé</a
-          >
+        <p class="num mt-5 select-all text-[1rem]" style="color: var(--ink); font-weight: 500;">{site.email}</p>
+        <div class="mt-5 flex flex-wrap gap-3">
+          <a href={`mailto:${site.email}`} class="btn btn-primary">Email me</a>
+          <a href={site.linkedin} class="btn btn-ghost">LinkedIn</a>
         </div>
       </div>
 
@@ -37,17 +29,17 @@ const year = new Date().getFullYear();
         <div>
           <p class="eyebrow">Elsewhere</p>
           <ul class="mt-4 space-y-2.5 text-sm">
-            <li><a href={site.linkedin} class="link-underline" style="color: var(--ink-2);">LinkedIn</a></li>
-            <li><a href={site.github} class="link-underline" style="color: var(--ink-2);">GitHub</a></li>
-            <li><a href={`mailto:${site.email}`} class="link-underline" style="color: var(--ink-2);">Email</a></li>
+            <li><a href={site.linkedin} class="link link-quiet">LinkedIn</a></li>
+            <li><a href={site.github} class="link link-quiet">GitHub</a></li>
+            <li><a href={site.resume} class="link link-quiet">Resume (PDF)</a></li>
           </ul>
         </div>
         <div>
           <p class="eyebrow">Site</p>
           <ul class="mt-4 space-y-2.5 text-sm">
-            <li><a href="/#work" class="link-underline" style="color: var(--ink-2);">Work</a></li>
-            <li><a href="/about" class="link-underline" style="color: var(--ink-2);">About</a></li>
-            <li><a href={site.resume} class="link-underline" style="color: var(--ink-2);">Résumé</a></li>
+            <li><a href="/#work" class="link link-quiet">Work</a></li>
+            <li><a href="/#experience" class="link link-quiet">Experience</a></li>
+            <li><a href="/about/" class="link link-quiet">About</a></li>
           </ul>
         </div>
       </div>
@@ -62,10 +54,3 @@ const year = new Date().getFullYear();
     </div>
   </div>
 </footer>
-
-<style>
-  [data-ghost]:hover {
-    background: var(--paper-3);
-    border-color: var(--ink-3);
-  }
-</style>

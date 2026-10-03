@@ -1,9 +1,1 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
-  <rect width="32" height="32" rx="7" fill="#0b6b58"/>
-  <!-- axes + a path climbing to an optimum at the vertex -->
-  <path d="M6 26V6" stroke="#fbfaf8" stroke-width="2" stroke-linecap="round" opacity=".4"/>
-  <path d="M6 26h20" stroke="#fbfaf8" stroke-width="2" stroke-linecap="round" opacity=".4"/>
-  <path d="M9 22.5 14.5 14.5 19.5 17.5 25 9" stroke="#fbfaf8" stroke-width="2.4"
-        stroke-linecap="round" stroke-linejoin="round" fill="none"/>
-  <circle cx="25" cy="9" r="3" fill="#fbfaf8"/>
-</svg>
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64"><rect width="64" height="64" rx="14" fill="#1D3557"/><path fill="#FBF8F1" d="M24.10 21.44L29.60 21.44L29.60 42.56L24.10 42.56L24.10 34.05L16.03 34.05L16.03 42.56L10.53 42.56L10.53 21.44L16.03 21.44L16.03 29.79L24.10 29.79L24.10 21.44ZM46.08 21.44L53.47 42.56L47.81 42.56L46.34 37.79L39.10 37.79L37.60 42.56L32.06 42.56L39.49 21.44L46.08 21.44ZM42.72 25.50L40.13 34.05L45.31 34.05L42.72 25.50Z"/></svg>

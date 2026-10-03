@@ -24,7 +24,7 @@ links:
   - label: 'The LinkedIn write-up'
     href: 'https://www.linkedin.com/in/hassam-asghar-69628b219/recent-activity/all/'
 featured: true
-order: 1
+order: 2
 ---
 
 ## The problem nobody warns you about

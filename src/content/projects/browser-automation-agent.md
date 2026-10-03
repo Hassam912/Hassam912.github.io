@@ -16,7 +16,7 @@ glance:
   problem: 'LLM browser agents are slow and expensive because they re-read the entire page — usually as screenshots — on every single step.'
   approach: 'Push the deterministic work into code: a matcher resolves fields against a profile, and only genuinely ambiguous fields reach the model. Every resolution is logged and promoted into reusable knowledge.'
   result: 'A repeatedly-visited site approaches zero model tokens — it replays a compiled sequence of steps instead of reasoning from scratch.'
-featured: true
+featured: false
 order: 7
 ---
 

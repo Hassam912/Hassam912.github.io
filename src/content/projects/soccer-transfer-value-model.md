@@ -23,8 +23,8 @@ glance:
 links:
   - label: 'Notebook & model results on GitHub'
     href: 'https://github.com/Hassam912/soccer-transfer-value-model'
-featured: true
-order: 3
+featured: false
+order: 5
 ---
 
 ## The question

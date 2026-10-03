@@ -12,7 +12,7 @@ glance:
   problem: 'HR document work is high-volume, highly templated and low-judgement — exactly the shape of task that consumes disproportionate human time.'
   approach: 'A prompt-driven agent over Sheets-as-database with Apps Script for document generation, storage and retrieval, plus Slack integrations for compliance workflows.'
   result: 'Letters, checklists and worklogs generated on request; worklog output fed directly into the billing pipeline.'
-featured: true
+featured: false
 order: 8
 ---
 

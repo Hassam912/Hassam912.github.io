@@ -20,8 +20,8 @@ glance:
   problem: 'Predict sale price from 79 features spanning numeric, ordinal and nominal types, with missing values that carry three distinct meanings.'
   approach: 'Type-aware preprocessing — ordinals ranked, nominals one-hot encoded, and missingness interpreted per feature — then a grid search across Ridge, Lasso and Gradient Boosting on 5-fold CV.'
   result: 'Top 20% finish, driven mostly by the preprocessing decisions rather than the estimator.'
-featured: true
-order: 4
+featured: false
+order: 6
 ---
 
 ## The dataset

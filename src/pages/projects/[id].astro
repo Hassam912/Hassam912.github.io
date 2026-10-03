@@ -28,22 +28,22 @@ const facts = [
 ];
 ---
 
-<Base title={`${d.title} — ${site.name}`} description={d.summary}>
+<Base title={`${d.title} — ${site.name}`} description={d.summary} progress>
   <article>
     {/* ── Header ───────────────────────────────────────────────────── */}
     <header class="wrap pt-14 pb-12 md:pt-20">
-      <a
-        href="/#work"
-        class="link-underline inline-flex items-center gap-1.5 text-sm font-medium"
-        style="color: var(--ink-3);"
-      >
-        <span aria-hidden="true">&larr;</span> Back to the work
-      </a>
+      <nav aria-label="Breadcrumb" class="text-sm">
+        <ol class="flex flex-wrap items-center gap-1.5" style="color: var(--ink-3);">
+          <li><a href="/#work" class="link">Work</a></li>
+          <li aria-hidden="true">/</li>
+          <li aria-current="page" class="truncate">{d.category}</li>
+        </ol>
+      </nav>
 
-      <p class="eyebrow mt-8" style="color: var(--accent-ink);">{d.category}</p>
+      <p class="eyebrow mt-8">{d.context}</p>
       <h1
-        class="mt-4 max-w-3xl text-[2.125rem] leading-[1.12] tracking-[-0.02em] md:text-5xl"
-        style="font-family: var(--font-display); color: var(--ink); font-weight: 400;"
+        class="mt-3 max-w-3xl text-[2.1rem] leading-[1.1] tracking-[-0.022em] md:text-[3rem]"
+        style={`font-family: var(--font-display); color: var(--ink); font-weight: 650; view-transition-name: title-${project.id};`}
       >
         {d.title}
       </h1>
@@ -79,10 +79,7 @@ const facts = [
           >
             {d.metrics.map((m) => (
               <div class="p-6" style="background: var(--paper-3);">
-                <dd
-                  class="text-3xl leading-none tracking-tight"
-                  style="font-family: var(--font-mono); font-weight: 600; color: var(--accent-ink);"
-                >
+                <dd class="num text-3xl leading-none" style="color: var(--accent);">
                   {m.value}
                 </dd>
                 <dt class="mt-3 text-[0.8125rem] leading-snug" style="color: var(--ink-2);">
@@ -107,7 +104,7 @@ const facts = [
             ] as const
           ).map(([label, body]) => (
             <div>
-              <p class="eyebrow" style="color: var(--accent-ink);">
+              <p class="eyebrow">
                 {label}
               </p>
               <p class="mt-3 text-[0.9375rem] leading-relaxed" style="color: var(--ink-2);">
@@ -133,8 +130,8 @@ const facts = [
               <ul class="mt-4 space-y-2">
                 {d.links.map((l) => (
                   <li>
-                    <a class="link-underline text-sm font-medium" style="color: var(--accent-ink);" href={l.href}>
-                      {l.label} &rarr;
+                    <a class="link inline-flex items-center gap-1.5 text-sm font-semibold" href={l.href}>
+                      {l.label} <span class="arrow" aria-hidden="true">&rarr;</span>
                     </a>
                   </li>
                 ))}
@@ -145,38 +142,49 @@ const facts = [
       </div>
     </div>
 
-    {/* ── Prev / next ──────────────────────────────────────────────── */}
-    <nav class="wrap mt-24">
-      <div class="grid gap-px overflow-hidden rounded-2xl border sm:grid-cols-2" style="border-color: var(--rule); background: var(--rule);">
+    {/* ── Next project + contact ─────────────────────────────────── */}
+    <nav class="wrap mt-20" aria-label="More projects">
+      <div class="grid gap-4 md:grid-cols-[minmax(0,1.6fr)_minmax(0,1fr)]">
         {
-          [
-            { entry: prev, dir: 'Previous' },
-            { entry: next, dir: 'Next' },
-          ].map(({ entry, dir }) =>
-            entry ? (
-              <a
-                href={`/projects/${entry.id}`}
-                class="group block p-7 transition-colors"
-                style="background: var(--paper-3);"
-                data-pn
-              >
-                <p class="eyebrow">{dir}</p>
-                <p class="mt-2.5 text-lg leading-snug tracking-tight" style="font-family: var(--font-display); color: var(--ink);">
-                  {entry.data.title}
-                </p>
-              </a>
-            ) : (
-              <div class="p-7" style="background: var(--paper-3);" />
-            )
+          next ? (
+            <a href={`/projects/${next.id}/`} class="card group block p-6 md:p-8">
+              <p class="eyebrow">Next project</p>
+              <p class="mt-3 text-[1.35rem] font-semibold leading-snug tracking-tight" style="color: var(--ink);">
+                {next.data.title}
+              </p>
+              <p class="mt-2 text-[0.95rem] leading-relaxed" style="color: var(--ink-2);">{next.data.tagline}</p>
+              <span class="mt-4 inline-flex items-center gap-1.5 text-sm font-semibold" style="color: var(--accent);">
+                Read it <span class="arrow" aria-hidden="true">&rarr;</span>
+              </span>
+            </a>
+          ) : (
+            <a href="/#work" class="card group block p-6 md:p-8">
+              <p class="eyebrow">That’s the last one</p>
+              <p class="mt-3 text-[1.35rem] font-semibold leading-snug tracking-tight" style="color: var(--ink);">
+                Back to all the work
+              </p>
+              <span class="mt-4 inline-flex items-center gap-1.5 text-sm font-semibold" style="color: var(--accent);">
+                See the list <span class="arrow" aria-hidden="true">&rarr;</span>
+              </span>
+            </a>
           )
         }
+        <div class="flex flex-col justify-between gap-4 rounded-[var(--radius-lg)] border p-6 md:p-8" style="border-color: var(--rule); background: var(--paper-2);">
+          <div>
+            <p class="eyebrow">Hiring for this kind of work?</p>
+            <p class="mt-3 text-[0.98rem] leading-relaxed" style="color: var(--ink-2);">Email is the fastest way to reach me.</p>
+          </div>
+          <div class="flex flex-wrap gap-2">
+            <a href={`mailto:${site.email}`} class="btn btn-primary btn-sm">Email me</a>
+            <a href={site.resume} class="btn btn-ghost btn-sm">Resume</a>
+          </div>
+        </div>
       </div>
+      {prev && (
+        <p class="mt-5 text-sm" style="color: var(--ink-3);">
+          Previous: <a href={`/projects/${prev.id}/`} class="link">{prev.data.title}</a>
+        </p>
+      )}
     </nav>
   </article>
 </Base>
-
-<style>
-  [data-pn]:hover {
-    background: var(--paper-2) !important;
-  }
-</style>

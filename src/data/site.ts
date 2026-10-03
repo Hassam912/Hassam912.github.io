@@ -1,7 +1,7 @@
 export const site = {
   name: 'Hassam Asghar',
   url: 'https://hassamasghar.com',
-  role: 'Analytics · Optimization · AI Automation',
+  role: 'Data & Business Analyst',
   location: 'Kitchener–Waterloo, Ontario',
   email: 'hassam.asghar.work@gmail.com',
   phone: '(226) 581-9664',
@@ -9,20 +9,29 @@ export const site = {
   github: 'https://github.com/Hassam912',
   resume: '/Hassam-Asghar-Resume.pdf',
 
-  /** The positioning line. Everything else on the site supports this claim. */
-  headline: 'Analytics that ends in a decision,\nnot a dashboard.',
+  /** The positioning line: the job title is in the eyebrow above it. The last
+      word is set in the accent colour. */
+  headline: 'I turn messy operating data into decisions.',
   subhead:
-    'Completing a Master of Management Analytics at Queen’s (Dec 2026). I work at the point where optimization, machine learning and automation meet a real P&L — including my own: a home-goods brand whose inventory I plan with a linear program I wrote.',
+    'SQL, Power BI, Python and optimization. Completing a Master of Management Analytics at Queen’s (Dec 2026), and co-running a home-textiles brand where I own every number.',
 
-  status: 'Open to analytics roles in the GTA & Southwestern Ontario',
+  status: 'Open to roles in the GTA & Southwestern Ontario',
 } as const;
 
-/** Above-the-fold proof. Every number here traces to a real artifact. */
+/** Above-the-fold proof: outcomes, each linking to the project behind it. */
 export const proof = [
-  { value: '~$1M', label: 'a month in billing run through data I owned', note: 'Cowlar Design Studio' },
-  { value: 'Top 20%', label: 'Kaggle House Prices leaderboard finish', note: 'team entry' },
-  { value: '4,056', label: 'player-seasons modelled across 203 features', note: 'MMA 860 team project' },
-  { value: '7 SKUs', label: 'of live inventory kitted by my LP model', note: 'Hopefield' },
+  { value: '~$1M', label: 'a month in billing through data I owned', href: '/projects/cowlar-billing-system/' },
+  { value: '−40%', label: 'financial reconciliation time, with Power BI', href: '/projects/cowlar-billing-system/' },
+  { value: '+37%', label: 'what menu variety adds to hospital food cost', href: '/projects/hospital-meal-planning-milp/' },
+  { value: '0.887', label: 'ROC-AUC on a claim-risk model', href: '/projects/car-insurance-claim-predictor/' },
+] as const;
+
+/** Where the work comes from: shown as a single row under the proof strip. */
+export const credentials = [
+  { name: 'Smith School of Business', sub: 'Queen’s University · MMA' },
+  { name: 'Cowlar Design Studio', sub: 'Y Combinator–backed' },
+  { name: 'Modisoft Inc.', sub: '200+ US retail accounts' },
+  { name: 'Hopefield Home', sub: 'Co-founder' },
 ] as const;
 
 export const toolkit = [

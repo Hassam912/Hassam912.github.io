@@ -7,11 +7,14 @@ import { site } from '../data/site';
 interface Props {
   title?: string;
   description?: string;
+  /** Thin reading-progress bar under the header (case studies). */
+  progress?: boolean;
 }
 
 const {
-  title = `${site.name} — Analytics, Optimization & AI Automation`,
-  description = 'Data and business analyst (Queen’s MMA candidate) working where optimization, machine learning and automation meet a real P&L.',
+  title = `${site.name} — Data & Business Analyst | SQL, Power BI, Python, Optimization`,
+  description = 'Data and business analyst in Kitchener–Waterloo (Queen’s MMA candidate, Dec 2026). SQL, Power BI, Python and optimization on real operating data.',
+  progress = false,
 } = Astro.props;
 
 const canonical = new URL(Astro.url.pathname, Astro.site ?? site.url).href;
@@ -19,7 +22,7 @@ const ogImage = new URL('/og.png', Astro.site ?? site.url).href;
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang="en-CA">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -40,15 +43,9 @@ const ogImage = new URL('/og.png', Astro.site ?? site.url).href;
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={ogImage} />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-    <script is:inline>
-      // Set the theme before first paint so there is no flash.
-      (() => {
-        const stored = localStorage.getItem('theme');
-        if (stored === 'light' || stored === 'dark') {
-          document.documentElement.setAttribute('data-theme', stored);
-        }
-      })();
-    </script>
+    <link rel="icon" href="/favicon.ico" sizes="32x32" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <meta name="theme-color" content="#fbf8f1" />
   </head>
   <body>
     <a
@@ -56,6 +53,7 @@ const ogImage = new URL('/og.png', Astro.site ?? site.url).href;
       class="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-50 focus:rounded focus:px-3 focus:py-2"
       style="background: var(--paper-3); border: 1px solid var(--rule);">Skip to content</a
     >
+    {progress && <div class="read-progress" aria-hidden="true"></div>}
     <Nav />
     <main id="main"><slot /></main>
     <Footer />

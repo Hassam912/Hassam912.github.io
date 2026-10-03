@@ -2,81 +2,145 @@
 import { site } from '../data/site';
 
 const path = Astro.url.pathname;
+/* Work and Contact are sections of the homepage; `section` lets the homepage
+   script underline whichever one is on screen. `match` sets the active state
+   at build time on the other pages. */
 const links = [
-  /* Scrolls to the work section on the homepage; from any other page it goes
-     home first and lands there. `match` drives the active state, since the
-     hash never appears in the pathname. */
-  { href: '/#work', label: 'Work', match: '/projects' },
-  { href: '/about', label: 'About' },
-  { href: site.resume, label: 'Résumé', external: true },
+  { href: '/#work', label: 'Work', section: 'work', match: '/projects' },
+  { href: '/about/', label: 'About', match: '/about' },
+  { href: '/#contact', label: 'Contact', section: 'contact' },
 ];
-const isActive = (l: { href: string; match?: string }) => {
-  const p = l.match ?? l.href;
-  return path === p || path.startsWith(p + '/');
-};
+const isActive = (l: { match?: string }) =>
+  !!l.match && (path === l.match || path.startsWith(l.match + '/'));
 ---
 
-<header
-  class="sticky top-0 z-40 border-b backdrop-blur-md"
-  style="border-color: var(--rule); background: color-mix(in srgb, var(--paper) 85%, transparent);"
->
-  <nav class="wrap flex h-14 items-center justify-between gap-4">
-    <a href="/" class="group flex items-baseline gap-2.5 min-w-0">
-      <span class="text-[0.9375rem] font-semibold tracking-tight truncate" style="color: var(--ink);"
-        >{site.name}</span
-      >
-      <span class="eyebrow hidden sm:inline truncate">Analytics · Optimization</span>
+<header class="site-header" data-header>
+  <nav class="wrap flex items-center justify-between gap-3" style="height: var(--header-h);" aria-label="Main">
+    <a href="/" class="flex min-w-0 items-baseline gap-3" aria-label={`${site.name}, home`}>
+      <img src="/favicon.svg" alt="" width="28" height="28" class="brand-mark" />
+      <span class="brand-name truncate text-[0.95rem] font-semibold tracking-tight" style="color: var(--ink);">{site.name}</span>
+      <span class="eyebrow hidden truncate md:inline">Data &amp; Business Analyst</span>
     </a>
 
-    <div class="flex items-center gap-1 sm:gap-2">
+    <div class="flex items-center gap-0.5 sm:gap-2">
       {
         links.map((l) => (
           <a
             href={l.href}
-            class="rounded px-2.5 py-1.5 text-[0.8125rem] font-medium transition-colors"
-            style={`color: ${isActive(l) && !l.external ? 'var(--accent-ink)' : 'var(--ink-2)'};`}
+            class="nav-link"
             data-nav
+            data-section={l.section}
+            aria-current={isActive(l) ? 'page' : undefined}
           >
             {l.label}
           </a>
         ))
       }
-      <button
-        id="theme-toggle"
-        type="button"
-        aria-label="Toggle colour theme"
-        class="ml-1 grid h-8 w-8 place-items-center rounded-full border transition-colors"
-        style="border-color: var(--rule); color: var(--ink-2);"
-      >
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true">
-          <circle cx="12" cy="12" r="4.2"></circle>
-          <path
-            d="M12 2.5v2M12 19.5v2M2.5 12h2M19.5 12h2M5.2 5.2l1.4 1.4M17.4 17.4l1.4 1.4M18.8 5.2l-1.4 1.4M6.6 17.4l-1.4 1.4"
-            stroke-linecap="round"></path>
-        </svg>
-      </button>
+      <a href={site.resume} class="btn btn-primary btn-sm ml-1.5">Resume</a>
     </div>
   </nav>
 </header>
 
 <style>
-  [data-nav]:hover {
-    background: var(--paper-2);
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 40;
+    background: var(--paper);
+    border-bottom: 1px solid var(--rule);
   }
-  #theme-toggle:hover {
-    background: var(--paper-2);
-    color: var(--ink);
+  .site-header[data-hidden] { transform: translateY(-100%); }
+  @media (prefers-reduced-motion: no-preference) {
+    .site-header { transition: transform var(--t-base) var(--ease); }
+  }
+
+  .nav-link {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    min-height: 2.5rem;
+    padding: 0 0.55rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--ink-2);
+    transition: color var(--t-fast) var(--ease);
+  }
+  .nav-link::after {
+    content: '';
+    position: absolute;
+    left: 0.55rem;
+    right: 0.55rem;
+    bottom: 0.45rem;
+    height: 2px;
+    background: var(--accent);
+    transform: scaleX(0);
+    transform-origin: 0 50%;
+    transition: transform var(--t-base) var(--ease);
+  }
+  .nav-link:hover { color: var(--ink); }
+  .brand-mark { display: none; border-radius: 6px; align-self: center; }
+  @media (max-width: 459px) {
+    .brand-mark { display: block; }
+    .brand-name { display: none; }
+  }
+  .nav-link[aria-current] { color: var(--accent); }
+  .nav-link[aria-current]::after { transform: scaleX(1); }
+  @media (max-width: 380px) {
+    .nav-link { padding: 0 0.4rem; font-size: 0.8125rem; }
+    .nav-link::after { left: 0.4rem; right: 0.4rem; }
   }
 </style>
 
-<script is:inline>
-  document.getElementById('theme-toggle')?.addEventListener('click', () => {
-    const root = document.documentElement;
-    const current =
-      root.getAttribute('data-theme') ??
-      (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
-    const next = current === 'dark' ? 'light' : 'dark';
-    root.setAttribute('data-theme', next);
-    localStorage.setItem('theme', next);
-  });
+<script>
+  /* Hide the header while scrolling down, bring it back on any scroll up.
+     It never hides near the top or while something inside it has focus. */
+  const header = document.querySelector<HTMLElement>('[data-header]');
+  if (header) {
+    let lastY = scrollY;
+    let ticking = false;
+    const update = () => {
+      const y = scrollY;
+      const down = y > lastY;
+      const hide = down && y > 120 && !header.contains(document.activeElement);
+      header.toggleAttribute('data-hidden', hide);
+      lastY = y;
+      ticking = false;
+    };
+    addEventListener(
+      'scroll',
+      () => {
+        if (!ticking) {
+          requestAnimationFrame(update);
+          ticking = true;
+        }
+      },
+      { passive: true }
+    );
+    header.addEventListener('focusin', () => header.removeAttribute('data-hidden'));
+  }
+
+  /* On the homepage, underline Work or Contact while that section is on screen. */
+  const sectionLinks = [...document.querySelectorAll<HTMLAnchorElement>('[data-nav][data-section]')];
+  const targets = sectionLinks
+    .map((l) => document.getElementById(l.dataset.section!))
+    .filter((el): el is HTMLElement => !!el);
+  if (targets.length) {
+    /* The current section is the last one whose top has passed the middle of
+       the screen; at the very bottom of the page the last section wins. */
+    const mark = () => {
+      const atBottom = innerHeight + scrollY >= document.documentElement.scrollHeight - 4;
+      let current: string | undefined;
+      for (const t of targets) {
+        const r = t.getBoundingClientRect();
+        if (r.top < innerHeight * 0.5 && r.bottom > 0) current = t.id;
+      }
+      if (atBottom) current = targets[targets.length - 1].id;
+      for (const l of sectionLinks) {
+        if (l.dataset.section === current) l.setAttribute('aria-current', 'true');
+        else l.removeAttribute('aria-current');
+      }
+    };
+    addEventListener('scroll', () => requestAnimationFrame(mark), { passive: true });
+    mark();
+  }
 </script>

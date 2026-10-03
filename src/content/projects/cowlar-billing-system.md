@@ -19,7 +19,7 @@ glance:
   approach: 'Owned end-to-end delivery of the analytics-ready SQL datasets, established QA/UAT workflows and SOPs, and built Power BI reporting on top.'
   result: 'A live production billing system with reporting used for client invoicing and internal decision-making.'
 featured: true
-order: 6
+order: 1
 draft: false
 ---
 

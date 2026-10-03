@@ -3,249 +3,104 @@ import { getCollection } from 'astro:content';
 import Base from '../layouts/Base.astro';
 import SectionHead from '../components/SectionHead.astro';
 import ProjectCard from '../components/ProjectCard.astro';
-import SkillCloud from '../components/SkillCloud.astro';
-import ToolTiles from '../components/ToolTiles.astro';
-import { site, toolkit } from '../data/site';
+import { site, proof, credentials, toolkit, experience, education } from '../data/site';
 
 const all = (await getCollection('projects', ({ data }) => !data.draft)).sort(
   (a, b) => a.data.order - b.data.order
 );
-const featured = all.filter((p) => p.data.featured);
-const rest = all.filter((p) => !p.data.featured);
+const flagships = all.filter((p) => p.data.featured);
+const more = all.filter((p) => !p.data.featured);
 
-/* Group the featured work by category. Order is fixed here rather than taken
-   from the data so the agentic-AI tools always land last. */
-const GROUP_ORDER = ['Optimization', 'Predictive Modelling', 'Analytics & BI', 'Agentic AI'] as const;
-const GROUP_BLURB: Record<string, string> = {
-  Optimization: 'Linear and mixed-integer programs — where the answer has to survive a real constraint.',
-  'Predictive Modelling': 'Models framed around the decision they enable, not the leaderboard.',
-  'Analytics & BI': 'Datasets and reporting that other people make decisions on.',
-  'Agentic AI': 'Tools I built so the analysis actually acts on itself.',
-};
-const groups = GROUP_ORDER.map((name) => ({
-  name,
-  slug: name.toLowerCase().replace(/[^a-z]+/g, '-').replace(/^-|-$/g, ''),
-  blurb: GROUP_BLURB[name],
-  items: featured.filter((p) => p.data.category === name),
-})).filter((g) => g.items.length > 0);
-const headlineLines = site.headline.split('\n');
+/* The last word of the headline is set in the accent colour. */
+const words = site.headline.split(' ');
+const lastWord = words.pop();
+const headStart = words.join(' ');
 ---
 
 <Base>
   {/* ── Hero ─────────────────────────────────────────────────────────── */}
-  <section class="wrap pt-14 pb-12 md:pt-20 md:pb-16">
-    <div class="rise grid items-center gap-14 lg:grid-cols-[1.05fr_0.95fr] lg:gap-16">
-      {/* Left — the pitch */}
-      <div>
-        <div class="flex items-center gap-2.5">
-          <span class="relative flex h-2 w-2">
-            <span
-              class="absolute inline-flex h-full w-full animate-ping rounded-full opacity-60"
-              style="background: var(--accent);"></span>
-            <span class="relative inline-flex h-2 w-2 rounded-full" style="background: var(--accent);"
-            ></span>
-          </span>
-          <p class="eyebrow">{site.status}</p>
-        </div>
+  <section class="wrap pt-12 pb-10 md:pt-20 md:pb-14">
+    <div class="max-w-[46rem]">
+      <p class="rise eyebrow flex flex-wrap items-center gap-x-2.5 gap-y-1" style="--i: 0;">
+        <span class="signal-dot" aria-hidden="true"></span>
+        <span style="color: var(--ink);">{site.name}</span>
+        <span aria-hidden="true">·</span>
+        <span>{site.role}</span>
+        <span aria-hidden="true">·</span>
+        <span>Kitchener–Waterloo</span>
+      </p>
 
-        <h1
-          class="mt-6 text-[2.25rem] leading-[1.06] tracking-[-0.03em] sm:text-5xl md:text-[3.25rem]"
-          style="font-family: var(--font-display); color: var(--ink); font-weight: 800;"
-        >
-          {
-            headlineLines.map((line, i) => (
-              <span class="block">
-                {i === headlineLines.length - 1 ? (
-                  <span style="color: var(--accent);">{line}</span>
-                ) : (
-                  line
-                )}
-              </span>
-            ))
-          }
-        </h1>
+      <h1
+        class="rise mt-5 text-[2.4rem] leading-[1.04] tracking-[-0.025em] sm:text-[3.1rem] md:text-[3.75rem]"
+        style="--i: 1; font-family: var(--font-display); color: var(--ink); font-weight: 700;"
+      >
+        {headStart} <span style="color: var(--accent);">{lastWord}</span>
+      </h1>
 
-        <p class="mt-6 max-w-xl text-[1.0625rem] leading-relaxed" style="color: var(--ink-2);">
-          {site.subhead}
-        </p>
+      <p class="rise mt-5 max-w-[38rem] text-[1.0625rem] leading-relaxed md:text-[1.125rem]" style="--i: 2; color: var(--ink-2);">
+        {site.subhead}
+      </p>
 
-        <div class="mt-8 flex flex-wrap items-center gap-3">
-          <a
-            href="#work"
-            class="rounded-full px-7 py-3.5 text-[0.9375rem] font-semibold text-white transition-all"
-            style="background: linear-gradient(135deg, #fb923c, #ea580c); box-shadow: var(--shadow-lift);"
-            data-cta>See the work</a
-          >
-          <a
-            href={site.resume}
-            class="rounded-full border px-7 py-3.5 text-[0.9375rem] font-semibold transition-colors"
-            style="border-color: var(--accent-border); background: var(--paper-3); color: var(--accent-ink);"
-            data-ghost>Download résumé</a
-          >
-        </div>
-        <a
-          href={`mailto:${site.email}`}
-          class="link-underline mt-5 inline-block text-sm font-medium"
-          style="color: var(--ink-2);">{site.email}</a
-        >
+      <div class="rise mt-7 flex flex-wrap items-center gap-3" style="--i: 3;">
+        <a href="#work" class="btn btn-primary">See the work <span class="arrow" aria-hidden="true">&darr;</span></a>
+        <a href={site.resume} class="btn btn-ghost">Download resume</a>
       </div>
-
-      {/* Right — the toolkit as a living word cloud */}
-      <div>
-        <h2
-          class="text-center text-[1.125rem] leading-tight tracking-tight md:text-[1.25rem]"
-          style="font-family: var(--font-display); color: var(--ink); font-weight: 700;"
-        >
-          What I work with
-        </h2>
-        <SkillCloud />
-        <p class="text-center text-[0.8125rem]" style="color: var(--ink-3);">
-          Never all of it at once — the list keeps rotating.
-        </p>
-      </div>
+      <p class="rise mt-5 text-sm" style="--i: 3; color: var(--ink-3);">
+        {site.status} · <a href={`mailto:${site.email}`} class="link">{site.email}</a>
+      </p>
     </div>
   </section>
 
-  {/* ── Credentials + toolkit ────────────────────────────────────────── */}
-  <section class="wrap pb-16">
-    <div class="grid gap-12 border-t pt-8 lg:grid-cols-[0.85fr_1.15fr] lg:gap-16" style="border-color: var(--rule);">
-      {/* Where the work comes from — stacked, so the tiles get the other half */}
-      <div>
-        <p class="eyebrow">Where the work comes from</p>
-        <ul class="mt-6 flex flex-col gap-5">
-          {
-            [
-              ['Smith School of Business', 'Queen’s University · MMA'],
-              ['Cowlar Design Studio', 'Y Combinator–backed'],
-              ['Modisoft Inc.', '200+ retail accounts · POS data QA'],
-              ['Hopefield Home', 'the brand I co-founded'],
-            ].map(([name, sub]) => (
-              <li class="border-l-2 pl-4" style="border-color: var(--accent-border);">
-                <p class="text-[1rem] font-semibold leading-snug tracking-tight" style="color: var(--ink);">
-                  {name}
-                </p>
-                <p class="eyebrow mt-1.5">{sub}</p>
-              </li>
-            ))
-          }
-        </ul>
-      </div>
-
-      {/* The toolkit, as cycling square tiles */}
-      <div>
-        <p class="eyebrow">What I build it with</p>
-        <div class="mt-6">
-          <ToolTiles />
-        </div>
-      </div>
-    </div>
-  </section>
-
-  {/* ── Featured work ────────────────────────────────────────────────── */}
-  <section id="work" class="wrap mt-28 scroll-mt-20 md:mt-36">
-    <SectionHead
-      eyebrow="Selected work"
-      title="The work, grouped by the kind of problem it solves."
-      lede="Every one started with a problem someone actually had — question, model, decision, result. Jump to whichever kind you care about."
-    />
-
-    {/* Jump-nav by category. Sticks below the site header so it stays
-        reachable through the full-height cards. */}
-    <nav class="project-nav" aria-label="Jump to a category of work">
-      <span class="eyebrow shrink-0">Jump to</span>
-      <ul class="project-nav-list">
-        {
-          groups.map((g) => (
-            <li>
-              <a href={`#group-${g.slug}`} class="project-nav-link" data-jump={`group-${g.slug}`}>
-                {g.name}
-                <span class="project-nav-count">{g.items.length}</span>
-              </a>
-            </li>
-          ))
-        }
-      </ul>
-    </nav>
-
-    <div class="mt-8 flex flex-col gap-16">
+  {/* ── Proof strip ──────────────────────────────────────────────────── */}
+  <section class="wrap" aria-label="Results at a glance">
+    <ul class="proof grid grid-cols-2 overflow-hidden rounded-[var(--radius-lg)] border lg:grid-cols-4" style="border-color: var(--rule); background: var(--paper-2);">
       {
-        groups.map((g) => (
-          <section id={`group-${g.slug}`} class="group-block flex flex-col gap-6">
-            <div class="flex flex-wrap items-baseline gap-x-4 gap-y-1">
-              <h3
-                class="text-[1.25rem] tracking-tight md:text-[1.375rem]"
-                style="font-family: var(--font-display); color: var(--ink); font-weight: 700;"
-              >
-                {g.name}
-              </h3>
-              <p class="text-[0.875rem]" style="color: var(--ink-3);">
-                {g.blurb}
-              </p>
-            </div>
-            {g.items.map((p, i) => (
-              <ProjectCard project={p} index={i} />
-            ))}
-          </section>
+        proof.map((p) => (
+          <li class="min-w-0">
+            <a href={p.href} class="proof-item group flex h-full flex-col gap-2 p-5 md:p-6">
+              <span class="num text-[1.75rem] leading-none md:text-[2rem]" style="color: var(--accent);">
+                {p.value}
+              </span>
+              <span class="text-[0.85rem] leading-snug" style="color: var(--ink-2);">
+                {p.label}
+              </span>
+            </a>
+          </li>
         ))
       }
-    </div>
+    </ul>
 
-    <script>
-      /* Light-touch scrollspy: mark whichever card is nearest the middle of
-         the viewport so the jump-nav always says where you are. */
-      const links = [...document.querySelectorAll<HTMLAnchorElement>('[data-jump]')];
-      const cards = links
-        .map((l) => document.getElementById(l.dataset.jump!))
-        .filter((el): el is HTMLElement => !!el);
-      /* Groups are tall, so track the one whose top is nearest the header
-         rather than whose centre is nearest the viewport centre. */
-
-      /* Drive the jump ourselves. A plain hash jump obeys scroll-margin-top
-         while scroll-snap wants the card centred, and the two disagree — which
-         left the first cards parked short of the viewport. */
-      links.forEach((l) =>
-        l.addEventListener('click', (e) => {
-          const target = document.getElementById(l.dataset.jump!);
-          if (!target) return;
-          e.preventDefault();
-          target.scrollIntoView({ block: 'start', behavior: 'smooth' });
-          history.replaceState(null, '', `#${l.dataset.jump}`);
-        })
-      );
-
-      if (links.length && cards.length && 'IntersectionObserver' in window) {
-        const setActive = (id: string) =>
-          links.forEach((l) => l.classList.toggle('is-active', l.dataset.jump === id));
-
-        const io = new IntersectionObserver(
-          (entries) => {
-            let best: { id: string; d: number } | null = null;
-            for (const c of cards) {
-              const r = c.getBoundingClientRect();
-              if (r.bottom < 120 || r.top > innerHeight) continue;
-              const d = Math.abs(r.top - 140);
-              if (!best || d < best.d) best = { id: c.id, d };
-            }
-            if (best) setActive(best.id);
-          },
-          { threshold: [0, 0.25, 0.5, 0.75, 1] }
-        );
-        cards.forEach((c) => io.observe(c));
+    <ul class="mt-8 grid grid-cols-2 gap-x-6 gap-y-4 md:grid-cols-4">
+      {
+        credentials.map((c) => (
+          <li class="min-w-0">
+            <p class="text-[0.95rem] font-semibold leading-snug" style="color: var(--ink);">{c.name}</p>
+            <p class="eyebrow mt-1">{c.sub}</p>
+          </li>
+        ))
       }
-    </script>
+    </ul>
   </section>
 
-  {/* ── Secondary work ───────────────────────────────────────────────── */}
+  {/* ── Selected work ────────────────────────────────────────────────── */}
+  <section id="work" class="wrap mt-20 md:mt-28">
+    <SectionHead
+      eyebrow="Selected work"
+      title="Four projects, strongest first."
+      lede="Each one starts from a business question and ends with what changed. Every number traces to the case study."
+    />
+    <div class="mt-8 flex flex-col gap-6">
+      {flagships.map((p) => <ProjectCard project={p} />)}
+    </div>
+  </section>
+
+  {/* ── More work ────────────────────────────────────────────────────── */}
   {
-    rest.length > 0 && (
-      <section class="wrap mt-28 md:mt-36">
-        <SectionHead
-          eyebrow="Also in the portfolio"
-          title="Coursework, competitions and tools I’ve built."
-          lede="Shorter write-ups — same structure, less depth."
-        />
-        <div class="mt-4">
-          {rest.map((p) => (
+    more.length > 0 && (
+      <section class="wrap mt-20 md:mt-24">
+        <SectionHead eyebrow="More work" title="Coursework, a competition and the tools I’ve built." />
+        <div class="mt-4 border-b" style="border-color: var(--rule);">
+          {more.map((p) => (
             <ProjectCard project={p} variant="compact" />
           ))}
         </div>
@@ -253,24 +108,54 @@ const headlineLines = site.headline.split('\n');
     )
   }
 
+  {/* ── Experience & education ───────────────────────────────────────── */}
+  <section id="experience" class="wrap mt-20 md:mt-28">
+    <SectionHead eyebrow="Experience" title="Where I’ve done the work." />
+    <div class="mt-8 grid gap-12 lg:grid-cols-[minmax(0,1.5fr)_minmax(0,1fr)] lg:gap-16">
+      <ol class="flex flex-col">
+        {
+          experience.map((x) => (
+            <li class="grid gap-1 border-t py-5 sm:grid-cols-[11rem_minmax(0,1fr)] sm:gap-6" style="border-color: var(--rule);">
+              <p class="eyebrow pt-0.5">{x.period}</p>
+              <div class="min-w-0">
+                <p class="text-[1rem] font-semibold leading-snug" style="color: var(--ink);">
+                  {x.title} <span style="color: var(--ink-3); font-weight: 500;">· {x.company}</span>
+                </p>
+                <p class="mt-1.5 text-[0.9375rem] leading-relaxed" style="color: var(--ink-2);">{x.detail}</p>
+              </div>
+            </li>
+          ))
+        }
+      </ol>
+      <div>
+        <p class="eyebrow border-t pt-5" style="border-color: var(--rule);">Education</p>
+        <ul class="mt-4 flex flex-col gap-5">
+          {
+            education.map((e) => (
+              <li>
+                <p class="text-[0.98rem] font-semibold leading-snug" style="color: var(--ink);">{e.credential}</p>
+                <p class="mt-1 text-sm" style="color: var(--ink-2);">{e.school}</p>
+                <p class="eyebrow mt-1.5">{e.period} · {e.detail}</p>
+              </li>
+            ))
+          }
+        </ul>
+        <a href={site.resume} class="link mt-6 inline-flex items-center gap-1.5 text-sm font-semibold">
+          Full resume (PDF) <span class="arrow" aria-hidden="true">&rarr;</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
   {/* ── Toolkit ──────────────────────────────────────────────────────── */}
-  <section class="wrap mt-28 md:mt-36">
-    <SectionHead
-      eyebrow="Toolkit"
-      title="What I reach for."
-      lede="Grouped by what it’s for, not by how long the list is."
-    />
-    <div
-      class="mt-10 grid gap-px overflow-hidden rounded-2xl border sm:grid-cols-2"
-      style="border-color: var(--rule); background: var(--rule);"
-    >
+  <section class="wrap mt-20 md:mt-28">
+    <SectionHead eyebrow="Toolkit" title="What I use, grouped by what it’s for." />
+    <div class="mt-8 grid gap-px overflow-hidden rounded-[var(--radius-lg)] border sm:grid-cols-2" style="border-color: var(--rule); background: var(--rule);">
       {
         toolkit.map((t) => (
-          <div class="p-7" style="background: var(--paper-3);">
-            <h3 class="text-[0.9375rem] font-semibold tracking-tight" style="color: var(--ink);">
-              {t.group}
-            </h3>
-            <ul class="mt-4 flex flex-wrap gap-1.5">
+          <div class="p-6" style="background: var(--paper-3);">
+            <h3 class="text-[0.95rem] font-semibold" style="color: var(--ink);">{t.group}</h3>
+            <ul class="mt-3 flex flex-wrap gap-1.5">
               {t.items.map((i) => (
                 <li class="chip">{i}</li>
               ))}
@@ -281,54 +166,41 @@ const headlineLines = site.headline.split('\n');
     </div>
   </section>
 
-  {/* ── Bio ──────────────────────────────────────────────────────────── */}
-  <section class="wrap mt-28 md:mt-36">
-    <div
-      class="grid gap-10 border-t pt-6 md:grid-cols-[auto_1fr] md:gap-16"
-      style="border-color: var(--rule);"
-    >
-      <p class="eyebrow md:pt-1">The short version</p>
+  {/* ── The short version ────────────────────────────────────────────── */}
+  <section class="wrap mt-20 md:mt-28">
+    <div class="grid gap-6 border-t pt-6 md:grid-cols-[11rem_minmax(0,1fr)] md:gap-10" style="border-color: var(--rule);">
+      <p class="eyebrow md:pt-1.5">The short version</p>
       <div class="max-w-2xl">
-        <div class="prose-case" style="font-size: 1.125rem;">
+        <div class="prose-case" style="font-size: 1.0625rem;">
           <p>
-            I came into analytics through operations — three years of support and billing work where I
-            kept hitting the same wall: the data existed, but nobody had built anything that would
+            I came into analytics through operations: three years of support and billing work where I
+            kept hitting the same wall. The data existed, but nobody had built anything that would
             <em>act</em> on it. So I started building. A fractional-billing system that processed close to $1M a month.
             An HR agent that writes its own documents. A browser agent that fills in forms by itself.
           </p>
           <p>
-            Now I’m finishing a Master of Management Analytics at Queen’s, which gave me the formal half —
-            optimization, inference, machine learning — to go with the engineering half. In between I
+            Now I’m finishing a Master of Management Analytics at Queen’s, which gave me the formal half
+            (optimization, inference, machine learning) to go with the engineering half. In between I
             co-founded <strong>Hopefield Home</strong>, a home-textiles brand, mostly because I wanted a business where
             I owned every number and couldn’t hide behind someone else’s dashboard.
           </p>
-          <p>
-            That’s the thread: I like problems where the answer has to survive contact with a real
-            constraint — a budget, a warehouse, a solver, a customer.
-          </p>
         </div>
-        <a
-          href="/about"
-          class="link-underline mt-6 inline-block text-sm font-medium"
-          style="color: var(--accent-ink);">More about me &rarr;</a
-        >
+        <a href="/about/" class="link mt-5 inline-flex items-center gap-1.5 text-sm font-semibold">
+          More about me <span class="arrow" aria-hidden="true">&rarr;</span>
+        </a>
       </div>
     </div>
   </section>
 </Base>
 
 <style>
-  [data-ghost]:hover {
-    background: var(--accent-soft);
-    border-color: var(--accent);
+  .proof li + li { border-left: 1px solid var(--rule); }
+  .proof li:nth-child(3) { border-left: 0; }
+  .proof li:nth-child(n + 3) { border-top: 1px solid var(--rule); }
+  @media (min-width: 1024px) {
+    .proof li:nth-child(3) { border-left: 1px solid var(--rule); }
+    .proof li:nth-child(n + 3) { border-top: 0; }
   }
-  [data-cta]:hover {
-    transform: translateY(-2px);
-    filter: saturate(1.08);
-  }
-  [data-pill]:hover {
-    transform: translateY(-2px);
-    box-shadow: var(--shadow-lift) !important;
-  }
-
+  .proof-item { transition: background-color var(--t-base) var(--ease); }
+  .proof-item:hover { background: var(--paper-3); }
 </style>

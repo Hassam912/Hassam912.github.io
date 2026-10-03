@@ -22,7 +22,7 @@ links:
   - label: 'Notebook & data on GitHub'
     href: 'https://github.com/Hassam912/riskiq-claim-prediction'
 featured: true
-order: 5
+order: 4
 ---
 
 ## The business problem, with a number attached

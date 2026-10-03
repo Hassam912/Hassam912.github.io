@@ -1,6 +1,6 @@
 ---
 import Base from '../layouts/Base.astro';
-import { site, education, experience, toolkit } from '../data/site';
+import { site, education, experience } from '../data/site';
 ---
 
 <Base
@@ -10,8 +10,8 @@ import { site, education, experience, toolkit } from '../data/site';
   <section class="wrap pt-16 pb-12 md:pt-24">
     <p class="eyebrow">About</p>
     <h1
-      class="mt-4 max-w-3xl text-[2.25rem] leading-[1.1] tracking-[-0.02em] md:text-5xl"
-      style="font-family: var(--font-display); color: var(--ink); font-weight: 400;"
+      class="mt-4 max-w-3xl text-[2.1rem] leading-[1.1] tracking-[-0.022em] md:text-[3rem]"
+      style="font-family: var(--font-display); color: var(--ink); font-weight: 650;"
     >
       I got into analytics because I kept watching good data go unused.
     </h1>
@@ -140,24 +140,9 @@ import { site, education, experience, toolkit } from '../data/site';
         </ul>
       </div>
 
-      <div>
-        <p class="eyebrow border-b pb-3" style="border-color: var(--rule);">Toolkit</p>
-        <div class="mt-5 space-y-5">
-          {
-            toolkit.map((t) => (
-              <div>
-                <p class="text-[0.8125rem] font-semibold" style="color: var(--ink);">
-                  {t.group}
-                </p>
-                <ul class="mt-2 flex flex-wrap gap-1.5">
-                  {t.items.map((i) => (
-                    <li class="chip">{i}</li>
-                  ))}
-                </ul>
-              </div>
-            ))
-          }
-        </div>
+      <div class="flex flex-col gap-3">
+        <a href={site.resume} class="btn btn-primary w-fit">Download resume</a>
+        <a href={site.linkedin} class="link text-sm font-semibold">LinkedIn profile <span class="arrow" aria-hidden="true">&rarr;</span></a>
       </div>
     </aside>
   </div>

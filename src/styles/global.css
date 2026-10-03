@@ -1,121 +1,115 @@
 @import 'tailwindcss';
 
-@import '@fontsource-variable/figtree';
-@import '@fontsource-variable/lexend';
-@import '@fontsource-variable/jetbrains-mono';
+@import '@fontsource-variable/work-sans';
+@import '@fontsource/ibm-plex-mono/latin-500.css';
+@import '@fontsource/ibm-plex-mono/latin-600.css';
 
-/* ── Design tokens ─────────────────────────────────────────────────────────
-   Warm, rounded, product-led: cool off-white page, white cards, orange accent.
-   Lexend for display, Figtree for text/UI, mono kept for figures.
+/* ── Design tokens: Bone & Lake, analyst edit ───────────────────────────────
+   Warm bone ground, lake-navy accent for brand and actions, signal red for
+   one small signal per screen. Work Sans for everything you read, IBM Plex
+   Mono for every number and label. Light only.
+   Token names are kept from the previous system so the hand-built SVG
+   charts in the case studies pick up the palette unchanged.
    ------------------------------------------------------------------------ */
 @theme {
-  --font-sans: 'Figtree Variable', ui-sans-serif, system-ui, sans-serif;
-  --font-display: 'Lexend Variable', 'Figtree Variable', ui-sans-serif, sans-serif;
-  --font-serif: 'Lexend Variable', 'Figtree Variable', ui-sans-serif, sans-serif;
-  --font-mono: 'JetBrains Mono Variable', ui-monospace, monospace;
-
-  --color-paper: #f6f9fd;
-  --color-paper-2: #eef3fa;
-  --color-ink: #0f172a;
-  --color-ink-2: #4b5563;
-  --color-ink-3: #6b7280;
-  --color-rule: #e5e7eb;
-  --color-accent: #f97316;
-  --color-accent-soft: #fff7ed;
+  --font-sans: 'Work Sans Variable', ui-sans-serif, system-ui, sans-serif;
+  --font-display: 'Work Sans Variable', ui-sans-serif, system-ui, sans-serif;
+  --font-serif: 'Work Sans Variable', ui-sans-serif, system-ui, sans-serif;
+  --font-mono: 'IBM Plex Mono', ui-monospace, 'SF Mono', Menlo, monospace;
 }
 
 :root {
-  --paper: #f6f9fd;
-  --paper-2: #eef3fa;
-  --paper-3: #ffffff;
-  --ink: #0f172a;
-  --ink-2: #4b5563;
-  --ink-3: #6b7280;
-  --rule: #e5e7eb;
-  --accent: #f97316;
-  --accent-ink: #c2410c;
-  --accent-soft: #fff7ed;
-  --accent-border: #fed7aa;
-  --radius: 1rem;
-  --radius-lg: 1.5rem;
-  --shadow: 0 1px 2px rgb(15 23 42 / 0.04), 0 12px 28px -14px rgb(15 23 42 / 0.14);
-  --shadow-lift: 0 2px 4px rgb(15 23 42 / 0.05), 0 20px 40px -18px rgb(249 115 22 / 0.28);
-}
+  color-scheme: light;
 
-:root[data-theme='dark'],
-html.dark {
-  --paper: #0b1120;
-  --paper-2: #111a2e;
-  --paper-3: #16203a;
-  --ink: #f1f5f9;
-  --ink-2: #cbd5e1;
-  --ink-3: #94a3b8;
-  --rule: #24314d;
-  --accent: #fb923c;
-  --accent-ink: #fdba74;
-  --accent-soft: #2a1a10;
-  --accent-border: #7c2d12;
-  --radius: 1rem;
-  --radius-lg: 1.5rem;
-  --shadow: 0 1px 2px rgb(0 0 0 / 0.5), 0 14px 32px -16px rgb(0 0 0 / 0.75);
-  --shadow-lift: 0 2px 4px rgb(0 0 0 / 0.5), 0 22px 44px -20px rgb(251 146 60 / 0.35);
-}
+  --paper: #fbf8f1;        /* bone: page ground */
+  --paper-2: #f4efe4;      /* soft kraft: panels, alt sections */
+  --paper-3: #fffdf9;      /* card surface */
+  --kraft: #efe8da;        /* chart panels */
+  --ink: #1d2230;          /* text, 15:1 on bone */
+  --ink-2: #464b57;        /* secondary text, 8.2:1 */
+  --ink-3: #62666f;        /* labels, chart context, 5.4:1 */
+  --rule: #e3dccd;
+  --accent: #1d3557;       /* lake navy, 11.7:1 */
+  --accent-ink: #1d3557;
+  --accent-soft: #e9eef5;
+  --accent-border: #b9c6d8;
+  --on-accent: #ffffff;
+  --signal: #b8321f;       /* one small signal per screen, 5.6:1 */
 
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme='light']) {
-  --paper: #0b1120;
-  --paper-2: #111a2e;
-  --paper-3: #16203a;
-  --ink: #f1f5f9;
-  --ink-2: #cbd5e1;
-  --ink-3: #94a3b8;
-  --rule: #24314d;
-  --accent: #fb923c;
-  --accent-ink: #fdba74;
-  --accent-soft: #2a1a10;
-  --accent-border: #7c2d12;
-  --radius: 1rem;
-  --radius-lg: 1.5rem;
-  --shadow: 0 1px 2px rgb(0 0 0 / 0.5), 0 14px 32px -16px rgb(0 0 0 / 0.75);
-  --shadow-lift: 0 2px 4px rgb(0 0 0 / 0.5), 0 22px 44px -20px rgb(251 146 60 / 0.35);
-  }
+  --radius: 0.75rem;
+  --radius-lg: 1rem;
+  --radius-btn: 0.5rem;
+  --shadow: 0 1px 2px rgb(29 34 48 / 0.04);
+  --shadow-lift: 0 1px 2px rgb(29 34 48 / 0.05), 0 12px 24px -16px rgb(29 53 87 / 0.28);
+
+  /* motion: one curve, short durations */
+  --ease: cubic-bezier(0.2, 0.7, 0.3, 1);
+  --t-fast: 150ms;
+  --t-base: 200ms;
+  --t-enter: 280ms;
+  --header-h: 3.5rem;
 }
 
 html {
   background: var(--paper);
   color: var(--ink);
   -webkit-font-smoothing: antialiased;
-  scroll-behavior: smooth;
+  scroll-padding-top: calc(var(--header-h) + 1rem);
 }
 
 body {
+  background: var(--paper);
   font-family: var(--font-sans);
   font-synthesis-weight: none;
 }
 
+h1, h2, h3 { text-wrap: balance; }
+
 ::selection {
   background: var(--accent);
-  color: var(--paper);
+  color: var(--on-accent);
+}
+
+/* Keyboard focus is always visible and always lake navy. */
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 4px;
 }
 
 /* ── Reusable primitives ─────────────────────────────────────────────────── */
 .wrap {
   width: 100%;
-  max-width: 78rem;
+  max-width: 72rem;
   margin-inline: auto;
-  padding-inline: 1.5rem;
+  padding-inline: 1.25rem;
 }
 @media (min-width: 768px) {
   .wrap { padding-inline: 2.5rem; }
 }
 
 .eyebrow {
-  font-family: var(--font-sans);
+  font-family: var(--font-mono);
   font-size: 0.75rem;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--ink-3);
+  font-weight: 500;
+}
+
+.num {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
   font-weight: 600;
+}
+
+.signal-dot {
+  display: inline-block;
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 999px;
+  background: var(--signal);
+  flex: none;
 }
 
 .rule { border-color: var(--rule); }
@@ -126,38 +120,71 @@ body {
   font-family: var(--font-sans);
   font-size: 0.8125rem;
   font-weight: 500;
-  letter-spacing: 0;
-  padding: 0.3rem 0.75rem;
-  border: 1px solid var(--accent-border);
+  padding: 0.25rem 0.7rem;
+  border: 1px solid var(--rule);
   border-radius: 999px;
-  background: var(--accent-soft);
-  color: var(--accent-ink);
+  background: var(--paper-3);
+  color: var(--ink-2);
   white-space: nowrap;
 }
 
-.link-underline {
-  background-image: linear-gradient(var(--accent), var(--accent));
-  background-size: 100% 1px;
-  background-repeat: no-repeat;
-  background-position: 0 100%;
-  transition: background-size 0.25s ease;
+/* Buttons: solid lake navy primary, outlined secondary. */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 2.75rem;
+  padding: 0.65rem 1.25rem;
+  border-radius: var(--radius-btn);
+  border: 2px solid var(--accent);
+  font-size: 0.9375rem;
+  font-weight: 600;
+  line-height: 1.2;
+  transition:
+    background-color var(--t-base) var(--ease),
+    color var(--t-base) var(--ease),
+    border-color var(--t-base) var(--ease),
+    transform var(--t-fast) var(--ease);
 }
-.link-underline:hover { background-size: 0% 1px; }
+.btn-primary { background: var(--accent); color: var(--on-accent); }
+.btn-primary:hover { background: #142640; border-color: #142640; }
+.btn-ghost { background: transparent; color: var(--accent); }
+.btn-ghost:hover { background: var(--accent-soft); }
+.btn-sm { min-height: 2.25rem; padding: 0.4rem 0.9rem; font-size: 0.8125rem; }
+
+/* Links: underline appears on hover, the usual way round. */
+.link {
+  color: var(--accent);
+  text-decoration-line: underline;
+  text-decoration-color: transparent;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 4px;
+  transition: text-decoration-color var(--t-base) var(--ease);
+}
+.link:hover { text-decoration-color: currentColor; }
+.link-quiet { color: var(--ink-2); }
+.link-quiet:hover { color: var(--ink); }
+
+/* Arrows nudge 3px when their link or card is hovered. */
+.arrow { transition: transform var(--t-base) var(--ease); }
+a:hover > .arrow,
+.group:hover .arrow { transform: translateX(3px); }
 
 /* Long-form case-study prose */
 .prose-case {
   font-family: var(--font-sans);
   font-size: 1.0625rem;
-  line-height: 1.8;
+  line-height: 1.75;
   color: var(--ink-2);
 }
 .prose-case > * + * { margin-top: 1.15em; }
 .prose-case h2 {
   font-family: var(--font-display);
   font-size: 1.5rem;
-  font-weight: 700;
+  font-weight: 650;
   letter-spacing: -0.015em;
-  color: var(--accent-ink);
+  line-height: 1.25;
+  color: var(--ink);
   margin-top: 3rem;
   padding-top: 1.75rem;
   border-top: 1px solid var(--rule);
@@ -165,12 +192,12 @@ body {
 .prose-case h3 {
   font-family: var(--font-display);
   font-size: 1.125rem;
-  font-weight: 700;
+  font-weight: 650;
   color: var(--ink);
   margin-top: 2rem;
 }
 .prose-case strong { color: var(--ink); font-weight: 600; }
-.prose-case a { color: var(--accent-ink); text-decoration: underline; text-underline-offset: 3px; }
+.prose-case a { color: var(--accent); text-decoration: underline; text-underline-offset: 3px; }
 .prose-case ul, .prose-case ol { padding-left: 1.25rem; }
 .prose-case li { margin-top: 0.4em; }
 .prose-case ul > li { list-style: none; position: relative; }
@@ -193,10 +220,18 @@ body {
   border-radius: 4px;
   padding: 0.1em 0.35em;
 }
+.prose-case pre code { background: none; border: 0; padding: 0; }
+.prose-case pre {
+  background: var(--paper-2);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+  padding: 1rem 1.25rem;
+  overflow-x: auto;
+  font-size: 0.875rem;
+}
 .prose-case blockquote {
   border-left: 2px solid var(--accent);
   padding-left: 1.25rem;
-  font-style: italic;
   color: var(--ink);
 }
 .prose-case table {
@@ -204,6 +239,7 @@ body {
   border-collapse: collapse;
   font-family: var(--font-sans);
   font-size: 0.875rem;
+  font-variant-numeric: tabular-nums;
 }
 .prose-case th, .prose-case td {
   text-align: left;
@@ -211,8 +247,9 @@ body {
   border-bottom: 1px solid var(--rule);
 }
 .prose-case th {
-  font-weight: 600;
-  color: var(--ink);
+  font-family: var(--font-mono);
+  font-weight: 500;
+  color: var(--ink-3);
   font-size: 0.6875rem;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -243,112 +280,81 @@ body {
   color: var(--ink-3);
 }
 
-/* Anchor targets clear the sticky header and the jump-nav above them. */
-.snap-card,
-.group-block {
-  scroll-margin-top: 7.5rem;
-}
-
-/* ── Jump-nav above the featured cards ───────────────────────────────────── */
-.project-nav {
-  position: sticky;
-  top: 3.5rem; /* clears the sticky site header (h-14) */
-  z-index: 30;
-  display: flex;
-  align-items: center;
-  gap: 0.9rem;
-  margin-top: 2rem;
-  padding: 0.7rem 0;
-  background: color-mix(in oklab, var(--paper) 88%, transparent);
-  backdrop-filter: blur(8px);
-}
-.project-nav-list {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-  min-width: 0;
-}
-.project-nav-link {
-  display: inline-block;
-  padding: 0.35rem 0.85rem;
-  border: 1px solid var(--rule);
-  border-radius: 999px;
-  background: var(--paper-3);
-  color: var(--ink-2);
-  font-size: 0.8125rem;
-  font-weight: 600;
-  white-space: nowrap;
-  transition:
-    color 0.2s ease,
-    background 0.2s ease,
-    border-color 0.2s ease;
-}
-.project-nav-link:hover {
-  border-color: var(--accent-border);
-  background: var(--accent-soft);
-  color: var(--accent-ink);
-}
-.project-nav-count {
-  display: inline-block;
-  margin-left: 0.45rem;
-  padding: 0 0.4rem;
-  border-radius: 999px;
-  background: var(--accent-soft);
-  color: var(--accent-ink);
-  font-size: 0.6875rem;
-  font-weight: 700;
-}
-.project-nav-link.is-active .project-nav-count {
-  background: rgb(255 255 255 / 0.22);
-  color: #fff;
-}
-.project-nav-link.is-active {
-  border-color: transparent;
-  background: var(--accent);
-  color: #fff;
-}
-@media (max-width: 640px) {
-  .project-nav {
-    align-items: flex-start;
-    flex-direction: column;
-    gap: 0.5rem;
-  }
-  .project-nav-list {
-    flex-wrap: nowrap;
-    overflow-x: auto;
-    padding-bottom: 0.25rem;
-    scrollbar-width: none;
-  }
-  .project-nav-list::-webkit-scrollbar {
-    display: none;
-  }
-}
-
-/* ── Featured-project scroll snapping ─────────────────────────────────────
-   One card fills the viewport at a time and scrolling settles on the next.
-   `proximity` rather than `mandatory`: mandatory on the document traps the
-   scroll between the hero and the first card, and makes it hard to stop
-   anywhere in between. Only .snap-card carries a snap point, so nothing
-   else on the page is affected.
+/* ── Charts: hover a mark to highlight it and dim the rest ──────────────────
+   Applies to every hand-built SVG chart (case-study figures and card thumbs).
+   The native <title> on each mark gives the value as a tooltip.
    ------------------------------------------------------------------------ */
-@media (min-width: 1024px) and (prefers-reduced-motion: no-preference) {
-  html {
-    scroll-snap-type: y proximity;
-  }
-  .snap-card {
-    scroll-snap-align: center;
-    /* No scroll-snap-stop: forcing a stop at every card makes the page grab
-       and re-position under the pointer, so a click can land on a different
-       card than the one aimed at. */
-    min-height: 84vh;
+.chart-figure svg :is(rect, circle, path, line),
+.thumb :is(rect, circle) {
+  transition: opacity var(--t-base) var(--ease);
+}
+@media (hover: hover) {
+  .chart-figure svg:has(:is(rect, circle):hover) :is(rect, circle):not(:hover),
+  .thumb:has(:is(rect, circle):hover) :is(rect, circle):not(:hover) {
+    opacity: 0.35;
   }
 }
 
-/* Entrance */
+/* ── Motion ──────────────────────────────────────────────────────────────────
+   Motion only confirms an action or shows a change. Everything below runs
+   only when the visitor has not asked for reduced motion.
+   ------------------------------------------------------------------------ */
+
+/* Page load: the hero rises once, its parts following each other 60ms apart.
+   The resting state is fully visible, so nothing depends on this running. */
 @media (prefers-reduced-motion: no-preference) {
-  .rise { animation: rise 0.7s cubic-bezier(0.2, 0.7, 0.3, 1) both; }
+  html { scroll-behavior: smooth; }
+
+  .rise {
+    animation: rise var(--t-enter) var(--ease) both;
+    animation-delay: calc(var(--i, 0) * 60ms);
+  }
   @keyframes rise {
-    from { opacity: 0; transform: translateY(12px); }
+    from { opacity: 0; transform: translateY(8px); }
     to { opacity: 1; transform: none; }
   }
+
+  /* Between pages: a short crossfade, and a project card's title carries
+     into the case-study heading (cross-document view transitions). */
+  @view-transition { navigation: auto; }
+  ::view-transition-old(root),
+  ::view-transition-new(root) { animation-duration: var(--t-base); }
+  ::view-transition-group(*) { animation-duration: 260ms; animation-timing-function: var(--ease); }
+
+  /* Case studies: a thin reading-progress bar under the header. */
+  @supports (animation-timeline: scroll()) {
+    .read-progress {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: var(--accent);
+      transform-origin: 0 50%;
+      transform: scaleX(0);
+      z-index: 60;
+      animation: read-progress linear both;
+      animation-timeline: scroll(root);
+    }
+    @keyframes read-progress { to { transform: scaleX(1); } }
+  }
+}
+
+/* Cards: rise 2px and the border turns lake navy. */
+.card {
+  border: 1px solid var(--rule);
+  background: var(--paper-3);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow);
+  transition:
+    transform var(--t-base) var(--ease),
+    border-color var(--t-base) var(--ease),
+    box-shadow var(--t-base) var(--ease);
+}
+a.card:hover {
+  border-color: var(--accent);
+  box-shadow: var(--shadow-lift);
+}
+@media (prefers-reduced-motion: no-preference) {
+  a.card:hover { transform: translateY(-2px); }
 }
