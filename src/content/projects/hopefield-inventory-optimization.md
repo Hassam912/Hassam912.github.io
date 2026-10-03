@@ -1,24 +1,26 @@
 ---
-title: 'Brought stranded towel inventory to zero with a 28-variable LP'
-tagline: 'An integer linear program that packs loose towels into sellable sets, leaves nothing over and protects the hero SKU.'
-tldr: 'Towels arrive as loose bath, hand and washcloth pieces but sell as fixed sets. I built a 28-variable linear program that brought stranded inventory to zero, protects the hero SKU and solves in seconds.'
-summary: 'An integer linear program that packs loose towels into sellable sets: stranded inventory to zero, hero-SKU minimum run protected, solved in seconds.'
+title: 'Packed 6,000 loose towels into 1,000 sets with zero left over'
+tagline: 'An integer program in Excel Solver that turns a towel order into sellable sets without stranding a single piece.'
+tldr: 'Towels arrive as loose pieces but sell as fixed sets. My Excel Solver model packed a 6,000-piece order into 1,000 sets with zero left over, where packing the obvious way strands 42.'
+summary: 'An integer program in Excel Solver for Hopefield Home: 6,000 loose towels packed into 1,000 sets with zero left over, every colour above its combo floor.'
 category: 'Optimization'
 context: 'Hopefield Home, the home-textiles brand I co-founded'
 team: 'Solo'
-role: 'Co-Founder & Operator: framed the packing decision, formulated and built the model in Excel Solver and Python, and ran the plan'
+role: 'Framed the packing decision, built the integer program in Excel Solver, and turned it into a reusable model for each purchase order'
 timeline: '2026'
-stack: ['Linear Programming', 'Integer Programming', 'Excel Solver', 'Python', 'Inventory Planning']
+stack: ['Excel Solver', 'Integer Programming', 'Linear Programming', 'Inventory Planning', 'Python']
 headline:
-  value: '0'
-  label: 'pieces left stranded after the LP plan, against odd lots left over by manual packing'
-result: 'Stranded inventory brought to zero while the hero SKU kept its minimum production run. Manual packing took an evening and still left unsellable odd lots.'
-impact: 'A packing plan in seconds instead of an evening of arithmetic, every piece converted into a sellable set, and a clear signal for which piece type to reorder first.'
+  value: '0 of 6,000'
+  label: 'pieces stranded, against 42 when each colour’s minimum is packed first'
+result: 'All 6,000 pieces packed into 1,000 sellable sets (730 combos, 270 single-type sets) with zero left over and every colour at or above its combo floor. Packing the floors first and splitting the rest strands 42 pieces.'
+impact: 'Every towel becomes a sellable set, six of seven colours get all four listings, and the plan re-solves in seconds for each new order instead of an evening of arithmetic.'
 metrics:
   - value: '0'
-    label: 'stranded pieces after the plan (manual packing left odd lots)'
-  - value: 'Seconds'
-    label: 'to solve, against an evening of manual arithmetic'
+    label: 'pieces stranded of 6,000 (42 with the rule of thumb)'
+  - value: '1,000'
+    label: 'sellable sets: 730 combos and 270 single-type sets'
+  - value: '6 of 7'
+    label: 'colours with all four listings (the seventh is all combos by design)'
 links: []
 featured: true
 order: 3
@@ -26,170 +28,181 @@ draft: false
 ---
 
 <figure class="chart-figure">
-<figcaption class="chart-title">Every loose piece lands in a sellable set</figcaption>
+<figcaption class="chart-title">The rule of thumb strands 42 pieces; the LP strands none</figcaption>
 
-<svg viewBox="0 0 400 318" role="img" aria-labelledby="hfA-title hfA-desc" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;font-family:var(--font-sans, sans-serif);">
-<title id="hfA-title">Schematic of the kitting decision</title>
-<desc id="hfA-desc">Three pools of loose pieces on the left (bath, hand and washcloth) feed four fixed set types on the right. The Set of 6 combo takes 2 bath, 2 hand and 2 washcloths; the Set of 6 hand towels takes 6 hand; the Set of 4 bath towels takes 4 bath; the Set of 12 washcloths takes 12 washcloths. Below, the plan leaves 0 pieces over while keeping the hero Set of 6 at or above its minimum run.</desc>
-<text x="71" y="20" text-anchor="middle" font-size="10" fill="var(--ink-3)" style="font-family:var(--font-mono, monospace);letter-spacing:0.08em;">LOOSE PIECES</text>
-<text x="307" y="20" text-anchor="middle" font-size="10" fill="var(--ink-3)" style="font-family:var(--font-mono, monospace);letter-spacing:0.08em;">SELLABLE SETS</text>
-<line x1="126" y1="62" x2="230" y2="50" stroke="var(--accent)" stroke-width="1.6" />
-<line x1="126" y1="62" x2="230" y2="154" stroke="var(--rule)" stroke-width="1.5" />
-<line x1="126" y1="132" x2="230" y2="50" stroke="var(--accent)" stroke-width="1.6" />
-<line x1="126" y1="132" x2="230" y2="102" stroke="var(--rule)" stroke-width="1.5" />
-<line x1="126" y1="202" x2="230" y2="50" stroke="var(--accent)" stroke-width="1.6" />
-<line x1="126" y1="202" x2="230" y2="206" stroke="var(--rule)" stroke-width="1.5" />
-<rect x="16" y="40" width="110" height="44" rx="9" fill="var(--paper-3)" stroke="var(--rule)" stroke-width="1" />
-<text x="71" y="67" text-anchor="middle" font-size="13" font-weight="600" fill="var(--ink-2)">Bath</text>
-<rect x="16" y="110" width="110" height="44" rx="9" fill="var(--paper-3)" stroke="var(--rule)" stroke-width="1" />
-<text x="71" y="137" text-anchor="middle" font-size="13" font-weight="600" fill="var(--ink-2)">Hand</text>
-<rect x="16" y="180" width="110" height="44" rx="9" fill="var(--paper-3)" stroke="var(--rule)" stroke-width="1" />
-<text x="71" y="207" text-anchor="middle" font-size="13" font-weight="600" fill="var(--ink-2)">Washcloth</text>
-<rect x="230" y="30" width="154" height="40" rx="9" fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="1.6" />
-<text x="307" y="47" text-anchor="middle" font-size="12.5" font-weight="700" fill="var(--accent-ink)">Set of 6 combo (hero)</text>
-<text x="307" y="62" text-anchor="middle" font-size="10.5" fill="var(--accent-ink)">2 bath · 2 hand · 2 wash</text>
-<rect x="230" y="82" width="154" height="40" rx="9" fill="var(--paper-3)" stroke="var(--rule)" stroke-width="1" />
-<text x="307" y="99" text-anchor="middle" font-size="12.5" font-weight="600" fill="var(--ink-2)">Set of 6 hand</text>
-<text x="307" y="114" text-anchor="middle" font-size="10.5" fill="var(--ink-3)">6 hand</text>
-<rect x="230" y="134" width="154" height="40" rx="9" fill="var(--paper-3)" stroke="var(--rule)" stroke-width="1" />
-<text x="307" y="151" text-anchor="middle" font-size="12.5" font-weight="600" fill="var(--ink-2)">Set of 4 bath</text>
-<text x="307" y="166" text-anchor="middle" font-size="10.5" fill="var(--ink-3)">4 bath</text>
-<rect x="230" y="186" width="154" height="40" rx="9" fill="var(--paper-3)" stroke="var(--rule)" stroke-width="1" />
-<text x="307" y="203" text-anchor="middle" font-size="12.5" font-weight="600" fill="var(--ink-2)">Set of 12 wash</text>
-<text x="307" y="218" text-anchor="middle" font-size="10.5" fill="var(--ink-3)">12 washcloths</text>
-<rect x="60" y="254" width="280" height="50" rx="9" fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="1.6" />
-<text x="200" y="276" text-anchor="middle" font-size="13.5" font-weight="700" fill="var(--accent-ink)">Left over after the plan: 0 pieces</text>
-<text x="200" y="294" text-anchor="middle" font-size="10.5" fill="var(--accent-ink)">hero set kept at or above its minimum run</text>
+<svg viewBox="0 0 640 282" role="img" aria-labelledby="hfA-title hfA-desc" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;font-family:var(--font-mono, monospace);">
+<title id="hfA-title">Pieces left stranded per colour: rule of thumb versus the LP plan</title>
+<desc id="hfA-desc">Bars show pieces stranded if each colour's minimum combo sets are packed first and the rest is split into single-type sets: Zero Twist Sage Green 0, White 6, Oatmeal Beige 6, Charcoal 6, Half Zero Sage Green 10, Navy Blue 8, Terra Cotta 6, total 42. Dots show the LP plan, which strands 0 in every colour.</desc>
+<line x1="210.0" y1="26" x2="210.0" y2="276" stroke="var(--rule)" stroke-width="1" />
+<text x="210.0" y="20" text-anchor="middle" font-size="9.5" fill="var(--ink-3)">0</text>
+<line x1="303.3" y1="26" x2="303.3" y2="276" stroke="var(--rule)" stroke-width="1" />
+<text x="303.3" y="20" text-anchor="middle" font-size="9.5" fill="var(--ink-3)">4</text>
+<line x1="396.7" y1="26" x2="396.7" y2="276" stroke="var(--rule)" stroke-width="1" />
+<text x="396.7" y="20" text-anchor="middle" font-size="9.5" fill="var(--ink-3)">8</text>
+<line x1="490.0" y1="26" x2="490.0" y2="276" stroke="var(--rule)" stroke-width="1" />
+<text x="490.0" y="20" text-anchor="middle" font-size="9.5" fill="var(--ink-3)">12</text>
+<text x="198" y="55.0" text-anchor="end" font-size="11" fill="var(--ink)">Zero Twist · Sage Green</text>
+<text x="218.0" y="55.0" font-size="10.5" fill="var(--ink-3)">0</text>
+<circle cx="210" cy="51.0" r="5" fill="var(--accent)"><title>Zero Twist · Sage Green: 0 stranded under the LP plan</title></circle>
+<text x="198" y="89.0" text-anchor="end" font-size="11" fill="var(--ink)">Zero Twist · White</text>
+<rect x="210" y="77.0" width="140.0" height="16" rx="3" fill="color-mix(in oklab, var(--ink-3) 45%, var(--paper-3))"><title>Zero Twist · White: 6 pieces stranded by packing the floor first</title></rect>
+<text x="358.0" y="89.0" font-size="10.5" fill="var(--ink-3)">6</text>
+<circle cx="210" cy="85.0" r="5" fill="var(--accent)"><title>Zero Twist · White: 0 stranded under the LP plan</title></circle>
+<text x="198" y="123.0" text-anchor="end" font-size="11" fill="var(--ink)">Zero Twist · Oatmeal Beige</text>
+<rect x="210" y="111.0" width="140.0" height="16" rx="3" fill="color-mix(in oklab, var(--ink-3) 45%, var(--paper-3))"><title>Zero Twist · Oatmeal Beige: 6 pieces stranded by packing the floor first</title></rect>
+<text x="358.0" y="123.0" font-size="10.5" fill="var(--ink-3)">6</text>
+<circle cx="210" cy="119.0" r="5" fill="var(--accent)"><title>Zero Twist · Oatmeal Beige: 0 stranded under the LP plan</title></circle>
+<text x="198" y="157.0" text-anchor="end" font-size="11" fill="var(--ink)">Zero Twist · Charcoal</text>
+<rect x="210" y="145.0" width="140.0" height="16" rx="3" fill="color-mix(in oklab, var(--ink-3) 45%, var(--paper-3))"><title>Zero Twist · Charcoal: 6 pieces stranded by packing the floor first</title></rect>
+<text x="358.0" y="157.0" font-size="10.5" fill="var(--ink-3)">6</text>
+<circle cx="210" cy="153.0" r="5" fill="var(--accent)"><title>Zero Twist · Charcoal: 0 stranded under the LP plan</title></circle>
+<text x="198" y="191.0" text-anchor="end" font-size="11" fill="var(--ink)">Half Zero · Sage Green</text>
+<rect x="210" y="179.0" width="233.3" height="16" rx="3" fill="color-mix(in oklab, var(--ink-3) 45%, var(--paper-3))"><title>Half Zero · Sage Green: 10 pieces stranded by packing the floor first</title></rect>
+<text x="451.3" y="191.0" font-size="10.5" fill="var(--ink-3)">10</text>
+<circle cx="210" cy="187.0" r="5" fill="var(--accent)"><title>Half Zero · Sage Green: 0 stranded under the LP plan</title></circle>
+<text x="198" y="225.0" text-anchor="end" font-size="11" fill="var(--ink)">Half Zero · Navy Blue</text>
+<rect x="210" y="213.0" width="186.7" height="16" rx="3" fill="color-mix(in oklab, var(--ink-3) 45%, var(--paper-3))"><title>Half Zero · Navy Blue: 8 pieces stranded by packing the floor first</title></rect>
+<text x="404.7" y="225.0" font-size="10.5" fill="var(--ink-3)">8</text>
+<circle cx="210" cy="221.0" r="5" fill="var(--accent)"><title>Half Zero · Navy Blue: 0 stranded under the LP plan</title></circle>
+<text x="198" y="259.0" text-anchor="end" font-size="11" fill="var(--ink)">Half Zero · Terra Cotta</text>
+<rect x="210" y="247.0" width="140.0" height="16" rx="3" fill="color-mix(in oklab, var(--ink-3) 45%, var(--paper-3))"><title>Half Zero · Terra Cotta: 6 pieces stranded by packing the floor first</title></rect>
+<text x="358.0" y="259.0" font-size="10.5" fill="var(--ink-3)">6</text>
+<circle cx="210" cy="255.0" r="5" fill="var(--accent)"><title>Half Zero · Terra Cotta: 0 stranded under the LP plan</title></circle>
+<text x="520" y="55.0" font-size="10" fill="var(--accent-ink)" font-weight="600">● LP plan: 0</text>
+<text x="520" y="89.0" font-size="10" fill="var(--ink-3)">▬ floor first: 42</text>
 </svg>
 
-<figcaption class="chart-caption">Schematic of one line-colour family. The three piece pools compete: every combo set uses two washcloths that a 12-pack can no longer use. The model solves this for 7 families at once.</figcaption>
+<figcaption class="chart-caption">Bars: pieces left over if each colour’s minimum combo sets are packed first and the rest is split into single-type sets. Dots: the LP plan. Computed from the order quantities and floors in the model workbook.</figcaption>
 </figure>
 
-## Packing by feel left capital locked in odd lots
+## A 6,000-piece order had to become sets without stranding any
 
-Hopefield is a home-textiles brand I co-founded and run on Amazon FBA and Shopify. The catalogue
-looks simple from outside: two fabric lines and seven colours. Underneath, every sale depends on a
-packing decision.
+Hopefield is a home-textiles brand I co-founded and run on Amazon FBA and Shopify. Our order
+arrives as **loose towels**: bath towels, hand towels and washcloths in seven colours across two
+fabric lines. Customers buy **sets**. Every packing choice draws on shared piece pools, so a bad mix
+leaves, say, two hand towels in a colour with no bath towels to pair them with. Those pieces are
+cash tied up in stock nobody can buy.
 
-Towels arrive from the mill as **loose pieces** in three types: bath, hand and washcloth. Customers
-buy **sets** with a fixed composition. Each packing decision draws on a shared, finite pool, and the
-pools are coupled. Get the mix wrong and the warehouse holds hand towels in one colour with no bath
-towels left to pair them with. Those towels are capital locked in a shape nobody buys.
+The decision was how many of each set to pack in each colour. Success meant two things: no piece
+left over, and enough of the main listing, the Set of 6 combo, in every colour.
 
-The decision I needed to make was simple to state: how many of each set to pack, per line and
-colour, so that every piece becomes something sellable. Success meant zero pieces left over, without
-starving the listing that drives the business.
+## The order came in equal pieces, but the sets need different multiples
 
-## Before: an evening of arithmetic that still left dead stock
-
-I used to plan this by hand. It took an evening of arithmetic and still left odd lots
-behind, because a person balancing three piece types across seven families cannot see how one
-choice ripples into the others. The inputs were the piece counts on hand for each line, colour and
-towel type, and the four fixed set compositions:
+The order was 1,000 combo-set equivalents: 2 bath, 2 hand and 2 washcloths per set, so 6,000 pieces.
+Each colour had equal counts of the three towel types, from 100 of each (White, Terra Cotta) to 500
+of each (Navy Blue). We sell four set types:
 
 <div class="table-scroll">
 
-| Set configuration | Bath | Hand | Washcloth |
+| Set | Bath | Hand | Washcloth |
 |---|---|---|---|
-| Set of 6 (combo) | 2 | 2 | 2 |
+| Set of 6 combo | 2 | 2 | 2 |
 | Set of 6 hand towels | 0 | 6 | 0 |
 | Set of 4 bath towels | 4 | 0 | 0 |
 | Set of 12 washcloths | 0 | 0 | 12 |
 
 </div>
 
-The seven line-colour families are Zero Twist in Sage Green, White, Oatmeal Beige and Charcoal, and
-Duvet Half Zero in Sage Green, Navy Blue and Terra Cotta.
+The difficulty is in the multiples. After the combos, the remaining bath towels must divide by 4,
+the hand towels by 6 and the washcloths by 12. Because all three pools shrink together, the remainder
+must be a multiple of 12, and the number of combos decides whether it is.
 
 ## How I built the model
 
-### A precise objective turned a judgement call into a solvable problem
+### Leftover pieces became the objective, and combo floors became constraints
 
-The problem has a decision (how many of each set to pack), constraints (no more pieces than are on
-hand, per type) and an objective. The objective is the part people skip. An instruction to pack the
-towels is a task. **Minimise the number of pieces left unallocated** is an objective, and once it was written that way
-a solver could settle the question exactly. I rejected continuing with spreadsheet arithmetic because
-it can check a plan but cannot search for the best one.
+I wrote the decision as an optimisation problem: 28 decision variables (7 colours × 4 set types),
+each the number of sets to pack. The objective is to **minimise the total pieces left over**. Two
+constraints keep it honest: leftovers can never go negative, so the plan never uses towels we don’t
+have, and each colour must pack at least a minimum number of combo sets, the floor I set for our main
+listing. I rejected doing it in a spreadsheet by trial and error, because a spreadsheet can check a
+plan but can’t search for the best one.
 
 ### Whole sets need integer variables
 
-There are 28 decision variables: 7 line-colour families × 4 set types, each the number of sets to
-pack. A plain linear program can return a fractional number of sets, and rounding afterwards can
-break the piece limits or reopen leftovers. I declared the variables as integers so every answer is a
-packable plan.
+A plain linear program can return 26.4 sets, and rounding afterwards can reopen leftovers or use
+pieces that don’t exist. I set every decision variable to integer and solved with Excel’s Simplex LP
+engine, so every answer is a plan someone can pack.
 
-### The hero-SKU floor sits inside the model as a constraint
+### One input per colour makes it reusable for the next order
 
-A model that only minimises waste will starve the best-selling listing to save a handful of
-washcloths. The Set of 6 combo drives the business, so it carries a minimum production run inside
-the model. The alternative was to optimise first and then bump the combo count by hand, which breaks
-the piece balance the solver just found. Encoding the floor as a constraint lets business judgement
-shape the answer while the solver still optimises everything around it.
+My first version hard-coded the piece counts. The final version takes one number per colour, the
+order quantity, and calculates the pieces from it. Changing the order and pressing Solve produces a
+new plan in seconds.
 
-### The binding piece type shows what to reorder
+## Zero of 6,000 pieces stranded; packing the obvious way strands 42
 
-Because the solver reports which piece type runs out first in each colour, the next purchase order
-can buy the specific piece that unlocks the most sets, instead of reordering everything in
-proportion. The alternative, topping every piece type up by the same share, buys stock that the set
-compositions cannot use and recreates the odd lots the model just removed. Reading the binding
-constraint turns the packing model into a purchasing tool at no extra cost.
+The solver returned this plan, with **zero pieces left over** in every colour:
 
-## Stranded inventory fell to zero, with the hero run protected
+<div class="table-scroll">
 
-The solver returns a complete packing plan, per line and colour, in seconds. In that plan **zero
-pieces are left stranded**, and the Set of 6 combo stays at or above its minimum run. The piece
-constraints guarantee the plan never uses more than is on hand; zero unallocated means every piece
-of every type in every family is used.
+| Line · colour | Pieces of each type | Combo floor | Combos | Hand 6 | Bath 4 | Wash 12 |
+|---|---|---|---|---|---|---|
+| Zero Twist · Sage Green | 400 | 200 | **200** | 0 | 0 | 0 |
+| Zero Twist · White | 100 | 25 | **26** | 8 | 12 | 4 |
+| Zero Twist · Oatmeal Beige | 250 | 100 | **101** | 8 | 12 | 4 |
+| Zero Twist · Charcoal | 250 | 100 | **101** | 8 | 12 | 4 |
+| Half Zero · Sage Green | 400 | 100 | **104** | 32 | 48 | 16 |
+| Half Zero · Navy Blue | 500 | 170 | **172** | 26 | 39 | 13 |
+| Half Zero · Terra Cotta | 100 | 25 | **26** | 8 | 12 | 4 |
+| **Total** | **6,000 pieces** | 720 | **730** | 90 | 135 | 45 |
 
-Reading the plan is simple: one row per line-colour family, one column per set type, and a count in
-each cell that can go straight onto the packing list.
+</div>
 
-One result I didn’t expect: washcloths are consumed twelve at a time in one set and two at a time in
-another, which gives the model room to absorb an awkward remainder that I would have written off by
-hand.
+The obvious way to plan by hand is to pack each colour’s floor, then split what’s left into
+single-type sets. That leaves remainders that don’t divide: White, for example, keeps 50 of each
+type, which strands 2 hand towels, 2 bath towels and 2 washcloths. Across the seven colours that
+approach strands **42 pieces**. The model adds just 1 to 4 combos above the floor in each colour,
+10 in total, so every remainder becomes a multiple of 12 and every piece lands in a set.
 
-## Recommendation: re-solve before every packing run
+To check it, I re-solved the same problem as an integer program in Python (SciPy’s HiGHS solver).
+It confirmed zero leftover and found exactly this plan as the zero-waste option with the most
+single-type sets.
 
-Run the model each time stock arrives or the set mix changes, and treat the binding piece type as
-the first line of the next purchase order. The plan takes seconds, so there is no reason to pack
-from memory again.
+## Recommendation: re-solve for every order, and add a tiebreak
+
+Run the model for each purchase order before packing. Then add a second objective. Zero leftover has
+many solutions: packing all 1,000 as combos also wastes nothing but drops the single-type listings.
+The plan the solver returned happens to keep the most single-type sets, which is what we wanted, but
+the model should state that preference instead of relying on it.
 
 ## Limitations and what I’d do next
 
-- **Demand is not in the objective.** Minimising leftovers assumes every set sells equally well. The
-  next version should weight sets by sales velocity, turning waste minimisation into profit
-  maximisation.
-- **It plans one snapshot.** A multi-period model with incoming purchase orders could decide when to
-  hold pieces back, as well as what to pack.
-- **No uncertainty.** Demand is stochastic. A scenario analysis over demand ranges would show how
-  fragile the plan is.
-- **Plan-versus-actual is not measured yet.** The next check is whether the packed sets sold through
-  as expected.
+- **Demand isn’t in the model.** It wastes nothing, but it doesn’t know which sets sell fastest.
+  Weighting sets by sales velocity would turn waste minimisation into profit maximisation.
+- **The objective has many optimal answers.** As above, a stated tiebreak should choose between
+  zero-waste plans.
+- **The floors are judgement calls.** They come from my read of the main listing, not from a demand
+  forecast.
+- **Plan versus actual isn’t measured yet.** The next check is whether each set sold through as
+  expected, which would also tell me whether the floors were right.
 
 <details class="appendix">
 <summary>Technical appendix</summary>
 
-**Formulation**
+**Formulation** (as built in the workbook)
 
-Indices: family *f* ∈ 7 line-colour families; set type *s* ∈ {combo, hand 6, bath 4, wash 12};
-piece type *p* ∈ {bath, hand, washcloth}.
+- **Decision variables.** *x<sub>c,s</sub>* = sets of type *s* packed in colour *c*; 7 × 4 = 28,
+  integer.
+- **Leftovers.** For each colour and towel type: pieces − 2 × combos − set size × single-type sets.
+- **Objective.** Minimise the sum of the 21 leftover cells.
+- **Constraints.** All variables integer; combos ≥ the colour’s floor and single-type sets ≥ 0; every
+  leftover ≥ 0.
+- **Inputs.** Order quantity per colour; pieces of each type = 2 × order quantity.
 
-- **Decision variables.** *x<sub>f,s</sub>* = number of sets of type *s* packed for family *f*;
-  integers, 7 × 4 = 28 variables.
-- **Objective.** Minimise total unallocated pieces:
-  Σ<sub>f,p</sub> ( on-hand<sub>f,p</sub> − Σ<sub>s</sub> a<sub>s,p</sub> · x<sub>f,s</sub> ),
-  where *a<sub>s,p</sub>* is the number of pieces of type *p* in set *s* (table above).
+**Solver settings.** Excel Solver, Simplex LP engine, minimise, integer constraint on all decision
+variables, integer optimality tolerance 1%. The model solves in seconds.
 
-**Constraints**
+**Floor-first remainders** (pieces of each type left after packing exactly the floor):
 
-1. **Piece availability.** For each family and piece type, Σ<sub>s</sub> a<sub>s,p</sub> ·
-   x<sub>f,s</sub> ≤ on-hand<sub>f,p</sub>. This is the binding constraint, and the reason the answer
-   is not obvious: the three piece types compete for the same packing decisions.
-2. **Non-negativity and integrality.** x<sub>f,s</sub> ≥ 0 and integer. Without non-negativity the
-   model returns negative production runs.
-3. **Minimum run on the hero SKU.** x<sub>f,combo</sub> ≥ the floor set for the Set of 6 combo,
-   regardless of what pure piece-efficiency would prefer.
-
-**Tools.** Built and solved with Excel Solver and Python.
+| Colour | Remainder | Stranded (hand mod 6 + bath mod 4 + wash mod 12) |
+|---|---|---|
+| ZT Sage Green | 0 | 0 |
+| ZT White | 50 | 2 + 2 + 2 = 6 |
+| ZT Oatmeal Beige | 50 | 6 |
+| ZT Charcoal | 50 | 6 |
+| HZ Sage Green | 200 | 2 + 0 + 8 = 10 |
+| HZ Navy Blue | 160 | 4 + 0 + 4 = 8 |
+| HZ Terra Cotta | 50 | 6 |
 
 </details>

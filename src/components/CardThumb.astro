@@ -32,7 +32,13 @@ const soccer = [
 ];
 const sMax = 280;
 
-/* ── Hopefield: fixed set compositions the LP packs to (bath / hand / cloth) ─ */
+/* ── Hopefield: pieces stranded per colour if the combo floor is packed first ─ */
+const stranded = [
+  { n: 'ZT Sage', v: 0 }, { n: 'ZT White', v: 6 }, { n: 'ZT Oatmeal', v: 6 }, { n: 'ZT Charcoal', v: 6 },
+  { n: 'HZ Sage', v: 10 }, { n: 'HZ Navy', v: 8 }, { n: 'HZ Terra', v: 6 },
+];
+
+/* ── Hopefield (old): fixed set compositions the LP packs to (bath / hand / cloth) ─ */
 const kits = [
   { n: 'Set of 6 (combo)', parts: [2, 2, 2] },
   { n: 'Set of 6 hand', parts: [0, 6, 0] },
@@ -132,32 +138,22 @@ const stages = [
 
 {
   id === 'hopefield-inventory-optimization' && (
-    <svg viewBox={`0 0 ${W} ${H}`} class="thumb" role="img" aria-label="Fixed set compositions the linear program packs loose towel stock into">
-      {kits.map((k, i) => {
-        const rh = 34;
-        const y = 16 + i * (rh + 20);
-        let cx = 132;
-        const unit = 46;
+    <svg viewBox={`0 0 ${W} ${H}`} class="thumb" role="img" aria-label="Pieces stranded per colour: 42 in total when the minimum combos are packed first, 0 under the LP plan">
+      {stranded.map((r, i) => {
+        const rh = (H - 6) / stranded.length;
+        const cy = 3 + i * rh + rh / 2;
+        const x0 = 150;
+        const bw = (v: number) => (v / 12) * (W - x0 - 60);
         return (
           <>
-            <text x="122" y={y + rh / 2 + 3} text-anchor="end" font-size="9" fill="var(--ink-3)" style="font-family: var(--font-mono);">
-              {k.n}
-            </text>
-            {k.parts.map((count, j) => {
-              const w = count * unit;
-              const el = w > 0 && (
-                <rect
-                  x={cx}
-                  y={y}
-                  width={w - 3}
-                  height={rh}
-                  rx="3"
-                  fill={`color-mix(in oklab, var(--accent) ${[30, 62, 100][j]}%, var(--paper-3))`}
-                />
-              );
-              cx += w;
-              return el;
-            })}
+            <text x={x0 - 10} y={cy + 3} text-anchor="end" font-size="8.5" fill="var(--ink-3)" style="font-family: var(--font-mono);">{r.n}</text>
+            {r.v > 0 && (
+              <rect x={x0} y={cy - 5} width={bw(r.v)} height="10" rx="2" fill="color-mix(in oklab, var(--ink-3) 42%, var(--paper-2))">
+                <title>{`${r.n}: ${r.v} pieces stranded by packing the floor first`}</title>
+              </rect>
+            )}
+            <circle cx={x0} cy={cy} r="4" fill="var(--accent)"><title>{`${r.n}: 0 stranded under the LP plan`}</title></circle>
+            <text x={x0 + bw(r.v) + 7} y={cy + 3} font-size="8.5" fill="var(--ink-3)" style="font-family: var(--font-mono);">{r.v}</text>
           </>
         );
       })}
@@ -327,8 +323,7 @@ const stages = [
   )}
   {id === 'hopefield-inventory-optimization' && (
     <>
-      Set compositions the LP packs to — <span class="sw sw-1" /> bath,
-      <span class="sw sw-2" /> hand, <span class="sw sw-3" /> washcloth
+      Pieces stranded per colour: packing the minimum combos first strands 42; <span class="sw sw-3" /> the LP plan strands 0
     </>
   )}
   {id === 'kaggle-house-prices' && <>Final leaderboard position out of all entries</>}
