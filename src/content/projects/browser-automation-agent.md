@@ -1,7 +1,7 @@
 ---
-title: 'Measured my browser agent, retired its learning loop, rebuilt it'
+title: 'Measured my browser agent over 119 sessions, then rebuilt it'
 tagline: 'A Chrome DevTools agent rebuilt deterministic-first: one-command adapters, then page reading, then a form kit with an audit gate.'
-tldr: 'My browser agent was built to learn each site and get cheaper on repeat visits. I logged its sessions, found repeat sites never got cheaper, retired the learning loop and rebuilt it around deterministic adapters.'
+tldr: 'My browser agent was built to learn each site and get cheaper on repeat visits. Across 119 logged sessions it never did: 68% weren’t forms and replays worked 0 of 2 times. I rebuilt it deterministic-first.'
 summary: 'A Chrome DevTools browser agent, measured and rebuilt: its learning loop retired for one-command adapters, agent-browser and a form kit with an audit gate.'
 category: 'Agentic AI'
 context: 'Personal engineering project'
@@ -10,11 +10,17 @@ role: 'Designed the architecture, ran the measurement, made the call to retire t
 timeline: '2026 (rebuilt Sep 2026)'
 stack: ['Node.js', 'Chrome DevTools Protocol', 'agent-browser', 'Claude API', 'Agentic workflows']
 headline:
-  value: '5 layers'
-  label: 'cheapest first: adapters, page reading, form kit, screenshots, then a human'
-result: 'Repeat tasks now run as one deterministic command with a written fallback plan. The previous design tried to learn each site automatically, and its session logs showed no cost drop on repeat visits.'
+  value: '68%'
+  label: 'of 119 logged sessions weren’t forms, so the form-centred learning loop was retired'
+result: 'Across 119 logged sessions the learning design never made repeat sites cheaper: 68% of sessions weren’t forms, 53% of commands were hand-written JavaScript and auto-drafted replays worked 0 of 2 times. Repeat tasks now run as one deterministic command.'
 impact: 'The model is called only for what code cannot settle, so routine web tasks no longer pay for page reasoning each time.'
-metrics: []
+metrics:
+  - value: '68%'
+    label: 'of 119 logged sessions weren’t forms'
+  - value: '53%'
+    label: 'of all commands were hand-written JavaScript'
+  - value: '0 of 2'
+    label: 'auto-drafted replay files that worked'
 links: []
 featured: false
 order: 9
@@ -59,15 +65,15 @@ as the first. My first design tried to fix that with a learning loop: per-site f
 run logs, and replay files drafted automatically once a site had been seen enough times. The bet was
 that repeat visits would get cheaper.
 
-## The session logs said the bet was wrong
+## 119 session logs said the bet was wrong
 
-The agent logged every session to a journal, so I could check the bet against real use. Three
-findings came out of it:
+The agent logged every session to a journal, so I could check the bet against real use. Across
+119 sessions, three findings came out of it:
 
-- **Most sessions weren’t forms at all,** so a form-centred design was built for the minority case.
-- **A large share of commands were hand-written JavaScript**, a sign the engine’s own tools didn’t
+- **68% of sessions weren’t forms at all,** so a form-centred design was built for the minority case.
+- **53% of all commands were hand-written JavaScript**, a sign the engine’s own tools didn’t
   cover the task.
-- **Auto-drafted replays didn’t work, and repeat sites never got cheaper.**
+- **Auto-drafted replays worked 0 of 2 times, and repeat sites never got cheaper.**
 
 So in September 2026 I retired the learning loop, archived its parts so they can be restored, and
 rebuilt the agent.
@@ -98,8 +104,7 @@ original design I kept.
 ## Repeat tasks now cost one command
 
 A task with an adapter now runs without the model reading the page. Site knowledge lives in plain
-notes, one per site, instead of machine files no one reviewed. I am not publishing the session counts
-behind the retirement decision here.
+notes, one per site, instead of machine files no one reviewed.
 
 ## What I’d tell the next team
 

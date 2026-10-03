@@ -1,12 +1,12 @@
 ---
 title: 'Priced hospital menu variety at +37% food cost with a MILP'
 tagline: 'A mixed-integer menu planner for five clinical diets that puts a dollar figure on menu variety.'
-tldr: 'Hospital menus must be cheap, clinically safe and varied. I built a MILP for five clinical diets; limiting ingredient repeats raised 3-day food cost 37% ($6.81 to $9.34), giving managers a price for variety.'
+tldr: 'Hospital menus must be cheap, clinically safe and varied. I led a team that built a MILP for five clinical diets; limiting ingredient repeats raised 3-day food cost 37% ($6.81 to $9.34), giving managers a price for variety.'
 summary: 'A mixed-integer program for hospital menus across five clinical diets: limiting ingredient repeats raises 3-day food cost 37%, from $6.81 to $9.34 per patient.'
 category: 'Optimization'
 context: 'MMA 861 · Smith School of Business, Queen’s University'
-team: 'Solo'
-role: 'Formulated the MILP, built it in Python and SciPy, wrote the 11 constraint families and ran the sensitivity analysis'
+team: 'Team project · team lead'
+role: 'Team lead: led the formulation, constraint design and sensitivity analysis'
 timeline: '2026'
 stack: ['Python', 'Mixed-Integer Programming', 'SciPy (HiGHS)', 'Linear Programming', 'Sensitivity Analysis', 'Plotly']
 headline:
@@ -94,7 +94,7 @@ A hospital food-service manager has to keep ingredient cost down, keep every pat
 clinical nutrition range, and keep menus varied enough that patients eat. A patient who stops
 eating is a clinical problem. Manual planning usually gives up one of the three, and the manager
 has no number for what the trade costs. Variety is the one that gets cut, because it sounds like
-a preference while cost and nutrition sound like requirements. I set out to answer one question
+a preference while cost and nutrition sound like requirements. We set out to answer one question
 for that manager: **what does a varied menu cost per patient, compared with the cheapest menu
 that is still clinically compliant?** Success meant a dollar figure per diet, from menus that
 pass every nutrient bound.
@@ -121,8 +121,8 @@ The model makes two kinds of decision at once: whether ingredient *i* is on the 
 *j* (binary), and how many grams (continuous). A linking constraint ties them together, so an
 unselected ingredient gets exactly zero grams and a selected one lands in a realistic portion
 range for that meal. A pure linear program cannot express “exactly one fruit per meal” or “no
-oatmeal with beef”, so I rejected it. The original proposal planned Excel Solver, which I dropped
-because the model outgrew its variable limits. I built it in Python on SciPy’s HiGHS MILP solver.
+oatmeal with beef”, so we rejected it. The original proposal planned Excel Solver, which we dropped
+because the model outgrew its variable limits. We built it in Python on SciPy’s HiGHS MILP solver.
 
 ### Each of the 11 constraint families closes a loophole the solver found
 
@@ -132,18 +132,18 @@ Without composition rules, breakfast was nutritionally valid and unrecognisable.
 culinary rules, it served granola with salmon because the pairing was cheap. Each family in the
 appendix table exists because a run produced something a dietitian would reject.
 
-### I made variety a hard rule so the answer comes out in dollars
+### We made variety a hard rule so the answer comes out in dollars
 
-I could have added a variety penalty to the objective. That would need an exchange rate between
-dollars and patient satisfaction, and any rate I chose would decide the answer. Hard rules avoid
-that: I solved every diet three times with identical constraints except the repeat rules, and the
+We could have added a variety penalty to the objective. That would need an exchange rate between
+dollars and patient satisfaction, and any rate we chose would decide the answer. Hard rules avoid
+that: we solved every diet three times with identical constraints except the repeat rules, and the
 cost difference between runs is the price of variety. The three runs are: cost only (repeats
 allowed), no ingredient twice in one day, and that plus no ingredient on more than 2 of the 3
 days.
 
 ### The one-fruit-per-meal rule carries the highest shadow price in every diet
 
-Integer programs do not produce usable dual values, so I solved the LP relaxation of the
+Integer programs do not produce usable dual values, so we solved the LP relaxation of the
 strictest model, with every binary relaxed to the range 0 to 1, and read the shadow prices.
 In all five diets, the nine “exactly one fruit per meal” constraints were the most expensive,
 at $0.29 to $0.41 each at the margin. No nutrient bound made any diet’s top 10. The relaxed
@@ -224,12 +224,12 @@ sits on its floor and potassium almost on its ceiling.
 
 \* stopped at the 180-second time limit with a feasible menu that is not proven optimal.
 
-- **Validation.** I checked every menu against every daily nutrient bound for all three days,
+- **Validation.** We checked every menu against every daily nutrient bound for all three days,
   with a 0.5-unit tolerance. No run violated a bound.
 - **Optimality.** 7 of 15 runs were proven optimal; 8 stopped at the time limit. The result
   holds on the clean runs: high cholesterol (+44%) and DASH (+42%) were proven optimal under all
   three rules.
-- **An anomaly I can explain.** For the normal male and diabetic diets, the stricter rule came
+- **An anomaly we can explain.** For the normal male and diabetic diets, the stricter rule came
   out cheaper than the looser one ($9.81 vs $9.93, $9.30 vs $9.57). A stricter rule cannot lower
   the true optimum, so the looser runs stopped before finding their best menu. Their true cost
   of variety may be somewhat lower than shown.
@@ -247,9 +247,9 @@ carries the highest shadow price in every diet. Negotiating fruit prices or appr
 fruits for the menu would cut cost more than relaxing any nutrient bound. After rollout, the
 measure to watch is plate waste and intake by diet, because that is what variety is meant to buy.
 
-## Limitations and what I’d do next
+## Limitations and what we’d do next
 
-- **8 of 15 runs are not proven optimal**, and I did not record their optimality gaps. Next: rerun
+- **8 of 15 runs are not proven optimal**, and we did not record their optimality gaps. Next: rerun
   with a longer limit and report the gap for each run, starting with the normal male and diabetic
   3-day runs that produced the anomaly.
 - **Prices are synthetic.** The 37% and the $123,000 estimate move with real supplier prices.
@@ -259,6 +259,11 @@ measure to watch is plate waste and intake by diet, because that is what variety
 - **Shadow prices come from a fully relaxed LP**, which can pick fractional menus. Next: fix the
   chosen menu and re-solve the portions to get dual values for the menu actually served.
 - **The block is 3 days.** A production planner needs a full week or a rotating cycle.
+
+## Team and credits
+
+MMA 861 team project. **I led the team, and led the formulation, the constraint design and the
+sensitivity analysis.** The model, notebook and write-up were built together.
 
 <details class="appendix">
 <summary>Technical appendix</summary>

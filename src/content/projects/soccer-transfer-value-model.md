@@ -5,7 +5,7 @@ tldr: 'Does the transfer market price output fairly? I led a team modelling 4,05
 summary: 'MMA 860 team project: a log-value model of 4,056 Big Five player-seasons (test R² 0.72) and four tests of how the transfer market prices players.'
 category: 'Predictive Modelling'
 context: 'MMA 860 · Smith School of Business, Queen’s University'
-team: 'Team project · team lead'
+team: 'Team of 7 · team lead'
 role: 'Team lead: led data assembly across three sources, designed the four hypothesis tests and led the modelling'
 timeline: '2026'
 stack: ['Python', 'pandas', 'statsmodels', 'scikit-learn', 'Ridge / Lasso', 'ANOVA']
