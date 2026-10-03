@@ -287,8 +287,8 @@ rotation.
 
 ## Team and credits
 
-Team Danforth had six people. **I was half of the modelling pair: I built my own CatBoost + LightGBM
-+ Random Forest pipeline (0.8235), ran the model analysis, confusion matrix, feature importance and
+Team Danforth had six people. **I was half of the modelling pair: I built my own CatBoost, LightGBM and
+Random Forest pipeline (0.8235), ran the model analysis, confusion matrix, feature importance and
 error analysis, and generated the final submissions.** Teammates led data cleaning and feature
 engineering, built further CatBoost and XGBoost pipelines, and assembled the stacked ensemble with a
 meta-learner on top that scored 0.8308.
