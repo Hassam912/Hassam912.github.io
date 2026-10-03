@@ -56,7 +56,7 @@ export const education = [
     school: 'Smith School of Business, Queen’s University',
     credential: 'Master of Management Analytics',
     detail: 'Data Science major',
-    period: '2026 – 2027',
+    period: '2026',
   },
   {
     school: 'National Defense University',
