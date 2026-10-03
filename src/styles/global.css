@@ -358,3 +358,56 @@ a.card:hover {
 @media (prefers-reduced-motion: no-preference) {
   a.card:hover { transform: translateY(-2px); }
 }
+
+/* Technical appendix: depth on demand. Results, role and limitations never go in here. */
+.prose-case details.appendix {
+  margin-top: 3rem;
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+  background: var(--paper-3);
+  padding: 0 1.25rem;
+}
+.prose-case details.appendix > summary {
+  cursor: pointer;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  min-height: 3rem;
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-2);
+}
+.prose-case details.appendix > summary::-webkit-details-marker { display: none; }
+.prose-case details.appendix > summary::after {
+  content: '+';
+  font-size: 1.1rem;
+  color: var(--accent);
+}
+.prose-case details.appendix[open] > summary::after { content: '−'; }
+.prose-case details.appendix[open] { padding-bottom: 1.25rem; }
+.prose-case details.appendix > * + * { margin-top: 1em; }
+.prose-case details.appendix table { font-size: 0.82rem; }
+
+/* Small screens: wide tables and charts scroll inside their own box instead of
+   shrinking to unreadable sizes. Chart text stays at roughly 10px or larger. */
+.prose-case table {
+  display: block;
+  max-width: 100%;
+  overflow-x: auto;
+}
+.prose-case figure.chart-figure { overflow-x: auto; }
+@media (max-width: 639px) {
+  .prose-case figure.chart-figure svg { min-width: 560px; }
+  .prose-case figure.chart-figure::after {
+    content: 'Scroll sideways to see the full chart →';
+    display: block;
+    margin-top: 0.5rem;
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    color: var(--ink-3);
+  }
+}

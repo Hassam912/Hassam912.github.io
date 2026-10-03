@@ -1,6 +1,7 @@
 ---
 import type { CollectionEntry } from 'astro:content';
 import CardThumb from './CardThumb.astro';
+import { readTime } from '../lib/readTime';
 
 interface Props {
   project: CollectionEntry<'projects'>;
@@ -10,6 +11,7 @@ interface Props {
 const { project, variant = 'feature' } = Astro.props;
 const d = project.data;
 const href = `/projects/${project.id}/`;
+const minutes = readTime(project.body);
 /* Shared with the case-study <h1> so the title carries across the page change. */
 const vt = `view-transition-name: title-${project.id};`;
 
@@ -21,6 +23,7 @@ const withThumb = new Set([
   'kaggle-house-prices',
   'car-insurance-claim-predictor',
   'cowlar-billing-system',
+  'pump-it-up-water-pumps',
 ]);
 const hasThumb = withThumb.has(project.id);
 ---
@@ -30,57 +33,55 @@ const hasThumb = withThumb.has(project.id);
     <a
       href={href}
       class:list={[
-        'card group grid items-center gap-8 p-6 md:p-9 lg:gap-12',
+        'card group grid items-center gap-6 p-5 md:p-8 lg:gap-12',
         hasThumb ? 'lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)]' : '',
       ]}
       id={`project-${project.id}`}
     >
-      <div class="flex min-w-0 flex-col">
+      {hasThumb && (
+        <div
+          class="min-w-0 rounded-[var(--radius)] border p-4 md:p-6 lg:order-2"
+          style="border-color: var(--rule); background: var(--paper-2);"
+        >
+          <CardThumb id={project.id} />
+        </div>
+      )}
+
+      <div class="flex min-w-0 flex-col lg:order-1">
         <p class="eyebrow">
           {d.category} <span aria-hidden="true">·</span> {d.context}
         </p>
 
         <h3
-          class="mt-3 text-[1.5rem] leading-[1.2] tracking-[-0.015em] md:text-[1.75rem]"
+          class="mt-3 text-[1.4rem] leading-[1.2] tracking-[-0.015em] md:text-[1.65rem]"
           style={`font-family: var(--font-display); color: var(--ink); font-weight: 650; ${vt}`}
         >
           {d.title}
         </h3>
-        <p class="mt-3 max-w-xl text-[0.98rem] leading-relaxed" style="color: var(--ink-2);">
+
+        <p class="mt-4 flex flex-wrap items-baseline gap-x-2.5 gap-y-1">
+          <span class="num text-[1.6rem] leading-none md:text-[1.8rem]" style="color: var(--accent);">{d.headline.value}</span>
+          <span class="text-[0.9rem] leading-snug" style="color: var(--ink-2);">{d.headline.label}</span>
+        </p>
+
+        <p class="mt-4 max-w-xl text-[0.98rem] leading-relaxed" style="color: var(--ink-2);">
           {d.tagline}
         </p>
 
-        {d.metrics.length > 0 && (
-          <dl class="mt-6 grid grid-cols-3 gap-4 border-t pt-5" style="border-color: var(--rule);">
-            {d.metrics.slice(0, 3).map((m) => (
-              <div class="min-w-0">
-                <dd class="num text-[1.35rem] leading-none md:text-[1.5rem]" style="color: var(--accent);">
-                  {m.value}
-                </dd>
-                <dt class="mt-2 text-[0.75rem] leading-snug" style="color: var(--ink-3);">
-                  {m.label}
-                </dt>
-              </div>
-            ))}
-          </dl>
-        )}
-
-        <div class="mt-6 flex flex-wrap gap-1.5">
+        <div class="mt-5 flex flex-wrap items-center gap-1.5">
+          <span class="badge">{d.team}</span>
           {d.stack.slice(0, 4).map((s) => (
             <span class="chip">{s}</span>
           ))}
         </div>
 
-        <span class="mt-6 inline-flex items-center gap-1.5 text-[0.9375rem] font-semibold" style="color: var(--accent);">
-          Read the case study <span class="arrow" aria-hidden="true">&rarr;</span>
-        </span>
+        <p class="mt-5 flex flex-wrap items-center gap-x-3 gap-y-1 text-[0.9375rem]">
+          <span class="inline-flex items-center gap-1.5 font-semibold" style="color: var(--accent);">
+            Read the case study <span class="arrow" aria-hidden="true">&rarr;</span>
+          </span>
+          <span class="eyebrow">{minutes} min read</span>
+        </p>
       </div>
-
-      {hasThumb && (
-        <div class="min-w-0 rounded-[var(--radius)] border p-5 md:p-6" style="border-color: var(--rule); background: var(--paper-2);">
-          <CardThumb id={project.id} />
-        </div>
-      )}
     </a>
   ) : (
     <a
@@ -89,15 +90,18 @@ const hasThumb = withThumb.has(project.id);
       style="border-color: var(--rule);"
     >
       <div class="min-w-0">
-        <p class="eyebrow">{d.category}</p>
+        <p class="eyebrow">
+          {d.category} <span aria-hidden="true">·</span> {d.team}
+        </p>
         <h3
           class="mt-1.5 text-[1.0625rem] font-semibold leading-snug tracking-tight"
           style={`color: var(--ink); ${vt}`}
         >
           {d.title}
         </h3>
-        <p class="mt-1 max-w-2xl text-[0.9375rem] leading-relaxed" style="color: var(--ink-2);">
-          {d.tagline}
+        <p class="mt-1.5 flex flex-wrap items-baseline gap-x-2 text-[0.92rem]" style="color: var(--ink-2);">
+          <span class="num" style="color: var(--accent);">{d.headline.value}</span>
+          <span>{d.headline.label}</span>
         </p>
       </div>
       <span class="inline-flex items-center gap-1.5 text-sm font-semibold" style="color: var(--accent);">
@@ -108,6 +112,20 @@ const hasThumb = withThumb.has(project.id);
 }
 
 <style>
-  .more-row { transition: background-color var(--t-base) var(--ease); }
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.04em;
+    font-weight: 500;
+    padding: 0.28rem 0.6rem;
+    border-radius: 999px;
+    background: var(--accent-soft);
+    color: var(--accent);
+    border: 1px solid var(--accent-border);
+    white-space: nowrap;
+  }
+  .more-row h3 { transition: color var(--t-base) var(--ease); }
   .more-row:hover h3 { color: var(--accent) !important; }
 </style>

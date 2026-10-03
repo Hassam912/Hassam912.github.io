@@ -1,75 +1,147 @@
 ---
-title: 'A browser agent that learns each site it visits'
-tagline: 'Zero-dependency automation that fills any web form — and gets cheaper to run every time it sees a site again.'
-summary: 'A universal form-filling agent built on the Chrome DevTools Protocol. A deterministic matcher handles what it can, the language model resolves only what it can’t, and a learning loop turns each run into cached knowledge so repeat visits cost almost nothing.'
+title: 'Measured my browser agent, retired its learning loop, rebuilt it'
+tagline: 'A Chrome DevTools agent rebuilt deterministic-first: one-command adapters, then page reading, then a form kit with an audit gate.'
+tldr: 'My browser agent was built to learn each site and get cheaper on repeat visits. I logged its sessions, found repeat sites never got cheaper, retired the learning loop and rebuilt it around deterministic adapters.'
+summary: 'A Chrome DevTools browser agent, measured and rebuilt: its learning loop retired for one-command adapters, agent-browser and a form kit with an audit gate.'
 category: 'Agentic AI'
 context: 'Personal engineering project'
-role: 'Sole designer and engineer'
-timeline: '2026'
-stack: ['Node.js', 'Chrome DevTools Protocol', 'Claude API', 'Agentic workflows']
-metrics:
-  - value: '0'
-    label: 'runtime dependencies'
-  - value: '3'
-    label: 'layers of learned site memory'
-glance:
-  problem: 'LLM browser agents are slow and expensive because they re-read the entire page — usually as screenshots — on every single step.'
-  approach: 'Push the deterministic work into code: a matcher resolves fields against a profile, and only genuinely ambiguous fields reach the model. Every resolution is logged and promoted into reusable knowledge.'
-  result: 'A repeatedly-visited site approaches zero model tokens — it replays a compiled sequence of steps instead of reasoning from scratch.'
+team: 'Solo'
+role: 'Designed the architecture, ran the measurement, made the call to retire the learning loop, and rebuilt the agent with Claude Code'
+timeline: '2026 (rebuilt Sep 2026)'
+stack: ['Node.js', 'Chrome DevTools Protocol', 'agent-browser', 'Claude API', 'Agentic workflows']
+headline:
+  value: '5 layers'
+  label: 'cheapest first: adapters, page reading, form kit, screenshots, then a human'
+result: 'Repeat tasks now run as one deterministic command with a written fallback plan. The previous design tried to learn each site automatically, and its session logs showed no cost drop on repeat visits.'
+impact: 'The model is called only for what code cannot settle, so routine web tasks no longer pay for page reasoning each time.'
+metrics: []
+links: []
 featured: false
-order: 7
+order: 9
+draft: false
 ---
 
-## The economics problem
+<figure class="chart-figure">
+<figcaption class="chart-title">Each task starts at the cheapest layer and falls through only on failure</figcaption>
 
-Most LLM browser agents work by screenshotting the page, asking the model what it sees, and
-acting on the answer. It works, and it's brutally expensive — every step re-reads the whole
-page through the most token-hungry channel available, and the agent is exactly as slow and
-costly on the hundredth visit to a site as on the first.
+<svg viewBox="0 0 400 352" role="img" aria-labelledby="brA-title brA-desc" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;font-family:var(--font-sans, sans-serif);">
+<title id="brA-title">Schematic of the rebuilt browser agent's layers</title>
+<desc id="brA-desc">Five layers from top to bottom, cheapest first. One: adapters, one command per repeated task. Two: agent-browser, which reads the page as a snapshot and page text. Three: the form kit, a deterministic matcher plus an audit gate, where only unresolved fields reach the model. Four: screenshots, as a last resort. Five: stop and report to a human. An arrow on the left shows cost per step rising downward.</desc>
+<line x1="22" y1="34" x2="22" y2="318" stroke="var(--rule)" stroke-width="1.5" />
+<path d="M 17.5 316 L 22 324 L 26.5 316 Z" fill="var(--ink-3)" />
+<text x="14" y="176" text-anchor="middle" font-size="10" fill="var(--ink-3)" transform="rotate(-90 14 176)" style="font-family:var(--font-mono, monospace);letter-spacing:0.06em;">COST PER STEP RISES</text>
+<rect x="40" y="26" width="350" height="50" rx="9" fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="1.6" />
+<text x="56" y="47" font-size="13" font-weight="700" fill="var(--accent-ink)">1 · Adapters</text>
+<text x="56" y="65" font-size="10.5" fill="var(--accent-ink)">one command per repeated task, one line of JSON back</text>
+<rect x="40" y="86" width="350" height="50" rx="9" fill="var(--paper-3)" stroke="var(--rule)" stroke-width="1" />
+<text x="56" y="107" font-size="13" font-weight="600" fill="var(--ink-2)">2 · agent-browser</text>
+<text x="56" y="125" font-size="10.5" fill="var(--ink-3)">page snapshot, element refs and text instead of pixels</text>
+<rect x="40" y="146" width="350" height="50" rx="9" fill="var(--paper-3)" stroke="var(--rule)" stroke-width="1" />
+<text x="56" y="167" font-size="13" font-weight="600" fill="var(--ink-2)">3 · Form kit + audit gate</text>
+<text x="56" y="185" font-size="10.5" fill="var(--ink-3)">matcher fills from a profile; model sees only leftovers</text>
+<rect x="40" y="206" width="350" height="50" rx="9" fill="var(--paper-3)" stroke="var(--rule)" stroke-width="1" />
+<text x="56" y="227" font-size="13" font-weight="600" fill="var(--ink-2)">4 · Screenshot</text>
+<text x="56" y="245" font-size="10.5" fill="var(--ink-3)">last resort, for canvas or elements missing from the snapshot</text>
+<rect x="40" y="266" width="350" height="50" rx="9" fill="var(--paper-3)" stroke="var(--rule)" stroke-width="1" />
+<text x="56" y="287" font-size="13" font-weight="600" fill="var(--ink-2)">5 · Stop and report</text>
+<text x="56" y="305" font-size="10.5" fill="var(--ink-3)">login wall, CAPTCHA, or the same failure twice</text>
+<text x="215" y="340" text-anchor="middle" font-size="10.5" fill="var(--ink-3)">a broken adapter hands the next layer a written fallback plan</text>
+</svg>
 
-That's the wrong shape. **A human gets faster at a form the second time.** The agent should
-too.
+<figcaption class="chart-caption">Schematic, not a chart. The learning loop that used to sit across these layers was removed in September 2026.</figcaption>
+</figure>
 
-## The design principle
+## The first design bet that the agent would learn each site
 
-Learned knowledge lives in **machine-readable files that scripts read — never files the
-model loads.**
+Most LLM browser agents screenshot the page, ask the model what it sees and act on the answer. Every
+step pays for the most expensive channel there is, and the hundredth visit to a site costs the same
+as the first. My first design tried to fix that with a learning loop: per-site facts written from
+run logs, and replay files drafted automatically once a site had been seen enough times. The bet was
+that repeat visits would get cheaper.
 
-Per page, the model sees only three things: a short list of fields the deterministic matcher
-couldn't resolve, a compact block of known facts about that host, and the result of a
-completeness check. The bulk page data never enters the context window; it moves between the
-browser and the matcher on disk.
+## The session logs said the bet was wrong
 
-## Three layers of memory
+The agent logged every session to a journal, so I could check the bet against real use. Three
+findings came out of it:
 
-1. **The engine** — no memory at all. A page scanner that handles native inputs, custom
-   widget families (React Select, MUI, Workday, PrimeNG), shadow DOM and cross-origin
-   iframes. This works on a site it has never seen.
-2. **Site facts** — per-host notes written automatically from run logs: which upload method
-   works here, what gates the flow, which widget families appear.
-3. **Compiled steps** — once a host has been seen enough times, the learner drafts a replay
-   file. Subsequent visits execute it deterministically, falling back to the model only when
-   a step fails.
+- **Most sessions weren’t forms at all,** so a form-centred design was built for the minority case.
+- **A large share of commands were hand-written JavaScript**, a sign the engine’s own tools didn’t
+  cover the task.
+- **Auto-drafted replays didn’t work, and repeat sites never got cheaper.**
 
-The effect compounds: over time, fewer fields ever reach the model at all.
+So in September 2026 I retired the learning loop, archived its parts so they can be restored, and
+rebuilt the agent.
 
-## The part I'd defend in an interview
+## How I rebuilt it
 
-An **audit gate**. The agent refuses to advance past a page while any required field is
-still empty.
+### Repeated tasks became one-command adapters
 
-That sounds obvious. It isn't how most agents behave — they optimistically click Next and
-discover the failure later, if at all. Making incompleteness a hard stop rather than a
-recoverable error is the difference between an agent that mostly works and one you can leave
-alone.
+An adapter does one job on one site and prints one line of JSON, so the caller never reads the page.
+Exit codes separate done, site changed, needs a human and Chrome down. When a site changes, the
+adapter prints a fallback plan for the next layer. When a task is done by hand a second time, the
+agent builds an adapter for it, tests it in preview and reports it. That replaced automatic replay
+with a reviewed script.
 
-The same instinct shows up in error classification: failures are typed as *usage*,
-*environment*, *engine* or *page* problems, so that a bug in my code never gets filed away as
-knowledge about a website.
+### Page reading moved to agent-browser
 
-## Why it belongs in an analytics portfolio
+For everything without an adapter, the agent uses agent-browser on the same Chrome: snapshots,
+element references and page text, with output capped. The rule now is to use these commands instead
+of hand-written scraping JavaScript, and to keep screenshots for the rare canvas page.
 
-Because the interesting decisions in it are analytical, not just engineering ones: what to
-compute deterministically versus what to hand to an expensive, non-deterministic model; how
-to validate a learned answer before trusting it; when to quarantine knowledge that has
-failed twice. That's the same judgement a production ML system needs.
+### The form kit kept the audit gate
+
+For long forms, a deterministic matcher fills fields from a plain-text profile and an answer bank.
+Only fields it can’t place reach the model. The **audit gate** refuses to advance while any required
+field is empty, and fills can be logged with a read-back of each field. It is the part of the
+original design I kept.
+
+## Repeat tasks now cost one command
+
+A task with an adapter now runs without the model reading the page. Site knowledge lives in plain
+notes, one per site, instead of machine files no one reviewed. I am not publishing the session counts
+behind the retirement decision here.
+
+## What I’d tell the next team
+
+Measure what your agent actually does before building memory for it. Mine was designed for forms and
+spent most of its time elsewhere. Put deterministic code first, the model second, and screenshots
+last, and make incompleteness a hard stop.
+
+## Limitations and what I’d do next
+
+- **No published before-and-after cost.** I haven’t yet reported tokens or time per task under each
+  design.
+- **Adapters break when sites change.** The fallback plan limits the damage, but each one still
+  needs maintenance.
+- **It runs one task at a time on one Chrome profile,** by design, so it doesn’t scale out.
+- **Not open source.** A public repo or demo video would let a reviewer check the claims.
+
+<details class="appendix">
+<summary>Technical appendix</summary>
+
+**Layers**
+
+<div class="table-scroll">
+
+| Layer | What it is | Used when |
+|---|---|---|
+| Adapters | One Node.js script per site and task, run through a single launcher | The task has been done before |
+| agent-browser | Snapshot, refs, page text and network reads on the agent Chrome | No adapter fits, or an adapter reports the site changed |
+| Form kit | Page scan, deterministic matcher, widget handlers, audit gate, upload and sign-in helpers | Long forms with many fields |
+| Screenshot | Annotated screenshot, act by label | Elements missing from the snapshot |
+
+</div>
+
+**Adapter exit codes.** 0 done · 2 bad arguments · 3 site changed (prints a fallback plan) · 4 needs
+a human · 5 Chrome not reachable · 6 another job holds the site lock.
+
+**Safety rules.** Anything that changes an account (post, reply, send, delete) runs as a preview by
+default and acts only with an explicit flag. Each job works in its own tab and takes a per-site lock.
+
+**Testing.** After any change to the scanner, matcher or profile, a regression suite replays 41
+recorded form scans.
+
+**Retired in v6.** The learner, auto-drafted replay files, page signatures and machine-written site
+facts, archived on 2026-09-23.
+
+</details>

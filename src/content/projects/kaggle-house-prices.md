@@ -1,105 +1,117 @@
 ---
-title: 'Top 20% on Kaggle’s House Prices — by fixing the encoding, not the model'
-tagline: 'A disciplined preprocessing strategy beat hyperparameter chasing on 79 mixed-type features.'
-short: 'Top 20% on Kaggle by fixing the encoding'
-navLabel: 'House prices'
-summary: 'The Ames housing dataset is 79 features of numeric, ordinal and nominal data with missingness that means three different things. Most of the leaderboard gap comes from treating those distinctions correctly — not from a fancier estimator.'
+title: 'Reached the top 20% on Kaggle House Prices through better encoding'
+tagline: 'Type-aware encoding and missing-value rules on 79 mixed-type housing features, compared across three models.'
+tldr: 'Kaggle’s House Prices asks for sale prices from 79 mixed-type features. I encoded each feature by type and read missing values by meaning; the entry reached the top 20% of the leaderboard.'
+summary: 'Kaggle House Prices: type-aware encoding and missing-value handling on 79 features took the entry to the top 20% of the leaderboard.'
 category: 'Predictive Modelling'
-context: 'Kaggle competition — team entry'
-role: 'Preprocessing design, model selection and tuning'
+context: 'Kaggle House Prices (Getting Started competition)'
+team: 'Self-directed'
+role: 'Designed the preprocessing, ran model selection and tuning'
 timeline: '2026'
 stack: ['Python', 'pandas', 'scikit-learn', 'Ridge / Lasso', 'Gradient Boosting', 'GridSearchCV']
+headline:
+  value: 'Top 20%'
+  label: 'of the Kaggle House Prices leaderboard (score, field size and date not recorded)'
+result: 'The entry finished in the top 20% of the House Prices leaderboard. The score, exact rank and field size were not recorded, and the leaderboard is rolling, so the percentile is a snapshot.'
 metrics:
   - value: 'Top 20%'
-    label: 'leaderboard finish'
-  - value: '79'
-    label: 'raw features before encoding'
-  - value: '5-fold'
-    label: 'CV on RMSE for model selection'
-glance:
-  problem: 'Predict sale price from 79 features spanning numeric, ordinal and nominal types, with missing values that carry three distinct meanings.'
-  approach: 'Type-aware preprocessing — ordinals ranked, nominals one-hot encoded, and missingness interpreted per feature — then a grid search across Ridge, Lasso and Gradient Boosting on 5-fold CV.'
-  result: 'Top 20% finish, driven mostly by the preprocessing decisions rather than the estimator.'
+    label: 'House Prices leaderboard finish'
 featured: false
-order: 6
+order: 8
+draft: false
 ---
 
-## The dataset
+## The 79 features are three different kinds of data, and the result depends on telling them apart
 
-1,460 training rows, 1,459 test rows, 79 feature columns, one target: `SalePrice`. It looks
-like a beginner problem and isn't, because those 79 columns are not one kind of thing.
+Kaggle’s House Prices competition asks for the sale price of homes in Ames, Iowa, scored on the
+error between the log of the predicted and actual price. It looks like a beginner problem. The
+difficulty is that its 79 feature columns mix three kinds of data: numbers, ordered ratings and
+unordered categories, with missing values that mean different things in different columns. A
+pipeline that treats every column the same way loses information in some columns and invents it
+in others. My question was **how much of the leaderboard gap comes from preprocessing each
+column correctly, compared with choosing and tuning the estimator.**
 
-They're three kinds of thing, and the entire result hinges on telling them apart.
+## 1,460 sold homes, with missing values that mean three different things
 
-## The three-way distinction that does the work
+The training set has 1,460 homes and the test set 1,459, each with 79 features and, for training,
+the sale price. Features cover lot and floor areas, build and sale years, quality and condition
+ratings, garage, basement, fireplace and fence details, neighbourhood and sale type. A null can
+mean three things here:
 
-Most submissions apply one encoding strategy across the board. That throws away real
-information in one direction and invents it in the other.
+1. **The feature does not exist.** `GarageType` is empty because there is no garage.
+2. **A numeric measurement is missing.**
+3. **A category value is missing.**
 
-**Numeric features stay numeric.** Square footage, year built, lot area. Nothing to do.
+## Three preprocessing choices carried the entry
 
-**Ordinal features become ranked numbers.** `ExterQual` takes values Excellent, Good,
-Average, Fair, Poor. One-hot encoding that creates five unrelated binary columns and
-discards the fact that Excellent > Good > Average — an ordering the model would otherwise
-have to rediscover from data. Mapping it to 5-4-3-2-1 hands the model a monotonic
-relationship for free.
+### Quality ratings became ranks, so the model did not have to relearn their order
 
-**Nominal features get one-hot encoded.** Neighbourhood, roof style, sale type. Here there
-genuinely is no ordering, and imposing one would be worse than useless — it would tell the
-model that Neighbourhood 7 sits between 6 and 8 in some meaningful sense.
+`ExterQual` runs Excellent, Good, Average, Fair, Poor. One-hot encoding turns that into five
+unrelated columns and throws away the order. I mapped ratings like this to 5 to 1, which gives the
+model a monotonic relationship directly. True categories such as neighbourhood, roof style and
+sale type have no order, so I one-hot encoded them. Numbering them would tell the model that
+neighbourhood 7 sits between 6 and 8, which means nothing.
 
-## Missingness means three different things
+### A missing garage means no garage, so absence became its own category
 
-This is the second place the leaderboard separates, and it's a domain-reasoning problem
-rather than a statistical one. In this dataset a null can mean:
+Filling `GarageType` with the most common value would invent a garage for houses that have
+none. For features that can be absent (garage, basement, fireplace, fence) I
+filled nulls with an explicit `None` category, so the model can learn absence as a signal. Genuinely
+missing numbers got the median, which resists this data’s right skew better than the mean. Genuinely
+missing categories got the mode. Getting the first group wrong would not show up in
+cross-validation, because the error is in the data and repeats in every fold.
 
-1. **The feature doesn't exist for this house.** No garage, no basement, no fireplace, no
-   fence. `GarageType = NaN` doesn't mean "unknown garage type" — it means *there is no
-   garage*. Imputing the mode here fabricates a garage. These get filled with an explicit
-   `'None'` category, which lets the model learn "absence of garage" as its own signal.
-2. **A genuinely missing numeric measurement.** Filled with the median — robust to the
-   heavy right skew in this data in a way the mean isn't.
-3. **A genuinely missing category.** Filled with the mode.
+### Train and test were encoded together so their columns lined up
 
-Getting category 1 wrong is the single most expensive mistake available in this
-competition, and it's invisible to cross-validation — the error is consistent across folds
-because it's baked into the data, not the split.
+Encoding the two files separately produces different dummy columns whenever a category appears
+in only one of them, and the matrices stop aligning. I combined train and test for structural
+steps only (type mapping and one-hot encoding), then split them back. Anything learned from values,
+such as medians and scaling, was fitted on training rows alone so the test distribution could not
+leak into the model.
 
-## One preprocessing pipeline, two datasets
+## The entry reached the top 20% of the public leaderboard
 
-Train and test are combined *before* encoding, then split back apart afterwards.
+I compared Ridge, Lasso and gradient boosting with a grid search on 5-fold cross-validated RMSE.
+Ridge suits the many correlated columns after one-hot expansion, Lasso can zero out noisy
+dummies, and gradient boosting captures interactions such as an extra bathroom being worth more in
+a large house. The finding I took away: the difference between the tuned models was small next
+to the difference between careful and careless preprocessing. I did not keep the cross-validation
+scores, so I cannot put a number on either gap.
 
-The reason is mundane and important: if you one-hot encode them separately, any category
-appearing in test but not train (or vice versa) produces a different set of dummy columns,
-and the matrices no longer align. Combining first guarantees both receive identical
-treatment and identical column structure.
+> **Note, October 2026:** House Prices is a Getting Started competition with a rolling
+> leaderboard that drops older submissions. The top-20% finish is a snapshot, and its score,
+> rank, field size and date were not recorded.
 
-The care needed here is that this applies to **structural** preprocessing only. Anything
-learned from data — medians, scaling parameters — must be fitted on train alone to avoid
-leaking test-set distribution into the model.
+## Recommendation: fix data types before tuning models
 
-## Model selection
+For anyone building a price model on property data, the first day should go to a column-by-column
+decision: number, ordered rating or category, and what a null means in that column. That work is
+cheap, transfers to any estimator, and in this project moved the result more than tuning. Model
+comparison comes after, on a fixed cross-validation scheme so scores can be compared.
 
-Grid search across three estimators with 5-fold cross-validation, selecting on RMSE:
+## Limitations and what I’d do next
 
-- **Ridge** — L2 regularization. The natural first choice given heavy multicollinearity
-  after one-hot expansion.
-- **Lasso** — L1. Performs feature selection by driving coefficients to zero, useful when
-  many of the expanded dummy columns are noise.
-- **Gradient Boosting** — captures non-linearity and interactions the linear models can't,
-  such as the way an extra bathroom is worth much more in a large house than a small one.
+- **No recorded scores.** Without the CV RMSE before and after preprocessing, the page’s main
+  claim is not backed by a number. Next: rerun the pipeline and log CV RMSE for each step.
+- **No log target.** The competition scores error on log price, but the models were not trained on
+  `log(SalePrice)`, so expensive homes carried more weight in training than in scoring. Next: train
+  on log price and back-transform.
+- **No engineered features.** Total floor area, age at sale and total bathrooms are obvious
+  combinations that tree models find slowly. Next: add them and measure each one.
+- **No ensemble.** Blending the linear and boosted predictions usually helps when their errors
+  differ. Next: a simple weighted blend chosen on out-of-fold predictions.
 
-The honest finding: **the spread between a well-tuned Ridge and a well-tuned Gradient
-Boosting model was far smaller than the spread between good and bad preprocessing.** Time
-spent on the encoding strategy returned more than time spent on hyperparameters — which is
-the opposite of where most effort typically goes.
+<details class="appendix">
+<summary>Technical appendix</summary>
 
-## What I'd add
+**Encoding rules.** Numeric features kept as numbers. Ordered quality and condition ratings mapped
+Excellent 5, Good 4, Average 3, Fair 2, Poor 1. Unordered categories one-hot encoded. Structural
+steps run on train and test combined; medians, modes and scaling fitted on train only.
 
-- **Target transformation.** `SalePrice` is right-skewed; modelling `log(SalePrice)` and
-  back-transforming usually buys a measurable improvement, since the competition scores on
-  log error anyway.
-- **Feature engineering** — total square footage as a single derived feature, house age at
-  sale, total bathroom count. Domain-obvious combinations that tree models find slowly.
-- **Ensembling** the linear and boosted predictions, which tends to help precisely because
-  their errors are uncorrelated.
+**Missing values.** Absence-type nulls (garage, basement, fireplace, fence) filled with `None`;
+numeric nulls with the training median; categorical nulls with the training mode.
+
+**Model selection.** Ridge (L2), Lasso (L1) and gradient boosting, each tuned with `GridSearchCV`
+on 5-fold cross-validated RMSE.
+
+</details>

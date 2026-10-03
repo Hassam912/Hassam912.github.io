@@ -51,6 +51,16 @@ const models = [
 const aMin = 0.85;
 const aMax = 0.895;
 
+/* ── Pump It Up: accuracy against the majority-class baseline ──────────────── */
+const pump = [
+  { n: 'Always guess "functional"', v: 0.5431, win: false },
+  { n: 'First CatBoost (CV)', v: 0.7906, win: false },
+  { n: 'My blend (leaderboard)', v: 0.8235, win: false },
+  { n: 'Team stack (leaderboard)', v: 0.8308, win: true },
+];
+const pMin = 0.5;
+const pMax = 0.86;
+
 /* ── Cowlar: the billing data pipeline, as a schematic ─────────────────────
    A diagram of the stages described in the case study — deliberately not a
    chart, because the underlying billing figures are a former employer's and
@@ -170,6 +180,32 @@ const stages = [
       <text x={W} y="74" text-anchor="end" font-size="9" fill="var(--ink-3)" style="font-family: var(--font-mono);">
         last
       </text>
+    </svg>
+  )
+}
+
+{
+  id === 'pump-it-up-water-pumps' && (
+    <svg viewBox={`0 0 ${W} ${H}`} class="thumb" role="img" aria-label="Accuracy rises from 0.5431 for always guessing functional to 0.8308 for the team's stacked ensemble">
+      {pump.map((m, i) => {
+        const rh = (H - 6) / pump.length;
+        const cy = 3 + i * rh + rh / 2;
+        const x0 = 176;
+        const bw = (v: number) => ((v - pMin) / (pMax - pMin)) * (W - x0 - 58);
+        return (
+          <>
+            <text x={x0 - 10} y={cy + 3.5} text-anchor="end" font-size="9.5" fill="var(--ink-3)" style="font-family: var(--font-mono);">
+              {m.n}
+            </text>
+            <rect x={x0} y={cy - 7} width={bw(m.v)} height="14" rx="3" fill={m.win ? 'var(--accent)' : 'color-mix(in oklab, var(--ink-3) 42%, var(--paper-2))'}>
+              <title>{`${m.n}: ${m.v} accuracy`}</title>
+            </rect>
+            <text x={x0 + bw(m.v) + 7} y={cy + 3.5} font-size="9.5" fill={m.win ? 'var(--accent-ink)' : 'var(--ink-3)'} style={`font-family: var(--font-mono); font-weight: ${m.win ? 600 : 400};`}>
+              {m.v.toFixed(4)}
+            </text>
+          </>
+        );
+      })}
     </svg>
   )
 }
@@ -300,6 +336,11 @@ const stages = [
     <>
       Schematic of the pipeline, not measured data — the billing figures belong to a former
       employer. <span class="sw sw-3" /> marks the QA gate I built.
+    </>
+  )}
+  {id === 'pump-it-up-water-pumps' && (
+    <>
+      Accuracy on 3 pump classes — <span class="sw sw-3" /> team stacked ensemble, #1 of 18,990 at submission
     </>
   )}
   {id === 'car-insurance-claim-predictor' && (

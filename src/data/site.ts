@@ -23,7 +23,7 @@ export const proof = [
   { value: '~$1M', label: 'a month in billing through data I owned', href: '/projects/cowlar-billing-system/' },
   { value: '−40%', label: 'financial reconciliation time, with Power BI', href: '/projects/cowlar-billing-system/' },
   { value: '+37%', label: 'what menu variety adds to hospital food cost', href: '/projects/hospital-meal-planning-milp/' },
-  { value: '0.887', label: 'ROC-AUC on a claim-risk model', href: '/projects/car-insurance-claim-predictor/' },
+  { value: '#1', label: 'of 18,990 on DrivenData’s Pump It Up leaderboard at submission (team)', href: '/projects/pump-it-up-water-pumps/' },
 ] as const;
 
 /** Where the work comes from: shown as a single row under the proof strip. */
@@ -37,12 +37,16 @@ export const credentials = [
 export const toolkit = [
   {
     group: 'Analysis & Modelling',
-    items: ['Python', 'pandas', 'scikit-learn', 'XGBoost', 'statsmodels', 'PuLP / Solver', 'SQL', 'R'],
+    items: ['Python', 'pandas', 'scikit-learn', 'CatBoost', 'LightGBM', 'XGBoost', 'statsmodels', 'PuLP / Solver', 'SQL', 'R'],
   },
   {
     group: 'Decision Science',
     items: [
       'Linear & mixed-integer programming',
+      'Ensembles & stacking',
+      'Clustering (K-Means, DBSCAN)',
+      'Association rules',
+      'Cost-sensitive model evaluation',
       'Regression & regularization',
       'Hypothesis testing / ANOVA',
       'A/B testing',
